@@ -1,0 +1,11 @@
+// Feckless Weasel All Projects Gradle Build Script
+// (C)2015 Christian Gunderman
+allprojects {
+
+}
+
+subprojects {
+    repositories {
+        mavenCentral()
+    }
+}

@@ -1,0 +1,32 @@
+// Feckless Weasel Server Gradle Build Script
+// (C) 2015 Christian Gunderman
+
+apply plugin: 'war'
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+dependencies {
+
+    compile 'javax.mail:mail:1.4.1'
+    
+    compile "javax.ws.rs:jsr311-api:1.1.1"
+
+    compile 'com.sun.jersey:jersey-server:1.13'
+    compile 'com.sun.jersey:jersey-core:1.13'
+    compile 'com.sun.jersey:jersey-servlet:1.13'
+
+    compile 'mysql:mysql-connector-java:5.1.6'
+
+    testCompile "junit:junit-dep:4.+"
+
+    test {
+        testLogging {
+            events "passed", "skipped", "failed"
+            exceptionFormat "full" // default is "short"
+        }
+    }
+}
+
