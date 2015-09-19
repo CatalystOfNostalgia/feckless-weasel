@@ -14,7 +14,7 @@
     <load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>
-    <servlet-name>Pinata Web API</servlet-name>
+    <servlet-name>Feckless Weasel Web API</servlet-name>
     <url-pattern>/api/*</url-pattern>
   </servlet-mapping>
 

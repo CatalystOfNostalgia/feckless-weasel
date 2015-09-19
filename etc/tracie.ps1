@@ -1,6 +1,8 @@
 # "Tracie" The Feckless Weasel Deployment System for Windows
 # By: Christian Gunderman
 
+$tomcatVersion = "v8.0.1"
+
 function Write-Help()
 {
     Clear-Host
@@ -12,6 +14,9 @@ function Write-Help()
     Write-Output("  build  - Compiles the project")
     Write-Output("  test  - Tests the project")
     Write-Output("  clean  - Cleans the project")
+    Write-Output("  start_server - Starts a local development server")
+    Write-Output("  stop_server - Stops a local development server")
+    Write-Output("  deploy - Installs the servlet and deploys it.")
 }
 
 function Reload-Path()
@@ -134,7 +139,7 @@ function Install-Tomcat-If-Needed()
     else
     {
         Write-Output("Downloading Tomcat installer...")
-        Invoke-WebRequest "http://archive.apache.org/dist/tomcat/tomcat-8/v8.0.1/bin/apache-tomcat-8.0.1.exe" -OutFile "tomcat.tmp.exe"
+        Invoke-WebRequest "http://archive.apache.org/dist/tomcat/tomcat-8/$tomcatVersion/bin/apache-tomcat-8.0.1.exe" -OutFile "tomcat.tmp.exe"
         Write-Output("Running Tomcat installer...")
         Start-Process "tomcat.tmp.exe" -ArgumentList "/S" -Wait
         Remove-Item "tomcat.tmp.exe"
@@ -152,6 +157,8 @@ function Install-MySQL-If-Needed()
     {
         Write-Output("Installing MySQL database system...")
         choco install --yes --force mysql
+        Set-Service MySQL -StartupType Manual
+        Stop-Service MySQL
         Reload-Path
     }
 }
@@ -185,6 +192,35 @@ function Check-Prereqs()
     Write-Output("Completed checking deployment prereqs.")
 }
 
+function Set-Server-Running([bool]$isRunning)
+{
+    $env:CATALINA_HOME = "C:\tools\apache-tomcat-8.0.20"
+
+    if ($isRunning)
+    {
+        Write-Output("Starting Tomcat Server...")
+        cmd.exe /C "$env:CATALINA_HOME\bin\startup.bat"
+        Write-Output("Starting MySQL...")
+        Start-Service MySQL
+    }
+    else
+    {
+        Write-Output("Stopping Tomcat Server...")
+        cmd.exe /C "$env:CATALINA_HOME\bin\shutdown.bat"
+        Write-Output("Stopping MySQL...")
+        Stop-Service MySQL
+    }
+}
+
+function Build-And-Deploy
+{
+    Check-Prereqs
+    Write-Output("Deploying...")
+    gradle build
+    Remove-Item("C:\tools\apache-tomcat-8.0.20\webapps\ROOT.war") -ErrorAction SilentlyContinue
+    Copy-Item "service\build\libs\service.war" "C:\tools\apache-tomcat-8.0.20\webapps\ROOT.war"
+}
+
 function EntryPoint($cmdLine)
 {
     Check-Is-Admin
@@ -194,6 +230,26 @@ function EntryPoint($cmdLine)
         if ($cmdLine[0] -eq "prereq")
         {
             Check-Prereqs
+            return
+        }
+
+        if ($cmdLine[0] -eq "start_server")
+        {
+            Check-Prereqs
+            Set-Server-Running($true)
+            return;
+        }
+
+        if ($cmdLine[0] -eq "deploy")
+        {
+            Build-And-Deploy
+            return
+        }
+
+        if ($cmdLine[0] -eq "stop_server")
+        {
+            Check-Prereqs
+            Set-Server-Running($false)
             return
         }
 
