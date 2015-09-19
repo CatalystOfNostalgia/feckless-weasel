@@ -21,12 +21,11 @@ dependencies {
     compile 'mysql:mysql-connector-java:5.1.6'
 
     testCompile "junit:junit-dep:4.+"
-
-    test {
-        testLogging {
-            events "passed", "skipped", "failed"
-            exceptionFormat "full" // default is "short"
-        }
-    }
 }
 
+test {
+    testLogging {
+        events "passed", "skipped", "failed"
+        exceptionFormat "full" // default is "short"
+    }
+}
