@@ -1,4 +1,4 @@
-# "Tracie" The Feckless Weasel Deployment System for Windows
+# One Stop Shop, The Feckless Weasel Deployment System for Windows
 # By: Christian Gunderman
 
 $tomcatVersion = "v8.0.1"
@@ -6,10 +6,10 @@ $tomcatVersion = "v8.0.1"
 function Write-Help()
 {
     Clear-Host
-    Write-Output('"Tracie" The Feckless Weasel Deployment System for Windows')
+    Write-Output('One Stop Shop, The Feckless Weasel Deployment System for Windows')
     Write-Output("By: Christian Gunderman")
     Write-Output("")
-    Write-Output("Tracie accepts the following commands:")
+    Write-Output("Accepts the following commands:")
     Write-Output("  prereq - Checks that all prereqs for deployment are met")
     Write-Output("  build  - Compiles the project")
     Write-Output("  test  - Tests the project")
@@ -30,7 +30,7 @@ function Check-Is-Admin()
     if (!([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole(
         [Security.Principal.WindowsBuiltInRole]"Administrator"))
     {
-        Write-Warning("Tracie must be run from an Administrative prompt.")
+        Write-Warning("One Stop Shop must be run from an Administrative prompt.")
         exit
     }
 }
