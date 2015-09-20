@@ -42,13 +42,13 @@ function CheckPrereqs {
 
 function StartServer {
     echo "Starting server..."
-    /usr/local/Cellar/tomcat/8.0.23/bin/catalina start
+    /usr/local/Cellar/tomcat/8.0.21/bin/catalina start
     mysql.server start
 }
 
 function StopServer {
     echo "Stopping Server..."
-    /usr/local/Cellar/tomcat/8.0.23/bin/catalina stop
+    /usr/local/Cellar/tomcat/8.0.21/bin/catalina stop
     mysql.server stop
 }
 
@@ -58,50 +58,43 @@ function Build {
     gradle build
 }
 
-function EntryPoint {
-    if [ "$#" -eq 1 ]; then
-        if [ "$1" = "prereq" ]; then
-            CheckPrereqs
-            return
-        fi
-
-        if [ "$1" == "start_server" ]; then
-	    CheckPrereqs
-            StartServer
-            return
-        fi
-
-        if [ "$1" == "deploy" ]; then
-            echo "Not implemented yet."
-            return
-        fi
-
-        if [ "$1" == "stop_server" ]; then
-            CheckPrereqs
-            StopServer
-            return
-        fi
-
-        if [ "$1" == "build" ]; then
-            CheckPrereqs
-            Build
-            return
-        fi
-
-        if [ "$1" == "clean" ]; then
-            gradle clean
-            return
-        fi
-
-        if [ "$1" == "test" ]; then
-            gradle test
-            return
-        fi
+if [ "$#" -eq 1 ]; then
+    if [ "$1" = "prereq" ]; then
+        CheckPrereqs
+        exit
     fi
 
-    # No commands match, print help.
-    PrintHelp
-}
+    if [ "$1" == "start_server" ]; then  CheckPrereqs
+        StartServer
+        exit
+    fi
 
-# Call script entry point.
-EntryPoint
+    if [ "$1" == "deploy" ]; then
+        echo "Not implemented yet."
+        exit
+    fi
+
+    if [ "$1" == "stop_server" ]; then
+        CheckPrereqs
+        StopServer
+        exit
+    fi
+
+    if [ "$1" == "build" ]; then
+        Build
+        exit
+    fi
+
+    if [ "$1" == "clean" ]; then
+        gradle clean
+        exit
+    fi
+
+    if [ "$1" == "test" ]; then
+        gradle test
+        exit
+    fi
+fi
+
+# No commands match, print help.
+PrintHelp
