@@ -58,6 +58,16 @@ function Build {
     gradle build
 }
 
+function BuildAndDeploy {
+    Build
+    StopServer
+    echo "Deploying..."
+    rm /usr/local/Cellar/tomcat/8.0.21/libexec/webapps/ROOT.war
+    rm -r /usr/local/Cellar/tomcat/8.0.21/libexec/webapps/ROOT
+    cp service/build/libs/service.war /usr/local/Cellar/tomcat/8.0.21/libexec/webapps/ROOT.war
+    StartServer
+}
+
 if [ "$#" -eq 1 ]; then
     if [ "$1" = "prereq" ]; then
         CheckPrereqs
@@ -70,7 +80,7 @@ if [ "$#" -eq 1 ]; then
     fi
 
     if [ "$1" == "deploy" ]; then
-        echo "Not implemented yet."
+        BuildAndDeploy
         exit
     fi
 
