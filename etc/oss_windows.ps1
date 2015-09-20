@@ -216,7 +216,7 @@ function Build-And-Deploy
 {
     Check-Prereqs
     Write-Output("Deploying...")
-    gradle build
+    gradle assemble
     Remove-Item("C:\tools\apache-tomcat-8.0.20\webapps\ROOT.war") -ErrorAction SilentlyContinue
     Copy-Item "service\build\libs\service.war" "C:\tools\apache-tomcat-8.0.20\webapps\ROOT.war"
 }

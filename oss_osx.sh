@@ -55,7 +55,7 @@ function StopServer {
 function Build {
     CheckPrereqs
     echo "Building..."
-    gradle build
+    gradle assemble
 }
 
 function BuildAndDeploy {
