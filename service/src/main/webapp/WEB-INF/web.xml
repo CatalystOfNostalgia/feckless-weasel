@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
-  <display-name>Pinata Web API</display-name>
+  <display-name>Feckless Weasel API</display-name>
 
   <!-- API Servlet -->
   <!-- TODO: Might not be necessary -->
   <servlet>
-    <servlet-name>Feckless Weasel API Service</servlet-name>
+    <servlet-name>Feckless Weasel API</servlet-name>
     <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
     <init-param>
       <param-name>com.sun.jersey.config.property.packages</param-name>
@@ -14,7 +14,7 @@
     <load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>
-    <servlet-name>Feckless Weasel Web API</servlet-name>
+    <servlet-name>Feckless Weasel API</servlet-name>
     <url-pattern>/api/*</url-pattern>
   </servlet-mapping>
 
@@ -29,7 +29,7 @@
     <load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>
-    <servlet-name>Feckless Weasel POC</servlet-name>
+    <servlet-name>Feckless Weasel API</servlet-name>
     <url-pattern>/*</url-pattern>
   </servlet-mapping>
 

@@ -17,6 +17,7 @@ dependencies {
     compile 'com.sun.jersey:jersey-server:1.13'
     compile 'com.sun.jersey:jersey-core:1.13'
     compile 'com.sun.jersey:jersey-servlet:1.13'
+    compile 'net.sf.flexjson:flexjson:3.3'
 
     compile 'mysql:mysql-connector-java:5.1.6'
 
