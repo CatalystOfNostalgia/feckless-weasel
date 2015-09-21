@@ -194,19 +194,17 @@ function Check-Prereqs()
 
 function Set-Server-Running([bool]$isRunning)
 {
-    $env:CATALINA_HOME = "C:\tools\apache-tomcat-8.0.20"
-
     if ($isRunning)
     {
         Write-Output("Starting Tomcat Server...")
-        cmd.exe /C "$env:CATALINA_HOME\bin\startup.bat"
+        Start-Service Tomcat8
         Write-Output("Starting MySQL...")
         Start-Service MySQL
     }
     else
     {
         Write-Output("Stopping Tomcat Server...")
-        cmd.exe /C "$env:CATALINA_HOME\bin\shutdown.bat"
+        Stop-Service Tomcat8
         Write-Output("Stopping MySQL...")
         Stop-Service MySQL
     }
@@ -217,8 +215,8 @@ function Build-And-Deploy
     Check-Prereqs
     Write-Output("Deploying...")
     gradle assemble
-    Remove-Item("C:\tools\apache-tomcat-8.0.20\webapps\ROOT.war") -ErrorAction SilentlyContinue
-    Copy-Item "service\build\libs\service.war" "C:\tools\apache-tomcat-8.0.20\webapps\ROOT.war"
+    Remove-Item("C:\Program Files\Apache Software Foundation\Tomcat 8.0\webapps\ROOT.war") -ErrorAction SilentlyContinue
+    Copy-Item "service\build\libs\service.war" "C:\Program Files\Apache Software Foundation\Tomcat 8.0\webapps\ROOT.war"
 }
 
 function EntryPoint($cmdLine)
