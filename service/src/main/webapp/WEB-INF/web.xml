@@ -18,21 +18,6 @@
     <url-pattern>/api/*</url-pattern>
   </servlet-mapping>
 
-  <!-- UI Servlet -->
-  <servlet>
-    <servlet-name>Feckless Weasel UI</servlet-name>
-    <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
-    <init-param>
-      <param-name>com.sun.jersey.config.property.packages</param-name>
-      <param-value>com.fecklessweasel.service.webui</param-value>
-    </init-param>
-    <load-on-startup>1</load-on-startup>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>Feckless Weasel API</servlet-name>
-    <url-pattern>/*</url-pattern>
-  </servlet-mapping>
-
   <!-- MySQL Resource -->
   <!-- TODO: Might not be necessary -->
   <resource-ref>

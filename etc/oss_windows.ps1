@@ -213,10 +213,13 @@ function Set-Server-Running([bool]$isRunning)
 function Build-And-Deploy
 {
     Check-Prereqs
+    Set-Server-Running($false)
     Write-Output("Deploying...")
     gradle assemble
     Remove-Item("C:\Program Files\Apache Software Foundation\Tomcat 8.0\webapps\ROOT.war") -ErrorAction SilentlyContinue
+    Remove-Item("C:\Program Files\Apache Software Foundation\Tomcat 8.0\webapps\ROOT") -ErrorAction SilentlyContinue -Recurse
     Copy-Item "service\build\libs\service.war" "C:\Program Files\Apache Software Foundation\Tomcat 8.0\webapps\ROOT.war"
+    Set-Server-Running($true)
 }
 
 function EntryPoint($cmdLine)
