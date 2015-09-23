@@ -1,0 +1,98 @@
+input{
+    font-size: 20px;
+    font: 20px Verdana, sans-serif;
+}
+
+input.text-large{
+    height: 30px;
+    width: 400px;
+}
+
+input.text-medium{
+    height:30px;
+    width: 200px;
+}
+
+input.text-small{
+    height: 30px;
+    width: 100px;
+}
+
+button{
+    font: 20px Verdana, sans-serif;
+    height: 30px;
+}
+
+button.button-small{
+    width: 40px;
+}
+
+button.button-medium{
+    width: 60px;
+}
+
+button.button-large{
+    width: 80px;
+}
+
+a{
+    font: 20px Verdana, sans-serif;
+}
+
+h1{
+    font: 40px Verdana, sans-serif;
+}
+
+h2{
+    font: 20px Verdana, sans-serif;
+}
+
+.header{
+    background-color: #FFAF00;
+    padding: 10px;
+}
+
+.column-left{
+    width: 15%;
+}
+
+.column-center{
+    width: 70%;
+    margin-left: 15%;
+}
+
+.column-right{
+    width: 15%;
+    margin-left: 85%;
+}
+
+.column-alpha{
+    width: 15%
+}
+
+.column-beta{
+    margin-left: 15%;
+    width: 35%;
+}
+
+.column-gamma{
+    margin-left: 50%;
+    width: 35%
+}
+
+.column-delta{
+    margin-lefth: 85%;
+    width: 15%;:w
+
+}
+
+.top{
+    background-color: #FFAF00
+    margin-left: 0px;
+    margin-top: 0px;
+}
+
+html, body{
+    margin: 0;
+    padding: 0;
+}

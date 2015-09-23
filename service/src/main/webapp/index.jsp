@@ -1,13 +1,17 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1" import="java.util.*"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8" import="java.util.*"%>
 <html>
-  <head>
-    <title>Feckless Weasel Hello World Index Page</title>
-  </head>
-  <body>
-    <h1>Feckless Weasel Home Page</h1>
-    <p>
-      Hello World! Today is <%= new java.util.Date() %>
-    </p>
-  </body>
+    <head>
+        <title>Feckless Weasel Hello World Index Page</title>
+        <link href="${pageContext.request.contextPath}/assets/css/base.css" rel="stylesheet" type="text/css">
+    </head>
+    <body>
+        <jsp:include page="header.jsp"/>
+        <div class="column-beta">
+            <h1>Welcome to Feckless Weasel!</h1>
+            <p>
+                Hello World! Today is <%= new java.util.Date() %>
+            </p>
+        </div>
+    </body>
 </html>
