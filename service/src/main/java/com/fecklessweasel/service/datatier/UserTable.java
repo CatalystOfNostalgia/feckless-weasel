@@ -57,7 +57,7 @@ public abstract class UserTable {
         CodeContract.assertNotNullOrEmptyOrWhitespace(pass, "pass");
         CodeContract.assertNotNull(joinDate, "joinDate");
         CodeContract.assertNotNull(email, "email");
-        
+
         try {
             PreparedStatement insertStatement
                 = connection.prepareStatement(INSERT_USER_QUERY,
@@ -101,7 +101,7 @@ public abstract class UserTable {
 
         CodeContract.assertNotNull(connection, "connection");
         CodeContract.assertNotNullOrEmptyOrWhitespace(user, "user");
-        
+
         try {
             PreparedStatement lookupStatement =
                 connection.prepareStatement(LOOKUP_USER_QUERY);
@@ -124,7 +124,7 @@ public abstract class UserTable {
 
         CodeContract.assertNotNull(connection, "connection");
         CodeContract.assertNotNullOrEmptyOrWhitespace(user, "user");
-        
+
         try {
             PreparedStatement deleteStatement =
                 connection.prepareStatement(DELETE_USER_QUERY);

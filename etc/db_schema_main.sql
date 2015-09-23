@@ -27,7 +27,6 @@ SOURCE etc/db_schema_user_role_table.sql;
 /* Create User session table */
 SOURCE etc/db_schema_user_session_table.sql;
 
-<<<<<<< 1cbbc2c54b6d0484254c1b65a80ceb150362cf37
 /* Create University table */
 SOURCE etc/db_schema_university_table.sql;
 
