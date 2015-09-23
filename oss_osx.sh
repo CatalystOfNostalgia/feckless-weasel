@@ -9,6 +9,7 @@ function PrintHelp {
     echo
     echo "Accepts the following commands:"
     echo "  prereq - Checks that all prereqs for deployment are met"
+    echo "  deploy_database - Creates MySQL Database and tables."
     echo "  build  - Compiles the project"
     echo "  test  - Tests the project"
     echo "  clean  - Cleans the project"
@@ -38,6 +39,13 @@ function CheckPrereqs {
     echo "Checking JDBC..."
     brew tap gbeine/homebrew-java
     brew install mysql-connector-java
+    echo "Checking JDBC is in Tomcat libs..."
+    if [ -e "/usr/local/Cellar/tomcat/8.0.21/libexec/lib/mysql-connector-java.jar" ]; then
+        echo "JDBC is already in Tomcat libs."
+    else
+        echo "Copying JDBC to Tomcat libs."
+        cp /usr/local/Cellar/mysql-connector-java/5.1.32/libexec/*.jar /usr/local/Cellar/tomcat/8.0.21/libexec/lib/mysql-connector-java.jar
+    fi
 }
 
 function StartServer {
@@ -68,9 +76,21 @@ function BuildAndDeploy {
     StartServer
 }
 
+function DeployDatabase {
+    echo "Deploying database and creating tables..."
+    echo "SOURCE etc/db_schema_main.sql" | mysql --batch -u root
+    echo "Completed deploying database and creating tables."
+}
+
 if [ "$#" -eq 1 ]; then
     if [ "$1" = "prereq" ]; then
         CheckPrereqs
+        exit
+    fi
+
+    if [ "$1" = "deploy_database" ]; then
+        CheckPrereqs
+        DeployDatabase
         exit
     fi
 
