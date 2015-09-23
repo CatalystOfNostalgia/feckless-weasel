@@ -11,6 +11,7 @@ function Write-Help()
     Write-Output("")
     Write-Output("Accepts the following commands:")
     Write-Output("  prereq - Checks that all prereqs for deployment are met")
+    Write-Output("  deploy_database - Creates MySQL database and tables.")
     Write-Output("  build  - Compiles the project")
     Write-Output("  test  - Tests the project")
     Write-Output("  clean  - Cleans the project")
@@ -234,6 +235,16 @@ function Build-And-Deploy
     Set-Server-Running($true)
 }
 
+function Deploy-Database()
+{
+    Write-Output("Deploying MySQL database and tables...")
+
+    # Pipe SQL statements from file into MySQL.
+    Write-Output("source etc\db_schema_main.sql") | mysql --batch -u root
+
+    Write-Output("MySQL database and table deployment completed.")
+}
+
 function EntryPoint($cmdLine)
 {
     Check-Is-Admin
@@ -243,6 +254,13 @@ function EntryPoint($cmdLine)
         if ($cmdLine[0] -eq "prereq")
         {
             Check-Prereqs
+            return
+        }
+
+        if ($cmdLine[0] -eq "deploy_database")
+        {
+            Check-Prereqs
+            Deploy-Database
             return
         }
 
