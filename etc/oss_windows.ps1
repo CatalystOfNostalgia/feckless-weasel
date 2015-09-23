@@ -178,6 +178,18 @@ function Install-MySQL-Connector-If-Needed()
         Start-Process "msiexec.exe" -ArgumentList "/package", "mysql-connector.tmp.msi", "/passive" -Wait
         Remove-Item "mysql-connector.tmp.msi"
     }
+
+    Write-Output("Checking MySQL to Java connector present in Tomcat libs...")
+    if (Test-Path("C:\Program Files\Apache Software Foundation\Tomcat 8.0\lib\mysql-connector-java.jar"))
+    {
+        Write-Output("MySQL to Java connector is present in Tomcat libs.")
+    }
+    else
+    {
+        Write-Output("Copying MySQL to Java connector to Tomcat libs.")
+        Copy-Item "C:\Program Files (x86)\MySQL\MySQL Connector J\*.jar" "C:\Program Files\Apache Software Foundation\Tomcat 8.0\lib\mysql-connector-java.jar"
+    }
+
 }
 
 function Check-Prereqs()
