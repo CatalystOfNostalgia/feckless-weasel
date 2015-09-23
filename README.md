@@ -22,6 +22,7 @@ oss_windows.bat *command*.
 OSS supports the following commands on each
 platform:
 * prereq: Installs all application prereqs and dependencies.
+* deploy_database: Creates MySQL Database and Tables.
 * build: Installs prereqs and compiles.
 * test: Runs Gradle unit tests.
 * clean: Runs Gradle clean.
@@ -35,6 +36,7 @@ The typical workflow for developers looks like this:
 * Clone Repo
 * Run *oss_[platform] build* to install dependencies and perform first build
 * Run *oss_[platform] deploy* to deploy application and start server
+* Run *oss_[platform] deploy_database* at least once to create database tables.
 * Visit *http://localhost:8080* to see the applet.
 * When done, run *oss_[platform] stop_server*
 
@@ -54,8 +56,16 @@ install Brew and other dependencies. The only manual prereq is that you visit
 Oracle's website and download the newest Java 8 JDK before running the OSS
 script.
 
-##### Building and Deploying on Other Platforms
+###### Building and Deploying on Other Platforms
 
 You can currently build on any platform that supports Gradle but you will have to manually
 deploy the various dependencies. Support for OS X and Linux deployment are planned and in
 progress.
+
+###### Database Deployment
+
+Before running the first time be sure to run *oss_[platform] deploy_database* at least
+once to create database tables. The database tables are the one portion of the service
+that are not prereq checked each time you run. After deploying the database, the only
+times you will need to run the command again are when you make database schema changes,
+such as new tables. **NOTE: DB deployment wipes the database.**
