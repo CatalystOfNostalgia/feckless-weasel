@@ -5,15 +5,21 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.time.LocalDate;
+import java.util.Date;
 import javax.mail.internet.InternetAddress;
 
+import com.fecklessweasel.service.objectmodel.CodeContract;
 import com.fecklessweasel.service.objectmodel.ServiceException;
 import com.fecklessweasel.service.objectmodel.ServiceStatus;
 
+/**
+ * Wrapper class for MySQL User table. Performs queries and basic checks.
+ * Exhaustive validation is performed by the object model.
+ * @author Christian Gunderman
+ */
 public abstract class UserTable {
     /** Create user query. */
-    private static final String INSERT_USER_QUERY =
+    public static final String INSERT_USER_QUERY =
         "INSERT INTO User (user, pass, first_name, last_name," +
         "join_date, email)" +
         " VALUES (?,?,?,?,?,?)";
@@ -23,10 +29,19 @@ public abstract class UserTable {
                                  String pass,
                                  String firstName,
                                  String lastName,
-                                 LocalDate joinDate,
+                                 Date joinDate,
                                  InternetAddress email)
         throws ServiceException {
 
+        // Check basic checks for clean arguments.
+        CodeContract.assertNotNull(connection, "connection");
+        CodeContract.assertNotNullOrEmptyOrWhitespace(user, "user");
+        CodeContract.assertNotNullOrEmptyOrWhitespace(pass, "pass");
+        CodeContract.assertNotNullOrEmptyOrWhitespace(firstName, "firstName");
+        CodeContract.assertNotNullOrEmptyOrWhitespace(lastName, "lastName");
+        CodeContract.assertNotNull(joinDate, "joinDate");
+        CodeContract.assertNotNull(email, "email");
+        
         try {
             PreparedStatement insertStatement
                 = connection.prepareStatement(INSERT_USER_QUERY);
