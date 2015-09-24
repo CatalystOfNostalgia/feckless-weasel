@@ -7,5 +7,6 @@
         <input type="text" class="text-large" id="class" name="class" placeholder="Enter your class (i.e. EECS-390)">
         <button type="submit" class="button-small" id="search-submit" name="search-submit">Go</button>
         <a href="/account_create.jsp">Create an account</a>
+        <a href="/classroom.jsp">Visit a Class</a>
     </div>
 </div>
