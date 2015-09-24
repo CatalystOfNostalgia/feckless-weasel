@@ -18,7 +18,7 @@ import com.fecklessweasel.service.objectmodel.ServiceStatus;
  * Unit tests for OMUtil class functions.
  */
 public class test_OMUtil {
-    
+
     @Test
     public void test_sqlCheck_NotNullConnection_NoException() throws Exception {
         OMUtil.sqlCheck(mock(Connection.class));
@@ -68,20 +68,24 @@ public class test_OMUtil {
     public void test_isValidInput_Symbols_False() throws Exception {
         assertFalse(OMUtil.isValidInput("A_b/C_D"));
     }
-    
+
     @Test
     public void test_isValidName_good() throws Exception {
         assertTrue(OMUtil.isValidName("University of awesome"));
     }
-    
+
     @Test
     public void test_isValidName_underscores() throws Exception {
         assertFalse(OMUtil.isValidName("University of __bad__"));
     }
-    
+
     @Test
     public void test_isValidName_numbers() throws Exception {
         assertFalse(OMUtil.isValidName("University of 123four"));
+
+    @Test
+    public void test_adminOrOwnerCheck() throws Exception {
+        fail("Not implemented");
     }
 
     @Test(expected=IllegalArgumentException.class)
