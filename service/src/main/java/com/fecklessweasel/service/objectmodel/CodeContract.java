@@ -35,7 +35,7 @@ public abstract class CodeContract {
             throw new IllegalArgumentException(
                 "argName cannot be null, empty, or whitespace");
         }
-        
+
         if (str == null || str.isEmpty() || str.trim().isEmpty()) {
             throw new IllegalArgumentException(argName
                 + " cannot be null, empty, or whitespace.");

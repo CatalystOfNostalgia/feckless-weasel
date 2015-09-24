@@ -43,7 +43,7 @@ public abstract class SQLSource {
             if (initialContext == null) {
                 initialContext = new InitialContext();
             }
-            
+
             // Obtain our environment naming context.
             Context environmentContext = (Context)initialContext.lookup("java:comp/env");
 

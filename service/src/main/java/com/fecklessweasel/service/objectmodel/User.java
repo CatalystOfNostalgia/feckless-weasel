@@ -39,16 +39,19 @@ public class User {
 
     /** Unique User id integer. */
     private long uid;
+
     /** Username. */
     private String username;
     /** Password hashes. */
     private String passwordHash;
+
     /** Date user joined. */
     private Date joinDate;
     /** User's email address. */
     private String email;
     /** User's security roles. */
     private final Set<Role> roles;
+
 
     public static User create(Connection sql,
                               String username,
@@ -86,8 +89,8 @@ public class User {
         if (emailStr.length() > EMAIL_MAX ||
             !emailStr.matches("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" +
                               "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")) {
-            throw new ServiceException(ServiceStatus.APP_INVALID_EMAIL);
-        }
+
+
         InternetAddress emailAddr = null;
         try {
             emailAddr = new InternetAddress(emailStr, /*Strict:*/ true);
@@ -110,7 +113,7 @@ public class User {
         UserHasRoleTable.insertUserHasRole(sql,
                                            uid,
                                            UserRoleTable.ROLE_USER_ID);
-        
+
         return new User(uid, username, password, joinDate, emailStr);
     }
 
@@ -137,7 +140,7 @@ public class User {
             if (!result.next()) {
                 throw new ServiceException(ServiceStatus.APP_USER_NOT_EXIST);
             }
-            
+
             User user = new User(result.getLong("uid"),
                                  result.getString("user"),
                                  result.getString("pass"),
@@ -337,7 +340,7 @@ public class User {
     }
 
     /**
-     * A Security Role. 
+     * A Security Role.
      * Get a user's Roles with getRoles() or isRole().
      * @author Christian Gunderman
      */
