@@ -18,5 +18,8 @@
  */
 SOURCE etc/db_schema_create_db.sql;
 
-/* #2: Create Users table */
+/* #2: Create User table */
 SOURCE etc/db_schema_user_table.sql;
+
+/* #3: Create User roles table */
+SOURCE etc/db_schema_user_role_table.sql;
