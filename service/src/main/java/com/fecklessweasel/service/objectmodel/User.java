@@ -90,7 +90,6 @@ public class User {
             !emailStr.matches("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" +
                               "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")) {
 
-
         InternetAddress emailAddr = null;
         try {
             emailAddr = new InternetAddress(emailStr, /*Strict:*/ true);
@@ -318,6 +317,48 @@ public class User {
 
         // Remove Role from user in database.
         UserHasRoleTable.deleteUserHasRole(connection, this.uid, role);
+    }
+
+    /**
+     * Gets username.
+     * @return Unique username String.
+     */
+    public String getUsername() {
+        return this.username;
+    }
+
+    /**
+     * Gets date user joined the system.
+     * @return Joined date.
+     */
+    public Date getJoinDate() {
+        return this.joinDate;
+    }
+
+    /**
+     * Gets the user's email address.
+     * @return The user's email address.
+     */
+    public String getEmail() {
+        return this.email;
+    }
+
+    /**
+     * Gets the user's password hash. This method is intentionally
+     * package protected to keep password hashes from leaving the objectmodel.
+     * @return The SHA256 hashed user password.
+     */
+    String getPasswordHash() {
+        return this.passwordHash;
+    }
+
+    /**
+     * Gets the user's table UID. This method is intentionally package
+     * protected.
+     * @return The user's AUTO_INCREMENT id.
+     */
+    long getUid() {
+        return this.uid;
     }
 
     /**

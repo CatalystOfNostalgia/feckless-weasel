@@ -53,6 +53,7 @@ public abstract class SQLSource {
 
             // Get the connection and run actions.
             connection = dataSource.getConnection();
+
             connection.prepareStatement(USE_DB_STATEMENT).execute();
             result = actions.run(connection);
         } catch (NamingException ex) {
