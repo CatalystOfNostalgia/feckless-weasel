@@ -145,7 +145,6 @@ public abstract class UserSessionTable {
      * @return True if the session exists.
      */
     public static boolean sessionExists(Connection connection,
-<<<<<<< a8e979c256e22bb1452fc3f2524b93f33aa90d66
                                         long uid,
                                         UUID sessionId) throws ServiceException {
         CodeContract.assertNotNull(connection, "connection");
@@ -155,14 +154,6 @@ public abstract class UserSessionTable {
             PreparedStatement queryStatement
                 = connection.prepareStatement(QUERY_SESSION_QUERY);
             queryStatement.setLong(1, uid);
-=======
-                                        int uid,
-                                        UUID sessionId) throws ServiceException {
-        try {
-            PreparedStatement queryStatement
-                = connection.prepareStatement(QUERY_SESSION_QUERY);
-            queryStatement.setInt(1, uid);
->>>>>>> UserSessionTable implementation.
             queryStatement.setString(2, sessionId.toString());
 
             ResultSet result = queryStatement.executeQuery();
