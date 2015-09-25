@@ -38,3 +38,4 @@ SOURCE etc/db_schema_class_table.sql;
 
 /* Create FileMetadata Table */
 SOURCE etc/db_schema_filemetadata_table.sql;
+
