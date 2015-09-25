@@ -1,4 +1,4 @@
-package com.pinata.service.datatier;
+package com.fecklessweasel.service.datatier;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -50,12 +50,12 @@ public abstract class UserSessionTable {
      * @param uuid The session id.
      */
     public static void insertSession(Connection connection,
-                                     int uid,
+                                     long uid,
                                      UUID uuid) throws ServiceException {
         try {
             PreparedStatement insertStatement
                 = connection.prepareStatement(INSERT_SESSION_QUERY);
-            insertStatement.setInt(1, uid);
+            insertStatement.setLong(1, uid);
             insertStatement.setString(2, uuid.toString());
 
             insertStatement.execute();
@@ -72,12 +72,12 @@ public abstract class UserSessionTable {
      * @param sessionId The unique session id.
      */
     public static void deleteSession(Connection connection,
-                                     int uid,
+                                     long uid,
                                      UUID sessionId) throws ServiceException {
         try {
             PreparedStatement deleteStatement
                 = connection.prepareStatement(DELETE_SESSION_QUERY);
-            deleteStatement.setInt(1, uid);
+            deleteStatement.setLong(1, uid);
             deleteStatement.setString(2, sessionId.toString());
 
             deleteStatement.execute();
@@ -93,11 +93,11 @@ public abstract class UserSessionTable {
      * @param uid The user AUTO_INCREMENT index integer.
      */
     public static void deleteAllSessions(Connection connection,
-                                         int uid) throws ServiceException {
+                                         long uid) throws ServiceException {
         try {
             PreparedStatement deleteStatement
                 = connection.prepareStatement(DELETE_ALL_SESSIONS_QUERY);
-            deleteStatement.setInt(1, uid);
+            deleteStatement.setLong(1, uid);
 
             deleteStatement.execute();
             deleteStatement.close();
@@ -133,12 +133,12 @@ public abstract class UserSessionTable {
      * @return True if the session exists.
      */
     public static boolean sessionExists(Connection connection,
-                                        int uid,
+                                        long uid,
                                         UUID sessionId) throws ServiceException {
         try {
             PreparedStatement queryStatement
                 = connection.prepareStatement(QUERY_SESSION_QUERY);
-            queryStatement.setInt(1, uid);
+            queryStatement.setLong(1, uid);
             queryStatement.setString(2, sessionId.toString());
 
             ResultSet result = queryStatement.executeQuery();
