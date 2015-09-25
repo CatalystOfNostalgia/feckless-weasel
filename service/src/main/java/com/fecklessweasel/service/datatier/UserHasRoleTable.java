@@ -39,12 +39,12 @@ public abstract class UserHasRoleTable {
      * @return The ResultSet containing the Role information.
      */
     public static ResultSet insertUserHasRole(Connection connection,
-                                              int uid,
+                                              long uid,
                                               String roleName) throws ServiceException {
         try {
             PreparedStatement insertStatement
                 = connection.prepareStatement(INSERT_USER_HAS_ROLE_QUERY);
-            insertStatement.setInt(1, uid);
+            insertStatement.setLong(1, uid);
             insertStatement.setString(2, roleName);
 
             insertStatement.execute();
@@ -70,12 +70,12 @@ public abstract class UserHasRoleTable {
      * @return The ResultSet containing the Role information.
      */
     public static void deleteUserHasRole(Connection connection,
-                                         int uid,
+                                         long uid,
                                          String role) throws ServiceException {
         try {
             PreparedStatement deleteStatement
                 = connection.prepareStatement(DELETE_USER_HAS_ROLE_NAME_QUERY);
-            deleteStatement.setInt(1, uid);
+            deleteStatement.setLong(1, uid);
             deleteStatement.setString(2, role);
 
             deleteStatement.execute();

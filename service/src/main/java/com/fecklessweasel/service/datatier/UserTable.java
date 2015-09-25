@@ -31,6 +31,10 @@ public abstract class UserTable {
         "SELECT * FROM User U, UserRole R, UserHasRole H WHERE U.user=? " +
         " AND U.uid=H.uid AND H.rid=R.rid";
 
+    /** Delete user query. */
+    private static final String DELETE_USER_QUERY =
+        "DELETE FROM User WHERE user=?";
+
     /**
      * Inserts a user into the MySQL table with some minimal validation.
      * This method should NOT be called directly since most validation
@@ -87,6 +91,55 @@ public abstract class UserTable {
             // We have no foreign or unique keys other than primary
             // so this can only be thrown for duplicate users.
             throw new ServiceException(ServiceStatus.APP_USERNAME_TAKEN, ex);
+        } catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        }
+    }
+
+    /**
+     * Looks up a user in the database and returns the associated ResultSet with
+     * with additional rows for each security UserRole the user has.
+     * @throws ServiceException If a SQL error occurs.
+     * @param connection The database connection.
+     * @param user The user to look up.
+     * @return user A ResultSet containing the user. Should contain only a
+     * single row.
+     */
+    public static ResultSet lookupUserWithRoles(Connection connection, String user)
+        throws ServiceException {
+
+        try {
+            PreparedStatement lookupStatement =
+                connection.prepareStatement(LOOKUP_USER_QUERY);
+            lookupStatement.setString(1, user);
+
+            return lookupStatement.executeQuery();
+        } catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        }
+    }
+
+    /**
+     * Deletes a user in the database.
+     * @throws ServiceException If a SQL error occurs or unable to delete.
+     * @param connection The database connection.
+     * @param user The username of the user to look up.
+     */
+    public static void deleteUser(Connection connection, String user)
+        throws ServiceException {
+        
+        try {
+            PreparedStatement deleteStatement =
+                connection.prepareStatement(DELETE_USER_QUERY);
+            deleteStatement.setString(1, user);
+
+            // Execute and check that deletion was successful.
+            if (deleteStatement.executeUpdate() != 1) {
+                deleteStatement.close();
+                throw new ServiceException(ServiceStatus.APP_USER_NOT_EXIST);
+            }
+
+            deleteStatement.close();
         } catch (SQLException ex) {
             throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
         }
