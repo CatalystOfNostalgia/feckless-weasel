@@ -55,7 +55,7 @@ public abstract class UserSessionTable {
                                      UUID uuid) throws ServiceException {
         CodeContract.assertNotNull(connection, "connection");
         CodeContract.assertNotNull(uuid, "uuid");
-        
+
         try {
             PreparedStatement insertStatement
                 = connection.prepareStatement(INSERT_SESSION_QUERY);
@@ -80,7 +80,7 @@ public abstract class UserSessionTable {
                                      UUID sessionId) throws ServiceException {
         CodeContract.assertNotNull(connection, "connection");
         CodeContract.assertNotNull(sessionId, "sessionId");
-        
+
         try {
             PreparedStatement deleteStatement
                 = connection.prepareStatement(DELETE_SESSION_QUERY);
@@ -102,7 +102,7 @@ public abstract class UserSessionTable {
     public static void deleteAllSessions(Connection connection,
                                          long uid) throws ServiceException {
         CodeContract.assertNotNull(connection, "connection");
-        
+
         try {
             PreparedStatement deleteStatement
                 = connection.prepareStatement(DELETE_ALL_SESSIONS_QUERY);
@@ -124,7 +124,7 @@ public abstract class UserSessionTable {
                                          String username) throws ServiceException {
         CodeContract.assertNotNull(connection, "connection");
         CodeContract.assertNotNullOrEmptyOrWhitespace(username, "username");
-        
+
         try {
             PreparedStatement insertStatement
                 = connection.prepareStatement(DELETE_ALL_SESSIONS_NAME_QUERY);
@@ -145,15 +145,24 @@ public abstract class UserSessionTable {
      * @return True if the session exists.
      */
     public static boolean sessionExists(Connection connection,
+<<<<<<< a8e979c256e22bb1452fc3f2524b93f33aa90d66
                                         long uid,
                                         UUID sessionId) throws ServiceException {
         CodeContract.assertNotNull(connection, "connection");
         CodeContract.assertNotNull(sessionId, "sessionId");
-        
+
         try {
             PreparedStatement queryStatement
                 = connection.prepareStatement(QUERY_SESSION_QUERY);
             queryStatement.setLong(1, uid);
+=======
+                                        int uid,
+                                        UUID sessionId) throws ServiceException {
+        try {
+            PreparedStatement queryStatement
+                = connection.prepareStatement(QUERY_SESSION_QUERY);
+            queryStatement.setInt(1, uid);
+>>>>>>> UserSessionTable implementation.
             queryStatement.setString(2, sessionId.toString());
 
             ResultSet result = queryStatement.executeQuery();
