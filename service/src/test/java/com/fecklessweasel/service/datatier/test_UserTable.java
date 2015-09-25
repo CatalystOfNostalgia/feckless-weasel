@@ -12,6 +12,7 @@ import org.junit.runners.JUnit4;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.sql.Statement;
 import javax.mail.internet.InternetAddress;
 import java.util.Date;
 
@@ -180,7 +181,8 @@ public class test_UserTable {
     @Test
     public void test_InsertUser_SQLConstraintException_ServiceException() throws Exception {
         // Throw exception when insertUser called next:
-        when(mockConnection.prepareStatement(UserTable.INSERT_USER_QUERY))
+        when(mockConnection.prepareStatement(UserTable.INSERT_USER_QUERY,
+                                             Statement.RETURN_GENERATED_KEYS))
             .thenThrow(new SQLIntegrityConstraintViolationException());
 
         try {
@@ -199,7 +201,8 @@ public class test_UserTable {
     @Test
     public void test_InsertUser_SQLException_ServiceException() throws Exception {
         // Throw exception when insertUser called next:
-        when(mockConnection.prepareStatement(UserTable.INSERT_USER_QUERY))
+        when(mockConnection.prepareStatement(UserTable.INSERT_USER_QUERY,
+                                             Statement.RETURN_GENERATED_KEYS))
             .thenThrow(new SQLException());
         
         try {

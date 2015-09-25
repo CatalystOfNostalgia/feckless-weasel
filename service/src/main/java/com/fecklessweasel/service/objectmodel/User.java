@@ -44,7 +44,7 @@ public class User {
     private static final int EMAIL_MAX = 320;
 
     /** Unique User id integer. */
-    private int uid;
+    private long uid;
     /** Username. */
     private String username;
     /** Password hashes. */
@@ -81,12 +81,12 @@ public class User {
             throw new ServiceException(ServiceStatus.APP_INVALID_USER_LENGTH);
         }
         // Check username characters.
-        if(!OMUtil.isValidInput(username)){
+        if(!username.matches("^[a-zA-Z0-9_]*$")){
             throw new ServiceException(ServiceStatus.APP_INVALID_USERNAME);
         }
 
         // Check password length.
-        if (password.length() > PASS_MAX || password.length() < PASS_MIN) {
+        if (password.length() < PASS_MIN) {
             throw new ServiceException(ServiceStatus.APP_INVALID_PASS_LENGTH);
         }
         // Check for spaces.
@@ -94,20 +94,22 @@ public class User {
             throw new ServiceException(ServiceStatus.APP_INVALID_PASSWORD);
         }
 
-        // Check first name length.
+        // Check name.
         if (firstName.length() > FIRST_NAME_MAX ||
-            firstName.length() < FIRST_NAME_MIN) {
-            throw new ServiceException(ServiceStatus.APP_INVALID_NAME);
-        }
-
-        // Check last name length.
-        if (lastName.length() > LAST_NAME_MAX ||
-            lastName.length() < LAST_NAME_MIN) {
+            firstName.length() < FIRST_NAME_MIN ||
+            !firstName.matches("^[a-zA-z]*$") ||
+            lastName.length() > LAST_NAME_MAX ||
+            lastName.length() < LAST_NAME_MIN ||
+            !lastName.matches("^[a-zA-z]*$")) {
             throw new ServiceException(ServiceStatus.APP_INVALID_NAME);
         }
 
         // Check for valid email and convert to internet address.
-        if(emailStr.length() > EMAIL_MAX) {
+        // REGEX from: http://www.mkyong.com/regular-expressions/
+        // how-to-validate-email-address-with-regular-expression/
+        if (emailStr.length() > EMAIL_MAX ||
+            !emailStr.matches("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" +
+                              "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")) {
             throw new ServiceException(ServiceStatus.APP_INVALID_EMAIL);
         }
         InternetAddress emailAddr = null;
@@ -123,9 +125,9 @@ public class User {
 
         // Insert user query.
         Date joinDate = new Date();
-        int uid = UserTable.insertUser(sql, username, password,
-                                       firstName, lastName, joinDate,
-                                       emailAddr);
+        long uid = UserTable.insertUser(sql, username, password,
+                                        firstName, lastName, joinDate,
+                                        emailAddr);
 
         // User role query.
         // NOTE: if you remove this line of code, you will break lookup which
@@ -139,6 +141,64 @@ public class User {
     }
 
     /**
+     * Gets username.
+     * @return Unique username String.
+     */
+    public String getUsername() {
+        return this.username;
+    }
+
+    /**
+     * Gets this user's first name.
+     * @return First name.
+     */
+    public String getFirstName() {
+        return this.firstName;
+    }
+
+    /**
+     * Gets this user's last name.
+     * @return Last name.
+     */
+    public String getLastName() {
+        return this.lastName;
+    }
+
+    /**
+     * Gets date user joined the system.
+     * @return Joined date.
+     */
+    public Date getJoinDate() {
+        return this.joinDate;
+    }
+
+    /**
+     * Gets the user's email address.
+     * @return The user's email address.
+     */
+    public String getEmail() {
+        return this.email;
+    }
+
+    /**
+     * Gets the user's password hash. This method is intentionally
+     * package protected to keep password hashes from leaving the objectmodel.
+     * @return The SHA256 hashed user password.
+     */
+    String getPasswordHash() {
+        return this.passwordHash;
+    }
+
+    /**
+     * Gets the user's table UID. This method is intentionally package
+     * protected.
+     * @return The user's AUTO_INCREMENT id.
+     */
+    long getUid() {
+        return this.uid;
+    }
+
+    /**
      * Creates a new User OM object. Constructor is private because User
      * objects can only be created internally from calls to create().
      * @param username The user's username.
@@ -146,7 +206,7 @@ public class User {
      * @param firstName The user's first name.
      * @param lastName The user's last name.
      */
-    private User(int uid, String username, String passwordHash,
+    private User(long uid, String username, String passwordHash,
                  String firstName, String lastName,
                  Date joinDate, String email) {
         this.uid = uid;

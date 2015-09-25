@@ -32,6 +32,10 @@ import com.fecklessweasel.service.objectmodel.User;
 @Path("v1/users")
 public class Users1Resource {
 
+    /** Injected information about the URI of the current request. */
+    @Context
+    UriInfo uriInfo;
+    
     /**
      * Post Request. Creates a new user in the database and returns a
      * CreateUserResponse, or an ErrorApiResponse in JSON.
@@ -47,30 +51,32 @@ public class Users1Resource {
         final CreateUserRequest request = new CreateUserRequest();
         request.deserializeFrom(jsonBody);
 
-        // Open SQL connection and create the new user.
-        UserResponse userResponse = null;
-        SQLSource.interact(new SQLInteractionInterface() {
+        // Open a SQL connection and create the user.
+        User user = SQLSource.interact(new SQLInteractionInterface<User>() {
                 @Override
-                public void run(Connection connection)
+                public User run(Connection connection)
                     throws ServiceException, SQLException {
 
-                    User user = null;
-                    user = User.create(connection,
+                    return User.create(connection,
                                        request.user,
                                        request.pass,
                                        request.firstName,
                                        request.lastName,
                                        request.email);
-                    // TODO: complete.
-                    // userResponse = user.toResponse(ServiceStatus.CREATED);
                 }
             });
+                    
+        UserResponse userResponse = new UserResponse(ServiceStatus.CREATED,
+                                                     user.getUsername(),
+                                                     user.getFirstName(),
+                                                     user.getLastName(),
+                                                     user.getJoinDate(),
+                                                     user.getEmail());
 
-        // TODO: complete.
-        //        URI newUserUri = uriInfo.getRequestUriBuilder()
-        //  .path(user.getUsername()).build();
-
-        return Response.created(null)
+        URI newUserUri = uriInfo.getRequestUriBuilder()
+            .path(user.getUsername()).build();
+        
+        return Response.created(newUserUri)
             .entity(userResponse.serialize()).build();
     }
 }

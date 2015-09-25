@@ -2,6 +2,7 @@ package com.fecklessweasel.service.datatier;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
@@ -25,13 +26,25 @@ public abstract class UserTable {
         "join_date, email)" +
         " VALUES (?,?,?,?,?,?)";
 
-    public static int insertUser(Connection connection,
-                                 String user,
-                                 String pass,
-                                 String firstName,
-                                 String lastName,
-                                 Date joinDate,
-                                 InternetAddress email)
+    /**
+     * Inserts a user into the MySQL table with some minimal validation.
+     * This method should NOT be called directly since most validation
+     * occurs in the object model.
+     * @param connection Connection to the database from SQLSource.
+     * @param user The username.
+     * @param pass The password.
+     * @param firstName The user's first name.
+     * @param lastName The user's last name.
+     * @param joinDate The date that the user joined.
+     * @param email The user's email.
+     */
+    public static long insertUser(Connection connection,
+                                  String user,
+                                  String pass,
+                                  String firstName,
+                                  String lastName,
+                                  Date joinDate,
+                                  InternetAddress email)
         throws ServiceException {
 
         // Check basic checks for clean arguments.
@@ -45,7 +58,8 @@ public abstract class UserTable {
         
         try {
             PreparedStatement insertStatement
-                = connection.prepareStatement(INSERT_USER_QUERY);
+                = connection.prepareStatement(INSERT_USER_QUERY,
+                                              Statement.RETURN_GENERATED_KEYS);
             insertStatement.setString(1, user);
             insertStatement.setString(2, pass);
             insertStatement.setString(3, firstName);
@@ -59,7 +73,7 @@ public abstract class UserTable {
             ResultSet result = insertStatement.getGeneratedKeys();
             result.next();
 
-            int uid = result.getInt(1);
+            long uid = result.getLong(1);
 
             insertStatement.close();
 

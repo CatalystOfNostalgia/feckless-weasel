@@ -25,11 +25,11 @@ public abstract class SQLSource {
      * actions upon the database, closing the connection when finished.
      * @param actions A function that performs actions upon the database.
      */
-    public static void interact(SQLInteractionInterface actions)
+    public static <T> T interact(SQLInteractionInterface<T> actions)
         throws ServiceException {
 
         Connection connection = null;
-
+        T result = null;
         try {
             // Obtain our environment naming context.
             Context initialContext = new InitialContext();
@@ -42,7 +42,7 @@ public abstract class SQLSource {
             // Get the connection and run actions.
             connection = dataSource.getConnection();
             connection.prepareStatement(USE_DB_QUERY).execute();
-            actions.run(connection);
+            result = actions.run(connection);
         } catch (NamingException ex) {
             throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
         } catch (SQLException ex) {
@@ -57,5 +57,7 @@ public abstract class SQLSource {
                 throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
             }
         }
+
+        return result;
     }
 }
