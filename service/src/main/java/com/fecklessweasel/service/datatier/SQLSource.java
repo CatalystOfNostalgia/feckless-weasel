@@ -17,16 +17,19 @@ import com.fecklessweasel.service.objectmodel.ServiceStatus;
  * @author Christian Gunderman
  */
 public abstract class SQLSource {
+    /** Use database query. */
+    private static final String USE_DB_QUERY = "USE FecklessWeaselDB";
+
     /**
      * Obtains a connection from the connection pool and performs the designated
      * actions upon the database, closing the connection when finished.
      * @param actions A function that performs actions upon the database.
      */
-    public static void interact(SQLInteractionInterface actions)
+    public static <T> T interact(SQLInteractionInterface<T> actions)
         throws ServiceException {
 
         Connection connection = null;
-
+        T result = null;
         try {
             // Obtain our environment naming context.
             Context initialContext = new InitialContext();
@@ -38,7 +41,8 @@ public abstract class SQLSource {
 
             // Get the connection and run actions.
             connection = dataSource.getConnection();
-            actions.run(connection);
+            connection.prepareStatement(USE_DB_QUERY).execute();
+            result = actions.run(connection);
         } catch (NamingException ex) {
             throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
         } catch (SQLException ex) {
@@ -53,5 +57,7 @@ public abstract class SQLSource {
                 throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
             }
         }
+
+        return result;
     }
 }

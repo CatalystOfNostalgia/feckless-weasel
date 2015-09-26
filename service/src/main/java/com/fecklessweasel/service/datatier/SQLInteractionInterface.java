@@ -10,7 +10,7 @@ import com.fecklessweasel.service.objectmodel.ServiceException;
  * SQLSource.interact() to perform an action upon the DB.
  * @author Christian Gunderman
  */
-public interface SQLInteractionInterface {
+public interface SQLInteractionInterface<R> {
 
     /**
      * This function should be implemented to do the desired action.
@@ -23,5 +23,5 @@ public interface SQLInteractionInterface {
      * by the SQL source and is passed up the stack as a generic 
      * DATABASE_ERROR.
      */
-    public void run(Connection connection) throws ServiceException, SQLException;
+    public R run(Connection connection) throws ServiceException, SQLException;
 }

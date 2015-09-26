@@ -33,7 +33,7 @@ public enum ServiceStatus {
 
     // App logic errors.
     APP_INVALID_USER_LENGTH(701, 400, "Username is either too short or too long."),
-    APP_INVALID_PASS_LENGTH(702, 400, "Password is either too short or too long."),
+    APP_INVALID_PASS_LENGTH(702, 400, "Password is too short."),
     APP_INVALID_BIRTHDAY(703, 400, "Birthday is in the future."),
     APP_USERNAME_TAKEN(704, 400, "A user with this username already exists."),
     APP_USER_NOT_EXIST(705, 400, "The requested user does not exist."),
