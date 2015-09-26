@@ -218,6 +218,16 @@ public class User {
     }
 
     /**
+     * Checks if two User objects refer to the same User account.
+     * @param o The object to compare.
+     * @return True if they are the same user.
+     */
+    @Override
+    public boolean equals(Object o) {
+        return ((User)o).getUid() == this.getUid();
+    }
+
+    /**
      * Gets username.
      * @return Unique username String.
      */
