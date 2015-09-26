@@ -47,7 +47,8 @@ public abstract class UserHasRoleTable {
 
         try {
             PreparedStatement insertStatement
-                = connection.prepareStatement(INSERT_USER_HAS_ROLE_QUERY);
+                = connection.prepareStatement(INSERT_USER_HAS_ROLE_QUERY,
+                                              Statement.RETURN_GENERATED_KEYS);
             insertStatement.setLong(1, uid);
             insertStatement.setString(2, roleName);
 
