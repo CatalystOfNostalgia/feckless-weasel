@@ -1,6 +1,7 @@
 package com.fecklessweasel.service.datatier;
 
 import java.sql.Connection;
+import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -43,7 +44,8 @@ public abstract class UserHasRoleTable {
                                               String roleName) throws ServiceException {
         try {
             PreparedStatement insertStatement
-                = connection.prepareStatement(INSERT_USER_HAS_ROLE_QUERY);
+                = connection.prepareStatement(INSERT_USER_HAS_ROLE_QUERY,
+                                              Statement.RETURN_GENERATED_KEYS);
             insertStatement.setLong(1, uid);
             insertStatement.setString(2, roleName);
 

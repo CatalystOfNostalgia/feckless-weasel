@@ -57,11 +57,10 @@ public class OMUtil {
                                          User resourceOwner)
         throws ServiceException {
 
-        throw new IllegalStateException("Not implemented");
-        /* if (!current.equals(resourceOwner) &&
+        if (!current.equals(resourceOwner) &&
             !current.isRole("ROLE_ADMIN")) {
             throw new ServiceException(ServiceStatus.ACCESS_DENIED);
-            }*/
+        }
     }
 
     /**
