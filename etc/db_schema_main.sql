@@ -14,11 +14,7 @@
 
 
 /* WIPES the old database and creates a new one and USE the DB.
-<<<<<<< ada4ef2499736a53c45d966cc56534920b88dee6
  *  It must be first.
-=======
- * It must be first.
->>>>>>> creation of filemetadata table
  */
 SOURCE etc/db_schema_create_db.sql;
 
