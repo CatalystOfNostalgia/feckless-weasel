@@ -26,3 +26,7 @@ SOURCE etc/db_schema_user_role_table.sql;
 
 /* #4: Create User session table */
 SOURCE etc/db_schema_user_session_table.sql;
+
+/* #5: Create FileMetadata Table */
+SOURCE etc/db_schema_filemetadata_table.sql;
+
