@@ -1,6 +1,8 @@
 # Feckless Weasel
 [![Build Status](https://travis-ci.org/CatalystOfNostalgia/feckless-weasel.svg?branch=master)](https://travis-ci.org/CatalystOfNostalgia/feckless-weasel)
+<<<<<<< 738c6f4d9d9f72dab8d4e1e12bb02bbc6702d4f0
 [![Coverage Status](https://coveralls.io/repos/CatalystOfNostalgia/feckless-weasel/badge.svg?branch=master&service=github)](https://coveralls.io/github/CatalystOfNostalgia/feckless-weasel?branch=master)
+
 ##### Introduction
 
 Feckless Weasel is a collaborative project for Case Western Reserve university's
