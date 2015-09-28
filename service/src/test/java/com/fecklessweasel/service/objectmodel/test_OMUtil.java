@@ -69,11 +69,6 @@ public class test_OMUtil {
         assertFalse(OMUtil.isValidInput("A_b/C_D"));
     }
 
-    @Test
-    public void test_adminOrOwnerCheck() throws Exception {
-        fail("Not implemented");
-    }
-
     @Test(expected=IllegalArgumentException.class)
     public void test_sha256_NullData_Exception() throws Exception {
         OMUtil.sha256(null);
