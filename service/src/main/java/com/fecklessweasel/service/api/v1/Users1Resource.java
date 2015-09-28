@@ -63,16 +63,12 @@ public class Users1Resource {
                     return User.create(connection,
                                        request.user,
                                        request.pass,
-                                       request.firstName,
-                                       request.lastName,
                                        request.email);
                 }
             });
                     
         UserResponse userResponse = new UserResponse(ServiceStatus.CREATED,
                                                      user.getUsername(),
-                                                     user.getFirstName(),
-                                                     user.getLastName(),
                                                      user.getJoinDate(),
                                                      user.getEmail());
 
@@ -105,8 +101,6 @@ public class Users1Resource {
         
         UserResponse userResponse = new UserResponse(ServiceStatus.OK,
                                                      user.getUsername(),
-                                                     user.getFirstName(),
-                                                     user.getLastName(),
                                                      user.getJoinDate(),
                                                      user.getEmail());
         
@@ -147,8 +141,6 @@ public class Users1Resource {
 
         UserResponse userResponse = new UserResponse(ServiceStatus.DELETED,
                                                      forsaken.getUsername(),
-                                                     forsaken.getFirstName(),
-                                                     forsaken.getLastName(),
                                                      forsaken.getJoinDate(),
                                                      forsaken.getEmail());
         return Response.ok(userResponse.serialize()).build();

@@ -34,14 +34,6 @@ public class User {
     private static final int PASS_MIN = 6;
     /** Maximum password length. */
     private static final int PASS_MAX = 100;
-    /** First name minimum length. */
-    private static final int FIRST_NAME_MIN = 2;
-    /** First name maximum length. */
-    private static final int FIRST_NAME_MAX = 25;
-    /** Last name minimum length. */
-    private static final int LAST_NAME_MIN = 2;
-    /** Last name maximum length. */
-    private static final int LAST_NAME_MAX = 25;
     /** Maximum email length. */
     private static final int EMAIL_MAX = 320;
 
@@ -51,10 +43,6 @@ public class User {
     private String username;
     /** Password hashes. */
     private String passwordHash;
-    /** First name. */
-    private String firstName;
-    /** Last name. */
-    private String lastName;
     /** Date user joined. */
     private Date joinDate;
     /** User's birthday. */
@@ -67,16 +55,12 @@ public class User {
     public static User create(Connection sql,
                               String username,
                               String password,
-                              String firstName,
-                              String lastName,
                               String emailStr) throws ServiceException {
 
         // Null check everything:
         OMUtil.sqlCheck(sql);
         OMUtil.nullCheck(username);
         OMUtil.nullCheck(password);
-        OMUtil.nullCheck(firstName);
-        OMUtil.nullCheck(lastName);
         OMUtil.nullCheck(emailStr);
 
         // Check username length.
@@ -96,16 +80,6 @@ public class User {
         // Check for spaces.
         if (password.contains(" ")){
             throw new ServiceException(ServiceStatus.APP_INVALID_PASSWORD);
-        }
-
-        // Check name.
-        if (firstName.length() > FIRST_NAME_MAX ||
-            firstName.length() < FIRST_NAME_MIN ||
-            !firstName.matches("^[a-zA-z]*$") ||
-            lastName.length() > LAST_NAME_MAX ||
-            lastName.length() < LAST_NAME_MIN ||
-            !lastName.matches("^[a-zA-z]*$")) {
-            throw new ServiceException(ServiceStatus.APP_INVALID_NAME);
         }
 
         // Check for valid email and convert to internet address.
@@ -130,8 +104,7 @@ public class User {
         // Insert user query.
         Date joinDate = new Date();
         long uid = UserTable.insertUser(sql, username, password,
-                                        firstName, lastName, joinDate,
-                                        emailAddr);
+                                        joinDate, emailAddr);
 
         // User role query.
         // NOTE: if you remove this line of code, you will break lookup which
@@ -140,8 +113,7 @@ public class User {
                                            uid,
                                            UserRoleTable.ROLE_USER_ID);
         
-        return new User(uid, username, password, firstName, lastName,
-                        joinDate, emailStr);
+        return new User(uid, username, password, joinDate, emailStr);
     }
 
     /**
@@ -171,8 +143,6 @@ public class User {
             User user = new User(result.getLong("uid"),
                                  result.getString("user"),
                                  result.getString("pass"),
-                                 result.getString("first_name"),
-                                 result.getString("last_name"),
                                  result.getDate("join_date"),
                                  result.getString("email"));
 
@@ -233,22 +203,6 @@ public class User {
      */
     public String getUsername() {
         return this.username;
-    }
-
-    /**
-     * Gets this user's first name.
-     * @return First name.
-     */
-    public String getFirstName() {
-        return this.firstName;
-    }
-
-    /**
-     * Gets this user's last name.
-     * @return Last name.
-     */
-    public String getLastName() {
-        return this.lastName;
     }
 
     /**
@@ -368,19 +322,17 @@ public class User {
     /**
      * Creates a new User OM object. Constructor is private because User
      * objects can only be created internally from calls to create().
+     * @param uid The user's ID in the DB.
      * @param username The user's username.
      * @param password The user's password.
-     * @param firstName The user's first name.
-     * @param lastName The user's last name.
+     * @param joinDate The date that the user joined.
+     * @param email The user's email address.
      */
     private User(long uid, String username, String passwordHash,
-                 String firstName, String lastName,
                  Date joinDate, String email) {
         this.uid = uid;
         this.username = username;
         this.passwordHash = passwordHash;
-        this.firstName = firstName;
-        this.lastName = lastName;
         this.joinDate = joinDate;
         this.email = email;
         this.roles = new HashSet<Role>();

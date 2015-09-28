@@ -18,14 +18,6 @@ public class CreateUserRequest extends JsonRequest {
     @JSON(include=true, name="pass")
     public String pass;
 
-    /** New user's first name. */
-    @JSON(include=true, name="first_name")
-    public String firstName;
-
-    /** New user's last name. */
-    @JSON(include=true, name="last_name")
-    public String lastName;
-
     /** New user's email address. */
     @JSON(include=true, name="email")
     public String email;
@@ -35,19 +27,13 @@ public class CreateUserRequest extends JsonRequest {
      * Creates a new CreateUserRequest with the provided field values.
      * @param user User name of the new user.
      * @param pass The new user's password.
-     * @param firstName The new user's first name.
-     * @param lastName The new user's last name.
      * @param email The user's email address.
      */
     public CreateUserRequest(String user,
                              String pass,
-                             String firstName,
-                             String lastName,
                              String email) {
         this.user = user;
         this.pass = pass;
-        this.firstName = firstName;
-        this.lastName = lastName;
         this.email = email;
     }
 

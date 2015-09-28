@@ -36,8 +36,6 @@ public class test_UserTable {
         UserTable.insertUser(null,
                              "user",
                              "pass",
-                             "firstName",
-                             "lastName",
                              new Date(),
                              new InternetAddress("gundermanc@gmail.com"));
     }
@@ -47,8 +45,6 @@ public class test_UserTable {
         UserTable.insertUser(this.mockConnection,
                              null,
                              "pass",
-                             "firstName",
-                             "lastName",
                              new Date(),
                              new InternetAddress("gundermanc@gmail.com"));
     }
@@ -58,41 +54,15 @@ public class test_UserTable {
         UserTable.insertUser(this.mockConnection,
                              "user",
                              null,
-                             "firstName",
-                             "lastName",
                              new Date(),
                              new InternetAddress("gundermanc@gmail.com"));
     }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void test_InsertUser_NullFirstName_Exception() throws Exception {
-        UserTable.insertUser(this.mockConnection,
-                             "user",
-                             "pass",
-                             null,
-                             "lastName",
-                             new Date(),
-                             new InternetAddress("gundermanc@gmail.com"));
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void test_InsertUser_NullLastName_Exception() throws Exception {
-        UserTable.insertUser(this.mockConnection,
-                             "user",
-                             "pass",
-                             "firstName",
-                             null,
-                             new Date(),
-                             new InternetAddress("gundermanc@gmail.com"));
-    }
-
+    
     @Test(expected = IllegalArgumentException.class)
     public void test_InsertUser_NullDate_Exception() throws Exception {
         UserTable.insertUser(this.mockConnection,
                              "user",
                              "pass",
-                             "firstName",
-                             "lastName",
                              null,
                              new InternetAddress("gundermanc@gmail.com"));
     }
@@ -102,44 +72,14 @@ public class test_UserTable {
         UserTable.insertUser(this.mockConnection,
                              "user",
                              "pass",
-                             "firstName",
-                             "lastName",
                              new Date(),
                              null);
     }
-
-
-
-
 
     @Test(expected = IllegalArgumentException.class)
     public void test_InsertUser_EmptyPass_Exception() throws Exception {
         UserTable.insertUser(this.mockConnection,
                              "user",
-                             "",
-                             "firstName",
-                             "lastName",
-                             new Date(),
-                             new InternetAddress("gundermanc@gmail.com"));
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void test_InsertUser_EmptyFirstName_Exception() throws Exception {
-        UserTable.insertUser(this.mockConnection,
-                             "user",
-                             "pass",
-                             "",
-                             "lastName",
-                             new Date(),
-                             new InternetAddress("gundermanc@gmail.com"));
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void test_InsertUser_EmptyLastName_Exception() throws Exception {
-        UserTable.insertUser(this.mockConnection,
-                             "user",
-                             "pass",
-                             "firstName",
                              "",
                              new Date(),
                              new InternetAddress("gundermanc@gmail.com"));
@@ -149,30 +89,6 @@ public class test_UserTable {
     public void test_InsertUser_WhitespacePass_Exception() throws Exception {
         UserTable.insertUser(this.mockConnection,
                              "user",
-                             "  ",
-                             "firstName",
-                             "lastName",
-                             new Date(),
-                             new InternetAddress("gundermanc@gmail.com"));
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void test_InsertUser_WhitespaceFirstName_Exception() throws Exception {
-        UserTable.insertUser(this.mockConnection,
-                             "user",
-                             "pass",
-                             "  ",
-                             "lastName",
-                             new Date(),
-                             new InternetAddress("gundermanc@gmail.com"));
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void test_InsertUser_WhitespaceLastName_Exception() throws Exception {
-        UserTable.insertUser(this.mockConnection,
-                             "user",
-                             "pass",
-                             "firstName",
                              "  ",
                              new Date(),
                              new InternetAddress("gundermanc@gmail.com"));
@@ -189,8 +105,6 @@ public class test_UserTable {
             UserTable.insertUser(this.mockConnection,
                                  "user",
                                  "pass",
-                                 "firstName",
-                                 "lastName",
                                  new Date(),
                                  new InternetAddress("gundermanc@gmail.com"));
         } catch (ServiceException ex) {
@@ -209,8 +123,6 @@ public class test_UserTable {
             UserTable.insertUser(this.mockConnection,
                                  "user",
                                  "pass",
-                                 "firstName",
-                                 "lastName",
                                  new Date(),
                                  new InternetAddress("gundermanc@gmail.com"));
         } catch (ServiceException ex) {

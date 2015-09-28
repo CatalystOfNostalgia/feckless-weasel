@@ -22,9 +22,8 @@ import com.fecklessweasel.service.objectmodel.ServiceStatus;
 public abstract class UserTable {
     /** Create user query. */
     public static final String INSERT_USER_QUERY =
-        "INSERT INTO User (user, pass, first_name, last_name," +
-        "join_date, email)" +
-        " VALUES (?,?,?,?,?,?)";
+        "INSERT INTO User (user, pass, join_date, email)" +
+        " VALUES (?,?,?,?)";
 
     /** Lookup user query. */
     private static final String LOOKUP_USER_QUERY =
@@ -42,16 +41,12 @@ public abstract class UserTable {
      * @param connection Connection to the database from SQLSource.
      * @param user The username.
      * @param pass The password.
-     * @param firstName The user's first name.
-     * @param lastName The user's last name.
      * @param joinDate The date that the user joined.
      * @param email The user's email.
      */
     public static long insertUser(Connection connection,
                                   String user,
                                   String pass,
-                                  String firstName,
-                                  String lastName,
                                   Date joinDate,
                                   InternetAddress email)
         throws ServiceException {
@@ -60,8 +55,6 @@ public abstract class UserTable {
         CodeContract.assertNotNull(connection, "connection");
         CodeContract.assertNotNullOrEmptyOrWhitespace(user, "user");
         CodeContract.assertNotNullOrEmptyOrWhitespace(pass, "pass");
-        CodeContract.assertNotNullOrEmptyOrWhitespace(firstName, "firstName");
-        CodeContract.assertNotNullOrEmptyOrWhitespace(lastName, "lastName");
         CodeContract.assertNotNull(joinDate, "joinDate");
         CodeContract.assertNotNull(email, "email");
         
@@ -71,10 +64,8 @@ public abstract class UserTable {
                                               Statement.RETURN_GENERATED_KEYS);
             insertStatement.setString(1, user);
             insertStatement.setString(2, pass);
-            insertStatement.setString(3, firstName);
-            insertStatement.setString(4, lastName);
-            insertStatement.setDate(5, new java.sql.Date(joinDate.getTime()));
-            insertStatement.setString(6, email.getAddress());
+            insertStatement.setDate(3, new java.sql.Date(joinDate.getTime()));
+            insertStatement.setString(4, email.getAddress());
 
             insertStatement.execute();
 
