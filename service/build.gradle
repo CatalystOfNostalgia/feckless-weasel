@@ -4,6 +4,7 @@
 apply plugin: 'war'
 apply plugin: 'java'
 apply plugin: 'eclipse'
+apply plugin: 'jacoco'
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
@@ -22,8 +23,6 @@ dependencies {
     compile 'mysql:mysql-connector-java:5.1.6'
 
     testCompile 'org.eluder.coveralls:coveralls-maven-plugin:4.0.0'
-    testCompile 'org.jacoco:jacoco:0.7.5.201505241946'
-
 
     testCompile "junit:junit-dep:4.+"
     testCompile 'org.mockito:mockito-all:1.8.4'
