@@ -151,4 +151,3 @@ public abstract class UserTable {
         }
     }
 }
-

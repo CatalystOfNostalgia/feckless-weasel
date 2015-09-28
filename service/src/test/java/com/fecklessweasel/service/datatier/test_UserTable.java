@@ -88,7 +88,6 @@ public class test_UserTable {
                              new InternetAddress("gundermanc@gmail.com"));
     }
 
-
     @Test(expected = IllegalArgumentException.class)
     public void test_InsertUser_WhitespacePass_Exception() throws Exception {
         UserTable.insertUser(this.mockConnection,

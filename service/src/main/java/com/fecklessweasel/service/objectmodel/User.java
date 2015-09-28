@@ -223,8 +223,6 @@ public class User {
             User user = new User(result.getLong("uid"),
                                  result.getString("user"),
                                  result.getString("pass"),
-                                 result.getString("first_name"),
-                                 result.getString("last_name"),
                                  result.getDate("join_date"),
                                  result.getString("email"));
 
