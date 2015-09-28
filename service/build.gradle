@@ -38,7 +38,7 @@ dependencies {
 
     compile 'mysql:mysql-connector-java:5.1.6'
 
-
+    testCompile 'org.eluder.coveralls:coveralls-maven-plugin:4.0.0'
     testCompile 'org.mockito:mockito-all:1.8.4'
     testCompile 'org.eluder.coveralls:coveralls-maven-plugin:4.0.0'
     testCompile "junit:junit-dep:4.+"
@@ -57,8 +57,5 @@ jacocoTestReport {
         xml.enabled = true
         html.enabled = true
     }
-<<<<<<< 7ee2b1d9010db723e956e36401c42dbb8a3711b8
+
 }
-=======
-}
->>>>>>> Jacoco test coverage.
