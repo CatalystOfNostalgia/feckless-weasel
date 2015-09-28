@@ -1,4 +1,5 @@
 # Feckless Weasel
+[![Build Status](https://travis-ci.org/CatalystOfNostalgia/feckless-weasel.svg?branch=master)](https://travis-ci.org/CatalystOfNostalgia/feckless-weasel)
 ##### Introduction
 
 Feckless Weasel is a collaborative project for Case Western Reserve university's
