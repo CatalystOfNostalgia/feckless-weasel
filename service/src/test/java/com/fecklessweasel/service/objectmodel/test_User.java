@@ -36,8 +36,6 @@ public class test_User {
             User.create(null,
                         "gundermanc",
                         "haha_nice_try",
-                        "Christian",
-                        "Gunderman",
                         "gundermanc@gmail.com");
         } catch (ServiceException ex) {
             assertEquals(ServiceStatus.NO_SQL, ex.status);
@@ -53,8 +51,6 @@ public class test_User {
             User.create(mock(Connection.class),
                         null,
                         "haha_nice_try",
-                        "Christian",
-                        "Gunderman",
                         "gundermanc@gmail.com");
         } catch (ServiceException ex) {
             assertEquals(ServiceStatus.MALFORMED_REQUEST, ex.status);
@@ -69,42 +65,6 @@ public class test_User {
         try {
             User.create(mock(Connection.class),
                         "gundermanc",
-                        null,
-                        "Christian",
-                        "Gunderman",
-                        "gundermanc@gmail.com");
-        } catch (ServiceException ex) {
-            assertEquals(ServiceStatus.MALFORMED_REQUEST, ex.status);
-            return;
-        }
-
-        fail("No service exception thrown");
-    }
-
-    @Test
-    public void test_create_NullFirstName_Exception() throws Exception {
-        try {
-            User.create(mock(Connection.class),
-                        "gundermanc",
-                        "haha_nice_try",
-                        null,
-                        "Gunderman",
-                        "gundermanc@gmail.com");
-        } catch (ServiceException ex) {
-            assertEquals(ServiceStatus.MALFORMED_REQUEST, ex.status);
-            return;
-        }
-
-        fail("No service exception thrown");
-    }
-
-    @Test
-    public void test_create_NullLastName_Exception() throws Exception {
-        try {
-            User.create(mock(Connection.class),
-                        "gundermanc",
-                        "haha_nice_try",
-                        "Christian",
                         null,
                         "gundermanc@gmail.com");
         } catch (ServiceException ex) {
@@ -121,8 +81,6 @@ public class test_User {
             User.create(mock(Connection.class),
                         "gundermanc",
                         "haha_nice_try",
-                        "Christian",
-                        "Gunderman",
                         null);
         } catch (ServiceException ex) {
             assertEquals(ServiceStatus.MALFORMED_REQUEST, ex.status);
@@ -138,8 +96,6 @@ public class test_User {
             User.create(mock(Connection.class),
                         "gunde",
                         "haha_nice_try",
-                        "Christian",
-                        "Gunderman",
                         "gundermanc@gmail.com");
         } catch (ServiceException ex) {
             assertEquals(ServiceStatus.APP_INVALID_USER_LENGTH, ex.status);
@@ -155,8 +111,6 @@ public class test_User {
             User.create(mock(Connection.class),
                         "ABCDEFGHIJKLMNOPQRSTUVWXYZA",
                         "haha_nice_try",
-                        "Christian",
-                        "Gunderman",
                         "gundermanc@gmail.com");
         } catch (ServiceException ex) {
             assertEquals(ServiceStatus.APP_INVALID_USER_LENGTH, ex.status);
@@ -172,8 +126,6 @@ public class test_User {
             User.create(mock(Connection.class),
                         "gunderman c",
                         "haha_nice_try",
-                        "Christian",
-                        "Gunderman",
                         "gundermanc@gmail.com");
         } catch (ServiceException ex) {
             assertEquals(ServiceStatus.APP_INVALID_USERNAME, ex.status);
@@ -189,8 +141,6 @@ public class test_User {
             User.create(mock(Connection.class),
                         "gunderman$c",
                         "haha_nice_try",
-                        "Christian",
-                        "Gunderman",
                         "gundermanc@gmail.com");
         } catch (ServiceException ex) {
             assertEquals(ServiceStatus.APP_INVALID_USERNAME, ex.status);
@@ -206,8 +156,6 @@ public class test_User {
             User.create(mock(Connection.class),
                         "gundermanc",
                         "12345",
-                        "Christian",
-                        "Gunderman",
                         "gundermanc@gmail.com");
         } catch (ServiceException ex) {
             assertEquals(ServiceStatus.APP_INVALID_PASS_LENGTH, ex.status);
@@ -223,147 +171,9 @@ public class test_User {
             User.create(mock(Connection.class),
                         "gundermanc",
                         "haha nice try",
-                        "Christian",
-                        "Gunderman",
                         "gundermanc@gmail.com");
         } catch (ServiceException ex) {
             assertEquals(ServiceStatus.APP_INVALID_PASSWORD, ex.status);
-            return;
-        }
-
-        fail("No service exception thrown");
-    }
-
-    @Test
-    public void test_create_FirstNameTooShort_Exception() throws Exception {
-        try {
-            User.create(mock(Connection.class),
-                        "gundermanc",
-                        "haha_nice_try",
-                        "C",
-                        "Gunderman",
-                        "gundermanc@gmail.com");
-        } catch (ServiceException ex) {
-            assertEquals(ServiceStatus.APP_INVALID_NAME, ex.status);
-            return;
-        }
-
-        fail("No service exception thrown");
-    }
-
-    @Test
-    public void test_create_FirstNameTooLong_Exception() throws Exception {
-        try {
-            User.create(mock(Connection.class),
-                        "gundermanc",
-                        "haha_nice_try",
-                        "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-                        "Gunderman",
-                        "gundermanc@gmail.com");
-        } catch (ServiceException ex) {
-            assertEquals(ServiceStatus.APP_INVALID_NAME, ex.status);
-            return;
-        }
-
-        fail("No service exception thrown");
-    }
-
-    @Test
-    public void test_create_FirstNameWithSpaces_Exception() throws Exception {
-        try {
-            User.create(mock(Connection.class),
-                        "gundermanc",
-                        "haha_nice_try",
-                        "Chris tian",
-                        "Gunderman",
-                        "gundermanc@gmail.com");
-        } catch (ServiceException ex) {
-            assertEquals(ServiceStatus.APP_INVALID_NAME, ex.status);
-            return;
-        }
-
-        fail("No service exception thrown");
-    }
-
-    @Test
-    public void test_create_FirstNameWithSymbols_Exception() throws Exception {
-        try {
-            User.create(mock(Connection.class),
-                        "gundermanc",
-                        "haha_nice_try",
-                        "Chris$tian",
-                        "Gunderman",
-                        "gundermanc@gmail.com");
-        } catch (ServiceException ex) {
-            assertEquals(ServiceStatus.APP_INVALID_NAME, ex.status);
-            return;
-        }
-
-        fail("No service exception thrown");
-    }
-
-    @Test
-    public void test_create_LastNameTooShort_Exception() throws Exception {
-        try {
-            User.create(mock(Connection.class),
-                        "gundermanc",
-                        "haha_nice_try",
-                        "Christian",
-                        "G",
-                        "gundermanc@gmail.com");
-        } catch (ServiceException ex) {
-            assertEquals(ServiceStatus.APP_INVALID_NAME, ex.status);
-            return;
-        }
-
-        fail("No service exception thrown");
-    }
-
-    @Test
-    public void test_create_LastNameTooLong_Exception() throws Exception {
-        try {
-            User.create(mock(Connection.class),
-                        "gundermanc",
-                        "haha_nice_try",
-                        "Christian",
-                        "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-                        "gundermanc@gmail.com");
-        } catch (ServiceException ex) {
-            assertEquals(ServiceStatus.APP_INVALID_NAME, ex.status);
-            return;
-        }
-
-        fail("No service exception thrown");
-    }
-
-    @Test
-    public void test_create_LastNameWithSpaces_Exception() throws Exception {
-        try {
-            User.create(mock(Connection.class),
-                        "gundermanc",
-                        "haha_nice_try",
-                        "Christian",
-                        "Gun der man",
-                        "gundermanc@gmail.com");
-        } catch (ServiceException ex) {
-            assertEquals(ServiceStatus.APP_INVALID_NAME, ex.status);
-            return;
-        }
-
-        fail("No service exception thrown");
-    }
-
-    @Test
-    public void test_create_LastNameWithSymbols_Exception() throws Exception {
-        try {
-            User.create(mock(Connection.class),
-                        "gundermanc",
-                        "haha_nice_try",
-                        "Christian",
-                        "Gunderm@n",
-                        "gundermanc@gmail.com");
-        } catch (ServiceException ex) {
-            assertEquals(ServiceStatus.APP_INVALID_NAME, ex.status);
             return;
         }
 
@@ -376,8 +186,6 @@ public class test_User {
             User.create(mock(Connection.class),
                         "gundermanc",
                         "haha_nice_try",
-                        "Christian",
-                        "Gunderman",
                         "gundermanc@gmail.");
         } catch (ServiceException ex) {
             assertEquals(ServiceStatus.APP_INVALID_EMAIL, ex.status);
@@ -393,8 +201,6 @@ public class test_User {
             User.create(mock(Connection.class),
                         "gundermanc",
                         "haha_nice_try",
-                        "Christian",
-                        "Gunderman",
                         "gundermanc");
         } catch (ServiceException ex) {
             assertEquals(ServiceStatus.APP_INVALID_EMAIL, ex.status);
@@ -410,8 +216,6 @@ public class test_User {
             User.create(mock(Connection.class),
                         "gundermanc",
                         "haha_nice_try",
-                        "Christian",
-                        "Gunderman",
                         "gundermanc@sfsf@sfsf.com");
         } catch (ServiceException ex) {
             assertEquals(ServiceStatus.APP_INVALID_EMAIL, ex.status);
@@ -427,8 +231,6 @@ public class test_User {
             User.create(mock(Connection.class),
                         "gundermanc",
                         "haha_nice_try",
-                        "Christian",
-                        "Gunderman",
                         "gundermanc@com");
         } catch (ServiceException ex) {
             assertEquals(ServiceStatus.APP_INVALID_EMAIL, ex.status);
@@ -444,8 +246,6 @@ public class test_User {
             User.create(mock(Connection.class),
                         "gundermanc",
                         "haha_nice_try",
-                        "Christian",
-                        "Gunderman",
                         "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
                         "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
                         "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
