@@ -24,7 +24,7 @@ buildscript {
 }
 
 cobertura.coverageFormats = ['html', 'xml'] // coveralls plugin depends on xml format report
-  
+
 dependencies {
 
     compile 'javax.mail:mail:1.4.1'
