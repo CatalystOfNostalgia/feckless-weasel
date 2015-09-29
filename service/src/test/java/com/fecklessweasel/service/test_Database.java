@@ -1,11 +1,11 @@
-package com.fecklessweasel.service;
-//import com.fecklessweasel.service.datatier.SQLSource;
-//import com.fecklessweasel.service.datatier.SQLInteractionInterface;
-import java.sql.Connection;
-import com.fecklessweasel.service.objectmodel.ServiceException;
-import java.sql.SQLException;
-import com.fecklessweasel.service.datatier.*;
+package com.fecklessweasel.service.datatier;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import com.fecklessweasel.service.objectmodel.ServiceException;
+
+import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
@@ -16,12 +16,15 @@ import org.junit.runners.JUnit4;
 
 public class test_Database {
 
+	private Connection mockConnection;
+	
+	@Before
+    public void setup() {
+        this.mockConnection = mock(Connection.class);
+    }
+	
     @Test
     public void test_insertUniversity() throws Exception{
-    	SQLSource.interact(new SQLInteractionInterface(){
-    		public void run(Connection conn) throws ServiceException, SQLException {
-    			UniversityTable.insert(conn, "uname","uacro","city","state","country");
-    		}
-    	});
+    	UniversityTable.insert(this.mockConnection, "uname","uacro","city","state","country");
     }
 }
