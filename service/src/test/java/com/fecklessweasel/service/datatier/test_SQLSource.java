@@ -157,23 +157,4 @@ public class test_SQLSource {
 
         verify(mockInteraction, times(1)).run(this.mockConnection);
     }
-
-    public void test_Interact_Success_2() throws Exception {
-        final long testLong = 3456;
-        
-        when(this.mockEnvironmentContext.lookup("jdbc/FecklessWeaselDB"))
-            .thenReturn(this.mockDataSource);
-        when(this.mockDataSource.getConnection())
-            .thenReturn(this.mockConnection);
-
-        SQLInteractionInterface<Long> mockInteraction
-            = (SQLInteractionInterface<Long>) mock(SQLInteractionInterface.class);
-
-        when(mockInteraction.run(this.mockConnection)).
-            thenReturn(testLong);
-        
-        assertEquals((long)testLong, (long)(SQLSource.interact(mockInteraction)));
-
-        verify(mockInteraction, times(1)).run(this.mockConnection);
-    }
 }
