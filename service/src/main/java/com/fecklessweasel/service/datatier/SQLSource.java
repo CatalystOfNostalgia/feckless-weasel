@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import javax.sql.DataSource;
 
+import com.fecklessweasel.service.objectmodel.CodeContract;
 import com.fecklessweasel.service.objectmodel.ServiceException;
 import com.fecklessweasel.service.objectmodel.ServiceStatus;
 
@@ -17,8 +18,14 @@ import com.fecklessweasel.service.objectmodel.ServiceStatus;
  * @author Christian Gunderman
  */
 public abstract class SQLSource {
-    /** Use database query. */
-    private static final String USE_DB_QUERY = "USE FecklessWeaselDB";
+    /** Use database statement. */
+    public static final String USE_DB_STATEMENT = "USE FecklessWeaselDB";
+
+    /**
+     * Our initial context. This is stored as a protected field so that
+     * it can be replaced by unit tests.
+     */
+    protected static Context initialContext;
 
     /**
      * Obtains a connection from the connection pool and performs the designated
@@ -28,11 +35,16 @@ public abstract class SQLSource {
     public static <T> T interact(SQLInteractionInterface<T> actions)
         throws ServiceException {
 
+        CodeContract.assertNotNull(actions, "actions");
+
         Connection connection = null;
         T result = null;
         try {
+            if (initialContext == null) {
+                initialContext = new InitialContext();
+            }
+            
             // Obtain our environment naming context.
-            Context initialContext = new InitialContext();
             Context environmentContext = (Context)initialContext.lookup("java:comp/env");
 
             // Look up our data source.
@@ -41,7 +53,7 @@ public abstract class SQLSource {
 
             // Get the connection and run actions.
             connection = dataSource.getConnection();
-            connection.prepareStatement(USE_DB_QUERY).execute();
+            connection.prepareStatement(USE_DB_STATEMENT).execute();
             result = actions.run(connection);
         } catch (NamingException ex) {
             throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
