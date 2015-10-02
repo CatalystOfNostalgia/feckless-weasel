@@ -2,6 +2,7 @@ package com.fecklessweasel.service.datatier;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
+import static org.mockito.Matchers.*;
 
 import org.junit.Test;
 import org.junit.Ignore;
@@ -12,6 +13,8 @@ import org.junit.runners.JUnit4;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.Statement;
 import javax.mail.internet.InternetAddress;
 import java.util.Date;
@@ -128,5 +131,36 @@ public class test_UserTable {
         } catch (ServiceException ex) {
             assert(ex.status == ServiceStatus.DATABASE_ERROR);
         }
+    }
+
+    @Test
+    public void test_InsertUser_SuccessCase() throws Exception {
+        final long id = 12345;
+        
+        // Throw exception when insertUser called next:
+        PreparedStatement mockPreparedStatement = mock(PreparedStatement.class);
+        ResultSet mockResultSet = mock(ResultSet.class);
+
+        when(mockResultSet.getLong(1)).thenReturn(id);
+        
+        when(mockPreparedStatement.getGeneratedKeys())
+            .thenReturn(mockResultSet);
+        
+        when(mockConnection.prepareStatement(UserTable.INSERT_USER_QUERY,
+                                             Statement.RETURN_GENERATED_KEYS))
+            .thenReturn(mockPreparedStatement);
+        
+
+        assert(UserTable.insertUser(this.mockConnection,
+                                    "user",
+                                    "pass",
+                                    new Date(),
+                                    new InternetAddress("gundermanc@gmail.com")) == id);
+
+        // Verify next was called once to get the generated key.
+        verify(mockResultSet, times(1)).next();
+
+        // Verify statement was closed.
+        verify(mockPreparedStatement, times(1)).close();
     }
 }
