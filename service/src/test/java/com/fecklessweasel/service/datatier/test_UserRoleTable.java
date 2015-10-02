@@ -23,7 +23,7 @@ import com.fecklessweasel.service.objectmodel.ServiceException;
 import com.fecklessweasel.service.objectmodel.ServiceStatus;
 
 /**
- * Unit tests for UserHasRoleTable validation and exception handling. Does
+ * Unit tests for UserRoleTable validation and exception handling. Does
  * not validate SQL queries.
  */
 public class test_UserRoleTable {
