@@ -45,8 +45,6 @@ public class User {
     private String passwordHash;
     /** Date user joined. */
     private Date joinDate;
-    /** User's birthday. */
-    private Date birthday;
     /** User's email address. */
     private String email;
     /** User's security roles. */
