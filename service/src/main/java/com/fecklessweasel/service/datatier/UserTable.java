@@ -26,12 +26,12 @@ public abstract class UserTable {
         " VALUES (?,?,?,?)";
 
     /** Lookup user query. */
-    private static final String LOOKUP_USER_QUERY =
+    public static final String LOOKUP_USER_QUERY =
         "SELECT * FROM User U, UserRole R, UserHasRole H WHERE U.user=? " +
         " AND U.uid=H.uid AND H.rid=R.rid";
 
     /** Delete user query. */
-    private static final String DELETE_USER_QUERY =
+    public static final String DELETE_USER_QUERY =
         "DELETE FROM User WHERE user=?";
 
     /**
@@ -99,6 +99,9 @@ public abstract class UserTable {
     public static ResultSet lookupUserWithRoles(Connection connection, String user)
         throws ServiceException {
 
+        CodeContract.assertNotNull(connection, "connection");
+        CodeContract.assertNotNullOrEmptyOrWhitespace(user, "user");
+        
         try {
             PreparedStatement lookupStatement =
                 connection.prepareStatement(LOOKUP_USER_QUERY);
@@ -118,6 +121,9 @@ public abstract class UserTable {
      */
     public static void deleteUser(Connection connection, String user)
         throws ServiceException {
+
+        CodeContract.assertNotNull(connection, "connection");
+        CodeContract.assertNotNullOrEmptyOrWhitespace(user, "user");
         
         try {
             PreparedStatement deleteStatement =
