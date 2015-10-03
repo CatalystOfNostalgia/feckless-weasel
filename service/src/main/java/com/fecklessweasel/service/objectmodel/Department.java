@@ -1,5 +1,7 @@
 package com.fecklessweasel.service.objectmodel;
 
+import java.sql.Connection;
+
 /**
  * Stores all information about a school's department. Created from database.
  * @author Elliot Essman

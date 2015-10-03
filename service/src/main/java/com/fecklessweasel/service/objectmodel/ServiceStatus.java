@@ -51,18 +51,18 @@ public enum ServiceStatus {
     APP_USER_HAS_ROLE_DUPLICATE(711, 400, "User already has Role, or Role doesn't exist."),
     APP_USER_NOT_HAVE_ROLE(712, 400, "User does not have Role."),
     APP_ROLE_NOT_EXIST(713, 400, "Role does not exist."),
-    APP_INVALID_NAME(714, 400, "First name or last name is too short or too long.");
-    APP_INVALID_UNIV_NAME_LENGTH(715, 400, "University name is too long or too short.");
-    APP_INVALID_UNIV_NAME_CHARS(716, 400, "University name contains invalid characters.");
-    APP_INVALID_ACRONYM_LENGTH(717, 400, "University acronym is too long or too short.");
-    APP_INVALID_ACRONYM_CHARS(718, 400, "University acronym contains invalid characters.");
-    APP_INVALID_CITY_LENGTH(719, 400, "University city name is too long or too short.");
-    APP_INVALID_CITY_CHARS(720, 400, "University city name contains invalid characters.");
-    APP_INVALID_STATE(721, 400, "University state is invalid.");
-    APP_INVALID_COUNTRY_LENGTH(722, 400, "University country name is too long or too short.");
-    APP_INVALID_COUNTRY_CHARS(723, 400, "University country name contains invalid characters.");
-    APP_INVALID_DEPTNAME_LENGTH(724, 400, "Department name is too long or too short.");
-    APP_INVALID_DEPT_ACRONYM(725, 400, "Department acronym is invalid.");
+    APP_INVALID_NAME(714, 400, "First name or last name is too short or too long."),
+    APP_INVALID_UNIV_NAME_LENGTH(715, 400, "University name is too long or too short."),
+    APP_INVALID_UNIV_NAME_CHARS(716, 400, "University name contains invalid characters."),
+    APP_INVALID_ACRONYM_LENGTH(717, 400, "University acronym is too long or too short."),
+    APP_INVALID_ACRONYM_CHARS(718, 400, "University acronym contains invalid characters."),
+    APP_INVALID_CITY_LENGTH(719, 400, "University city name is too long or too short."),
+    APP_INVALID_CITY_CHARS(720, 400, "University city name contains invalid characters."),
+    APP_INVALID_STATE(721, 400, "University state is invalid."),
+    APP_INVALID_COUNTRY_LENGTH(722, 400, "University country name is too long or too short."),
+    APP_INVALID_COUNTRY_CHARS(723, 400, "University country name contains invalid characters."),
+    APP_INVALID_DEPTNAME_LENGTH(724, 400, "Department name is too long or too short."),
+    APP_INVALID_DEPT_ACRONYM(725, 400, "Department acronym is invalid."),
     APP_INVALID_CLASS_NUMBER(726, 400, "Class number in invalid.");
     
     

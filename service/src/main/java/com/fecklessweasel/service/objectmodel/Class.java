@@ -1,5 +1,7 @@
 package com.fecklessweasel.service.objectmodel;
 
+import java.sql.Connection;
+
 /**
  * Stores all information about a Class. Created from database.
  * 
