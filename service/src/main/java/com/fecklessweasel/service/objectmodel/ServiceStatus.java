@@ -53,6 +53,8 @@ public enum ServiceStatus {
     APP_ROLE_NOT_EXIST(713, 400, "Role does not exist."),
     APP_INVALID_NAME(714, 400, "First name or last name is too short or too long.");
 
+    APP_FILE_NOT_EXIST(715, 400, "The requested file does not exist");
+
     /** The String name of the state (OK, MALFORMED_REQUEST, ...) */
     public final String status;
     /** The integer code for this error or state. */
