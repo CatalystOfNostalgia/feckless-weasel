@@ -31,6 +31,11 @@ public abstract class FileMetadataTable{
   public static final String DELETE_FILE_QUERY =
     "DELETE FROM FileMetadata WHERE fid=";
 
+  public static final String INCREMENT_FILE_RATING_QUERY =
+    "UPDATE Filemetadata SET `rating` = `rating` +1 WHERE fid =?";
+
+  public static final String DECREMENT_FILE_RATING_QUERY =
+    "UPDATE Filemetadata SET `rating` = `rating` -1 WHERE fid =?";
   /**
    * Inserts a file into the corresponding MySQL table. returns the generated fid
    *@param connection Connection to the database from SQLSource.
@@ -147,15 +152,54 @@ public abstract class FileMetadataTable{
                   throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
               }
     }
-
+    /**
+     * Deletes the specified file's metadata from the table
+     *@param connection Connection to the mySQL database
+     *@param fid The file's unique identifier
+     */
     public static void deleteFile(Connection connection, int fid) throws ServiceException{
-
       try {
         PreparedStatement deleteStatement = connection.prepareStatement(DELETE_FILE_QUERY);
         deleteStatement.setInt(1, fid);
 
         if (deleteStatement.executeUpdate() != -1) {
           deleteStatement.close();
+          throw new ServiceException(ServiceStatus.APP_FILE_NOT_EXIST);
+        }
+      } catch (SQLException ex){
+        throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+      }
+    }
+
+    /**
+     * Increment the Rating column of the specified file's metadata
+     *@param connection Connection to the mySQL database
+     *@param fid The file's unique identifier
+     */
+    public static void incrementFileRating(Connection connection, int fid) throws ServiceException{
+      try{
+        PreparedStatement incrementStatement = connection.prepareStatement(INCREMENT_FILE_RATING_QUERY);
+        incrementStatement.setInt(1,fid);
+
+        if(incrementStatement.executeUpdate() != -1){
+          throw new ServiceException(ServiceStatus.APP_FILE_NOT_EXIST);
+        }
+      } catch (SQLException ex){
+        throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+      }
+    }
+
+    /**
+     * Decrement the Rating column of the specified file's metadata
+     *@param connection Connection to the mySQL database
+     *@param fid The file's unique identifier
+     */
+    public static void decrementFileRating(Connection connection, int fid) throws ServiceException{
+      try{
+        PreparedStatement decrementStatement = connection.prepareStatement(DECREMENT_FILE_RATING_QUERY);
+        decrementStatement.setInt(1,fid);
+
+        if(decrementStatement.executeUpdate() != -1){
           throw new ServiceException(ServiceStatus.APP_FILE_NOT_EXIST);
         }
       } catch (SQLException ex){
