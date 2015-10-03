@@ -8,5 +8,6 @@ CREATE TABLE FileMetadata(
 	course varchar(50) NOT NULL,
 	university varchar(50) NOT NULL,
 	creation_date DATETIME,
+	rating INT,
 	PRIMARY KEY (fid),
 	INDEX USING HASH(user));
