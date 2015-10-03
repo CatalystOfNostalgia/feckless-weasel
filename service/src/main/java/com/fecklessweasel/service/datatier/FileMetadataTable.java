@@ -168,6 +168,7 @@ public abstract class FileMetadataTable{
           deleteStatement.close();
           throw new ServiceException(ServiceStatus.APP_FILE_NOT_EXIST);
         }
+<<<<<<< 2e13b872a0f6cd15bea1e0b656039ceed8a7b7b7
 
       } catch (SQLException ex){
         throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
@@ -205,6 +206,8 @@ public abstract class FileMetadataTable{
         if(decrementStatement.executeUpdate() != -1){
           throw new ServiceException(ServiceStatus.APP_FILE_NOT_EXIST);
         }
+=======
+>>>>>>> fixed compilation errors of FileMetadataTable java wrapper class
       } catch (SQLException ex){
         throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
       }
