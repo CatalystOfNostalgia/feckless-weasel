@@ -36,6 +36,7 @@ public abstract class FileMetadataTable{
 
   public static final String DECREMENT_FILE_RATING_QUERY =
     "UPDATE Filemetadata SET `rating` = `rating` -1 WHERE fid =?";
+
   /**
    * Inserts a file into the corresponding MySQL table. returns the generated fid
    *@param connection Connection to the database from SQLSource.
@@ -152,6 +153,7 @@ public abstract class FileMetadataTable{
                   throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
               }
     }
+
     /**
      * Deletes the specified file's metadata from the table
      *@param connection Connection to the mySQL database
@@ -166,6 +168,7 @@ public abstract class FileMetadataTable{
           deleteStatement.close();
           throw new ServiceException(ServiceStatus.APP_FILE_NOT_EXIST);
         }
+
       } catch (SQLException ex){
         throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
       }
