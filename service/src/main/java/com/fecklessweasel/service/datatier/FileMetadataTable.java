@@ -43,8 +43,8 @@ public abstract class FileMetadataTable{
    */
   public static long insertFileData(Connection connection,
                                      String user,
-                                     String course
-                                     String university
+                                     String course,
+                                     String university,
                                      Date creationDate,
                                      int rating)
     throws ServiceException {
@@ -62,7 +62,7 @@ public abstract class FileMetadataTable{
           insertStatement.setString(1, user);
           insertStatement.setString(2, course);
           insertStatement.setString(3, university);
-          insertStatement.setDate(4, creationDate);
+          insertStatement.setDate(4, new java.sql.Date(creationDate.getTime()));
           insertStatement.setInt(5, rating);
 
           insertStatement.execute();
@@ -89,11 +89,11 @@ public abstract class FileMetadataTable{
     public static ResultSet lookUpFile(Connection connection, int fileId)
       throws ServiceException{
 
-        CodeContract.assertNotNull(connection);
+        CodeContract.assertNotNull(connection, "connection");
 
         try{
           PreparedStatement lookUpFileStatement = connection.prepareStatement(LOOKUP_FILE_QUERY);
-          lookUpFileStatement.setString(1, fileId);
+          lookUpFileStatement.setInt(1, fileId);
 
           return lookUpFileStatement.executeQuery();
         } catch (SQLException ex) {
@@ -109,7 +109,7 @@ public abstract class FileMetadataTable{
     public static ResultSet lookUpUsersFiles(Connection connection, String user)
       throws ServiceException{
 
-        CodeContract.assertNotNull(connection);
+        CodeContract.assertNotNull(connection, "connection");
         CodeContract.assertNotNullOrEmptyOrWhitespace(user, "user");
 
         try{
@@ -133,7 +133,7 @@ public abstract class FileMetadataTable{
     public static ResultSet lookUpCourseFiles(Connection connection, String course, String university)
       throws ServiceException{
 
-              CodeContract.assertNotNull(connection);
+              CodeContract.assertNotNull(connection, "connection");
               CodeContract.assertNotNullOrEmptyOrWhitespace(course, "course");
               CodeContract.assertNotNullOrEmptyOrWhitespace(university, "university");
 
@@ -158,9 +158,8 @@ public abstract class FileMetadataTable{
           deleteStatement.close();
           throw new ServiceException(ServiceStatus.APP_FILE_NOT_EXIST);
         }
-
-      } catch (ServiceException ex){
-
+      } catch (SQLException ex){
+        throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
       }
     }
 }
