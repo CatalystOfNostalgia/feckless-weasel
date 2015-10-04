@@ -2,14 +2,15 @@ package com.fecklessweasel.service.objectmodel;
 
 import java.sql.Connection;
 
+import com.fecklessweasel.service.datatier.DepartmentTable;
 /**
- * Stores all information about a school's department. Created from database.
+ * Stores all information about a school's department.
  * @author Elliot Essman
  */
 
 public class Department {
 	
-	private int id;
+	private long id;
 	private int univId;
 	private String acronym;
 	private String deptName;
@@ -17,14 +18,22 @@ public class Department {
 	private int DEPTNAME_MAX = 20;
 	private int DEPTNAME_MIN = 4;
 	
-	private Department(int id, int univId, String deptName, String acronym){
+	private Department(long id, int univId, String deptName, String acronym){
 		this.id = id;
 		this.univId = univId;
 		this.deptName = deptName;
 		this.acronym = acronym;
 	}
 	
-	public Department create(Connection conn, int univId, String deptName, String acronym){
+	/**
+	 * Creates a department in the database
+	 * @param conn A connection to the database
+	 * @param univid Id of the university this department is in
+	 * @param deptname The official name of the department
+	 * @param acronym The acronym of the department
+	 * @return A department object
+	 */
+	public Department create(Connection conn, int univId, String deptName, String acronym) throws ServiceException{
 		OMUtil.sqlCheck(conn);
         OMUtil.nullCheck(univId);
         OMUtil.nullCheck(deptName);
@@ -46,7 +55,7 @@ public class Department {
         return new Department(id, univId, deptName, acronym);
 	}
 	
-	public int getId(){
+	public long getId(){
 		return this.id;
 	}
 	public int getUnivId(){

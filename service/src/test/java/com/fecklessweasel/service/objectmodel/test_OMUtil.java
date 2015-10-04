@@ -68,6 +68,21 @@ public class test_OMUtil {
     public void test_isValidInput_Symbols_False() throws Exception {
         assertFalse(OMUtil.isValidInput("A_b/C_D"));
     }
+    
+    @Test
+    public void test_isValidName_good() throws Exception {
+        assertTrue(OMUtil.isValidName("University of awesome"));
+    }
+    
+    @Test
+    public void test_isValidName_underscores() throws Exception {
+        assertFalse(OMUtil.isValidName("University of __bad__"));
+    }
+    
+    @Test
+    public void test_isValidName_numbers() throws Exception {
+        assertFalse(OMUtil.isValidName("University of 123four"));
+    }
 
     @Test(expected=IllegalArgumentException.class)
     public void test_sha256_NullData_Exception() throws Exception {

@@ -2,14 +2,16 @@ package com.fecklessweasel.service.objectmodel;
 
 import java.sql.Connection;
 
+import com.fecklessweasel.service.datatier.UniversityTable;
+
 /**
- * Stores all information about a University. Created from database.
+ * Stores all information about a University.
  * @author Elliot Essman
  */
 
 public class University {
 	
-	private int id;
+	private long id;
 	private String longname;
 	private String acronym;
 	private String city;
@@ -25,7 +27,7 @@ public class University {
 	private int COUNTRY_MAX = 30;
 	private int COUNTRY_MIN = 3;
 	
-	private University(int id, String longname, String acronym, String city, String state, String country){
+	private University(long id, String longname, String acronym, String city, String state, String country){
 		this.id = id;
 		this.longname = longname;
 		this.acronym = acronym;
@@ -38,10 +40,11 @@ public class University {
 	 * Creates a university in the database.
 	 * @param conn Connection to the database
 	 * @param longname The official name of the university
-	 * @param acronym The acronym/short name of the university
+	 * @param acronym The acronym of the university
 	 * @param city The city of the university
-	 * @param state The state of the University. Can be Null.
-	 * @param the The country of the University
+	 * @param state The state of the university
+	 * @param country The country of the university
+	 * @return A university object which has been added to the database
 	 */
 	public University create(Connection conn, String longname, String acronym, String city, String state, String country) throws ServiceException{
 		
@@ -94,11 +97,11 @@ public class University {
         }
         
         long id = UniversityTable.insertUniversity(conn, longname, acronym, city, state, country);
-        return new User(id, longname, acronym, city, state, country);
+        return new University(id, longname, acronym, city, state, country);
         
 	}
 	
-	public int getId(){
+	public long getId(){
 		return this.id;
 	}
 	public String getLongname(){

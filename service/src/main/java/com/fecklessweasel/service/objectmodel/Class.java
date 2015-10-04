@@ -2,15 +2,17 @@ package com.fecklessweasel.service.objectmodel;
 
 import java.sql.Connection;
 
+import com.fecklessweasel.service.datatier.ClassTable;
+
 /**
- * Stores all information about a Class. Created from database.
+ * Stores all information about a class at a university.
  * 
  * @author Elliot Essman
  */
 
 public class Class {
 
-	private int id;
+	private long id;
 	private int deptId;
 	private int univId;
 	private int classNum;
@@ -18,14 +20,22 @@ public class Class {
 	private int NUM_MAX = 999;
 	private int NUM_MIN = 90;
 
-	private Class(int id, int univId, int deptId, int classNum) {
+	private Class(long id, int univId, int deptId, int classNum) {
 		this.id = id;
 		this.univId = univId;
 		this.deptId = deptId;
 		this.classNum = classNum;
 	}
 
-	public Class create(Connection conn, int univId, int deptId, int classNum) {
+	/**
+	 * Creates a class in the database
+	 * @param conn A connection to the database
+	 * @param univid Id of the university this class is at
+	 * @param deptid The official name of the department
+	 * @param classnum The number of this class
+	 * @return A class object
+	 */
+	public Class create(Connection conn, int univId, int deptId, int classNum) throws ServiceException{
 		OMUtil.sqlCheck(conn);
 		OMUtil.nullCheck(deptId);
 		OMUtil.nullCheck(univId);
@@ -38,7 +48,7 @@ public class Class {
 		return new Class(id, univId, deptId, classNum);
 	}
 
-	public int getId() {
+	public long getId() {
 		return this.id;
 	}
 

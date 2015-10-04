@@ -62,8 +62,9 @@ public enum ServiceStatus {
     APP_INVALID_COUNTRY_LENGTH(722, 400, "University country name is too long or too short."),
     APP_INVALID_COUNTRY_CHARS(723, 400, "University country name contains invalid characters."),
     APP_INVALID_DEPTNAME_LENGTH(724, 400, "Department name is too long or too short."),
-    APP_INVALID_DEPT_ACRONYM(725, 400, "Department acronym is invalid."),
-    APP_INVALID_CLASS_NUMBER(726, 400, "Class number in invalid.");
+    APP_INVALID_DEPTNAME_CHARS(725, 400, "Department name contains invalid characters."),
+    APP_INVALID_DEPT_ACRONYM(726, 400, "Department acronym is invalid."),
+    APP_INVALID_CLASS_NUMBER(727, 400, "Class number in invalid.");
     
     
 

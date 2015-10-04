@@ -49,12 +49,12 @@ public class OMUtil {
     
     /**
      * Checks the string for any unaccepted characters.
-     * Allowed: a-z, A-Z
+     * Allowed: a-z, A-Z, spaces
      * @param str The string to check.
      * @return true if there are no invalid characters in the string.
      */
     public static boolean isValidName(String str) {
-        if (str != null && str.matches("^[a-zA-Z]*$")){
+        if (str != null && str.trim().equals(str) && str.matches("^[a-zA-Z ]*$")){
             return true;
         }
         

@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
 
+import com.fecklessweasel.service.objectmodel.CodeContract;
 import com.fecklessweasel.service.objectmodel.ServiceException;
 import com.fecklessweasel.service.objectmodel.ServiceStatus;
 
@@ -19,10 +20,16 @@ public class ClassTable {
 	private static String INSERT_ROW = "insert into Class (univid, deptid, classnumber) values (?,?,?)";
 
 	/**
-	 * Insert a class into the table
+	 * Inserts a class into the table.
+	 * @param conn A connection to the database
+	 * @param univid Id of the university this class is at
+	 * @param deptid The official name of the department
+	 * @param classnum The number of this class
+	 * @return The id of the new class
 	 */
-	public static void insert(Connection conn, int univid, int deptid, int classnumber) throws SQLException,
+	public static long insertClass(Connection conn, int univid, int deptid, int classnumber) throws ServiceException,
 			ServiceException {
+		CodeContract.assertNotNull(conn, "conn");
 		try {
 			PreparedStatement preparedStatement = conn.prepareStatement(INSERT_ROW);
 			preparedStatement.setInt(1, univid);

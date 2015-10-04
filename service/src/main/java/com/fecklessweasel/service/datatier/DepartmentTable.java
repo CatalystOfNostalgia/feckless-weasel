@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
 
+import com.fecklessweasel.service.objectmodel.CodeContract;
 import com.fecklessweasel.service.objectmodel.ServiceException;
 import com.fecklessweasel.service.objectmodel.ServiceStatus;
 
@@ -20,11 +21,17 @@ public class DepartmentTable {
 
 	/**
 	 * Insert a department into the table
-	 * 
+	 * @param conn A connection to the database
+	 * @param univid Id of the university this department is in
+	 * @param deptname The official name of the department
+	 * @param acronym The acronym of the department
 	 * @return The id of the new department
 	 */
 	public static long insertDepartment(Connection conn, int univid, String deptname, String acronym)
 			throws ServiceException {
+		CodeContract.assertNotNull(conn, "conn");
+		CodeContract.assertNotNullOrEmptyOrWhitespace(deptname, "deptname");
+		CodeContract.assertNotNullOrEmptyOrWhitespace(acronym, "acronym");
 		try {
 			PreparedStatement preparedStatement = conn.prepareStatement(INSERT_ROW);
 			preparedStatement.setInt(1, univid);
