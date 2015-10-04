@@ -6,6 +6,7 @@
         <link href="${pageContext.request.contextPath}/assets/css/base.css" rel="stylesheet" type="text/css">
     </head>
     <body class="four-column">
+        <jsp:include page="header.jsp"/>
         <div class="column-beta">
             <h1>Create an account</h1>
             <h2>It's free!</h2>
