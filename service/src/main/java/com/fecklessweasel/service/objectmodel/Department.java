@@ -15,8 +15,8 @@ public class Department {
 	private String acronym;
 	private String deptName;
 	
-	private int DEPTNAME_MAX = 20;
-	private int DEPTNAME_MIN = 4;
+	private static int DEPTNAME_MAX = 20;
+	private static int DEPTNAME_MIN = 4;
 	
 	private Department(long id, int univId, String deptName, String acronym){
 		this.id = id;
@@ -33,10 +33,11 @@ public class Department {
 	 * @param acronym The acronym of the department
 	 * @return A department object
 	 */
-	public Department create(Connection conn, int univId, String deptName, String acronym) throws ServiceException{
+	public static Department create(Connection conn, int univId, String deptName, String acronym) throws ServiceException{
 		OMUtil.sqlCheck(conn);
         OMUtil.nullCheck(univId);
         OMUtil.nullCheck(deptName);
+        OMUtil.nullCheck(acronym);
         
         //department name length
         if (deptName.length() > DEPTNAME_MAX || deptName.length() < DEPTNAME_MIN) {

@@ -17,8 +17,8 @@ public class Class {
 	private int univId;
 	private int classNum;
 
-	private int NUM_MAX = 999;
-	private int NUM_MIN = 90;
+	private static int NUM_MAX = 999;
+	private static int NUM_MIN = 90;
 
 	private Class(long id, int univId, int deptId, int classNum) {
 		this.id = id;
@@ -35,7 +35,7 @@ public class Class {
 	 * @param classnum The number of this class
 	 * @return A class object
 	 */
-	public Class create(Connection conn, int univId, int deptId, int classNum) throws ServiceException{
+	public static Class create(Connection conn, int univId, int deptId, int classNum) throws ServiceException{
 		OMUtil.sqlCheck(conn);
 		OMUtil.nullCheck(deptId);
 		OMUtil.nullCheck(univId);

@@ -18,14 +18,14 @@ public class University {
 	private String state;
 	private String country;
 	
-	private int NAME_MAX = 30;
-	private int NAME_MIN = 5;
-	private int ACRONYM_MAX = 5;
-	private int ACRONYM_MIN = 2;
-	private int CITY_MAX = 30;
-	private int CITY_MIN = 3;
-	private int COUNTRY_MAX = 30;
-	private int COUNTRY_MIN = 3;
+	private static int NAME_MAX = 30;
+	private static int NAME_MIN = 5;
+	private static int ACRONYM_MAX = 5;
+	private static int ACRONYM_MIN = 2;
+	private static int CITY_MAX = 30;
+	private static int CITY_MIN = 3;
+	private static int COUNTRY_MAX = 30;
+	private static int COUNTRY_MIN = 3;
 	
 	private University(long id, String longname, String acronym, String city, String state, String country){
 		this.id = id;
@@ -46,13 +46,13 @@ public class University {
 	 * @param country The country of the university
 	 * @return A university object which has been added to the database
 	 */
-	public University create(Connection conn, String longname, String acronym, String city, String state, String country) throws ServiceException{
+	public static University create(Connection conn, String longname, String acronym, String city, String state, String country) throws ServiceException{
 		
-		//TODO null check state only when country is USA
 		OMUtil.sqlCheck(conn);
         OMUtil.nullCheck(longname);
         OMUtil.nullCheck(acronym);
         OMUtil.nullCheck(city);
+        OMUtil.nullCheck(state);//TODO null check state only when country is USA
         OMUtil.nullCheck(country);
         
         //university name length
