@@ -6,6 +6,7 @@
         <link href="${pageContext.request.contextPath}/assets/css/base.css" rel="stylesheet" type="text/css">
     </head>
     <body class="four-column">
+        <jsp:include page="header.jsp"/>
         <div class="column-beta">
             <br>
             <h1>EECS 393</h1>

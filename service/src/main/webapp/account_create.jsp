@@ -13,8 +13,9 @@
             <input type="text" class="text-large" id="username" name="username" placeholder="username">
             <input type="password" class="text-large" id="password" name="password" placeholder="password">
             <input type="password" class="text-large" id="password" name="retype password" placeholder="retype password">
+            <input type="text" class="text-large" id="email" name="email" placeholder="email">
             <div>
-                <button type="submit" class="button-large" id="submit" name="submit">Create</button>
+                <button type="submit" class="button-large" id="submit" name="submit">Create Account</button>
             </div>
         </div>
     </body>
