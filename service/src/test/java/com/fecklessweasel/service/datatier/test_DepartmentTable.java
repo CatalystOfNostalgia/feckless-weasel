@@ -29,11 +29,6 @@ public class test_DepartmentTable {
     }
 	
 	@Test(expected = IllegalArgumentException.class)
-    public void test_insert_nullUnivId() throws Exception{
-		DepartmentTable.insertDepartment(this.mockConnection, 10, "deptname", "acronym");
-    }
-	
-	@Test(expected = IllegalArgumentException.class)
     public void test_insert_nullDeptName() throws Exception{
 		DepartmentTable.insertDepartment(this.mockConnection, 10, null, "acronym");
     }

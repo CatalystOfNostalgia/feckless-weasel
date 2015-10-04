@@ -26,3 +26,12 @@ SOURCE etc/db_schema_user_role_table.sql;
 
 /* #4: Create User session table */
 SOURCE etc/db_schema_user_session_table.sql;
+
+/* #5: Create University table */
+SOURCE etc/db_schema_university_table.sql;
+
+/* #5: Create Department table */
+SOURCE etc/db_schema_department_table.sql;
+
+/* #5: Create Class table */
+SOURCE etc/db_schema_class_table.sql;
