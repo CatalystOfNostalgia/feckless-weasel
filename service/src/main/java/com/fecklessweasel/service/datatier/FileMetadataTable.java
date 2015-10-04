@@ -46,7 +46,7 @@ public abstract class FileMetadataTable{
    *@param rating The files rated score.
    *@return fid Returns the fid of the inserted file. This is a files unique identifier
    */
-  public static long insertFileData(Connection connection,
+  public static int insertFileData(Connection connection,
                                      String user,
                                      String course,
                                      String university,
@@ -76,11 +76,11 @@ public abstract class FileMetadataTable{
           ResultSet result = insertStatement.getGeneratedKeys();
           result.next();
 
-          long uid = result.getLong(1);
+          int fid = result.getInt(1);
 
           insertStatement.close();
 
-          return uid;
+          return fid;
         } catch (SQLException ex) {
           throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
         }
