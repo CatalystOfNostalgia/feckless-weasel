@@ -18,7 +18,6 @@
  */
 SOURCE etc/db_schema_create_db.sql;
 
-<<<<<<< HEAD
 /* #2: Create User table */
 SOURCE etc/db_schema_user_table.sql;
 
