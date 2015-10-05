@@ -4,7 +4,8 @@
 ##### Introduction
 
 Feckless Weasel is a collaborative project for Case Western Reserve university's
-Software Engineering class. At the moment, the repo is more or less empty.
+Software Engineering class. At the moment, only user account database and object
+model are complete.
 
 ##### One Stop Shop for Build and Deployment
 
@@ -18,7 +19,7 @@ more or less the same commands.
 OSS commands are the first argument after the script name on the command line.
 e.g.:
 ```
-oss_windows.bat *command*.
+oss_windows.bat *command*
 ```
 
 OSS supports the following commands on each
@@ -51,12 +52,20 @@ from an Administrator command prompt or Powershell instance. You can launch
 these as Admin by right clicking them in the start menu and selecting
 *Run as Administrator*.
 
+If you have other problems it is possible that the deployment script versions
+are incorrect and need to be updated since paths in the OSS scripts are
+hardcoded.
+
 ###### Building and Deploying on OS X
 
 You build and run on OS X as described above. The script will automatically
 install Brew and other dependencies. The only manual prereq is that you visit
 Oracle's website and download the newest Java 8 JDK before running the OSS
 script.
+
+If the scripts do not operate as described, check to make sure that the paths
+in the scripts match those of the version of mysql, jdk, mysql-java-connector,
+and tomcat installed on your machine.
 
 ###### Building and Deploying on Other Platforms
 
@@ -71,3 +80,17 @@ once to create database tables. The database tables are the one portion of the s
 that are not prereq checked each time you run. After deploying the database, the only
 times you will need to run the command again are when you make database schema changes,
 such as new tables. **NOTE: DB deployment wipes the database.**
+
+###### Running Tests and Test Coverage
+
+Unit test coverage for the master branch is displayed on the badge in the top of this
+page. For more detailed information about coverage, run the tests with:
+```
+gradle test
+```
+And then analyze the code coverage with:
+```
+gradle jacocoTestReport
+```
+
+The coverage report is in *service/build/reports/jacoco/test/html/index.html*
