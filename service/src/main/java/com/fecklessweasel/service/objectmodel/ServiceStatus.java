@@ -54,7 +54,7 @@ public enum ServiceStatus {
     APP_INVALID_NAME(714, 400, "First name or last name is too short or too long."),
     APP_INVALID_UNIV_NAME_LENGTH(715, 400, "University name is too long or too short."),
     APP_INVALID_UNIV_NAME_CHARS(716, 400, "University name contains invalid characters."),
-    APP_INVALID_ACRONYM_LENGTH(717, 400, "University acronym is too long or too short."),
+    APP_INVALID_UNIV_ACRONYM_LENGTH(717, 400, "University acronym is too long or too short."),
     APP_INVALID_ACRONYM_CHARS(718, 400, "University acronym contains invalid characters."),
     APP_INVALID_CITY_LENGTH(719, 400, "University city name is too long or too short."),
     APP_INVALID_CITY_CHARS(720, 400, "University city name contains invalid characters."),

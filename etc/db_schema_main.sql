@@ -13,25 +13,25 @@
 
 
 
-/* #1: WIPES the old database and creates a new one and USE the DB.
+/* WIPES the old database and creates a new one and USE the DB.
  *  It must be first.
  */
 SOURCE etc/db_schema_create_db.sql;
 
-/* #2: Create User table */
+/* Create User table */
 SOURCE etc/db_schema_user_table.sql;
 
-/* #3: Create User roles table */
+/* Create User roles table */
 SOURCE etc/db_schema_user_role_table.sql;
 
-/* #4: Create User session table */
+/* Create User session table */
 SOURCE etc/db_schema_user_session_table.sql;
 
-/* #5: Create University table */
+/* Create University table */
 SOURCE etc/db_schema_university_table.sql;
 
-/* #5: Create Department table */
+/* Create Department table */
 SOURCE etc/db_schema_department_table.sql;
 
-/* #5: Create Class table */
+/* Create Class table */
 SOURCE etc/db_schema_class_table.sql;
