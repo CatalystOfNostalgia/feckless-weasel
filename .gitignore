@@ -5,6 +5,10 @@
 [#]*[#]
 .\#*
 
+# Intellij files
+.idea/
+*.iml
+
 # Gradle wrappers
 gradle/*
 .gradle/
