@@ -37,10 +37,24 @@ public class OMUtil {
      * Checks the string for any unaccepted characters.
      * Allowed: a-z, A-Z, 0-9, _
      * @param str The string to check.
-     * @return true if there are invalid characters in the string.
+     * @return true if there are no invalid characters in the string.
      */
     public static boolean isValidInput(String str) {
         if (str != null && str.matches("^[a-zA-Z0-9_]*$")){
+            return true;
+        }
+        
+        return false;
+    }
+    
+    /**
+     * Checks the string for any unaccepted characters.
+     * Allowed: a-z, A-Z, spaces
+     * @param str The string to check.
+     * @return true if there are no invalid characters in the string.
+     */
+    public static boolean isValidName(String str) {
+        if (str != null && str.trim().equals(str) && str.matches("^[a-zA-Z ]*$")){
             return true;
         }
         
