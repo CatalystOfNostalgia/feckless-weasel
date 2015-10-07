@@ -74,9 +74,9 @@ public abstract class FileMetadataTable{
     }
     /**
     * Looks up the file using its unique identifier
-    *@param connection Connection to the mySQL database
-    *@param fileId The files unique identifier
-    *@return file A ResultSet containing the file tuple - only a single row.
+    * @param connection Connection to the mySQL database
+    * @param fileId The files unique identifier
+    * @return file A ResultSet containing the file tuple - only a single row.
     */
     public static ResultSet lookUpFile(Connection connection, int fileId)
         throws ServiceException {
@@ -94,9 +94,9 @@ public abstract class FileMetadataTable{
     }
     /**
     * Looks up all files belonging to a certain user
-    *@param connection Connection to the mySQL database
-    *@param user: The username whose files we want to return
-    *@return files A ResultSet containing all file tuples associated with the username
+    * @param connection Connection to the mySQL database
+    * @param user: The username whose files we want to return
+    * @return files A ResultSet containing all file tuples associated with the username
     */
     public static ResultSet lookUpUsersFiles(Connection connection, int user)
         throws ServiceException{
@@ -115,9 +115,9 @@ public abstract class FileMetadataTable{
 
     /**
     * Looks up all files belonging to a certain user
-    *@param connection Connection to the mySQL database
-    *@param course The course we want files from
-    *@result files A ResultSet containing all file tuples associated with the username
+    * @param connection Connection to the mySQL database
+    * @param course The course we want files from
+    * @result files A ResultSet containing all file tuples associated with the username
     */
     public static ResultSet lookUpCourseFiles(Connection connection, int course)
         throws ServiceException{
@@ -135,8 +135,8 @@ public abstract class FileMetadataTable{
 
     /**
     * Deletes the specified file's metadata from the table
-    *@param connection Connection to the mySQL database
-    *@param fid The file's unique identifier
+    * @param connection Connection to the mySQL database
+    * @param fid The file's unique identifier
     */
     public static void deleteFile(Connection connection, int fid) throws ServiceException{
         try {
