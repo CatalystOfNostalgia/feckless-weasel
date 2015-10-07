@@ -1,6 +1,6 @@
 /*
  * Feckless Weasel SQL Installer FileMetadata Table Script
- * @Author: Hayden Schmackpfeffer
+ * @author: Hayden Schmackpfeffer
  */
 
 CREATE TABLE FileMetadata(
