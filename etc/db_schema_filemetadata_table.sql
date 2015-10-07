@@ -1,13 +1,14 @@
 /*
  * Feckless Weasel SQL Installer FileMetadata Table Script
+ * @Author: Hayden Schmackpfeffer
  */
 
 CREATE TABLE FileMetadata(
 	fid INT AUTO_INCREMENT,
-	user varchar(25) NOT NULL,
-	course varchar(50) NOT NULL,
-	university varchar(50) NOT NULL,
+	uid INT NOT NULL,
+	cid INT NOT NULL,
 	creation_date DATETIME,
-	rating INT,
 	PRIMARY KEY (fid),
+    FOREIGN KEY (uid) REFERENCES User(uid) ON DELETE SET NULL,
+    FOREIGN KEY (cid) REFERENCES Department(id),
 	INDEX USING HASH(user));
