@@ -82,10 +82,6 @@ public class test_OMUtil {
     @Test
     public void test_isValidName_numbers() throws Exception {
         assertFalse(OMUtil.isValidName("University of 123four"));
-
-    @Test
-    public void test_adminOrOwnerCheck() throws Exception {
-        fail("Not implemented");
     }
 
     @Test(expected=IllegalArgumentException.class)

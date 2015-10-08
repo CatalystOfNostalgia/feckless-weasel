@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 
 import java.util.Date;
-
 import com.fecklessweasel.service.objectmodel.CodeContract;
 import com.fecklessweasel.service.objectmodel.ServiceException;
 import com.fecklessweasel.service.objectmodel.ServiceStatus;
@@ -93,7 +92,6 @@ public abstract class UserRoleTable {
 
             lookupStatement.setString(1, roleId);
 
-
             ResultSet result = lookupStatement.executeQuery();
             lookupStatement.close();
 
@@ -110,7 +108,6 @@ public abstract class UserRoleTable {
      */
     public static void deleteUserRole(Connection connection,
                                       String roleId) throws ServiceException {
-
         CodeContract.assertNotNull(connection, "connection");
         CodeContract.assertNotNullOrEmptyOrWhitespace(roleId, "roleId");
 

@@ -34,15 +34,6 @@ public abstract class UserTable {
     public static final String DELETE_USER_QUERY =
         "DELETE FROM User WHERE user=?";
 
-    /** Lookup user query. */
-    private static final String LOOKUP_USER_QUERY =
-        "SELECT * FROM User U, UserRole R, UserHasRole H WHERE U.user=? " +
-        " AND U.uid=H.uid AND H.rid=R.rid";
-
-    /** Delete user query. */
-    private static final String DELETE_USER_QUERY =
-        "DELETE FROM User WHERE user=?";
-
     /**
      * Inserts a user into the MySQL table with some minimal validation.
      * This method should NOT be called directly since most validation

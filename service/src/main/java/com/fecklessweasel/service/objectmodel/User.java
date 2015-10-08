@@ -39,12 +39,10 @@ public class User {
 
     /** Unique User id integer. */
     private long uid;
-
     /** Username. */
     private String username;
     /** Password hashes. */
     private String passwordHash;
-
     /** Date user joined. */
     private Date joinDate;
     /** User's email address. */
@@ -88,7 +86,8 @@ public class User {
         if (emailStr.length() > EMAIL_MAX ||
             !emailStr.matches("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" +
                               "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")) {
-
+            throw new ServiceException(ServiceStatus.APP_INVALID_EMAIL);
+        }
         InternetAddress emailAddr = null;
         try {
             emailAddr = new InternetAddress(emailStr, /*Strict:*/ true);
@@ -194,209 +193,6 @@ public class User {
     @Override
     public boolean equals(Object o) {
         return ((User)o).getUid() == this.getUid();
-    }
-
-    /**
-     * Looks up a user in the datatier and returns it as a User object.
-     * @throws ServiceException With APP_USER_NOT_EXIST if user doesn't exist,
-     * or another code if SQL error occurs.
-     * @param connection The SQL connection.
-     * @param username The username of the user to look up.
-     * @return A new user object for the user.
-     */
-    public static User lookup(Connection connection, String username)
-        throws ServiceException {
-
-        // Null check everything:
-        OMUtil.sqlCheck(connection);
-        OMUtil.nullCheck(username);
-
-        ResultSet result = UserTable.lookupUserWithRoles(connection, username);
-
-        // Build User object.
-        try {
-            // Get the first (and only) row or throw if user not exist.
-            if (!result.next()) {
-                throw new ServiceException(ServiceStatus.APP_USER_NOT_EXIST);
-            }
-
-            User user = new User(result.getLong("uid"),
-                                 result.getString("user"),
-                                 result.getString("pass"),
-                                 result.getDate("join_date"),
-                                 result.getString("email"));
-
-            // Populate user roles.
-            // NOTE: this implementation assumes that every user is AT LEAST
-            // one role.
-            do {
-                user.roles.add(new Role(result.getString("role"),
-                                        result.getString("description")));
-            } while(result.next());
-
-            result.close();
-            return user;
-        } catch (SQLException ex) {
-            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
-        }
-    }
-
-    /**
-     * Deletes a user.
-     * @throws ServiceException If a database error occurs.
-     * @param connection The SQL connection.
-     * @param username The username of the user to delete.
-     */
-    public static void delete(Connection connection, String username)
-        throws ServiceException {
-
-        // Null check everything:
-        OMUtil.sqlCheck(connection);
-        OMUtil.nullCheck(username);
-
-        // Try to delete
-        UserTable.deleteUser(connection, username);
-    }
-
-    /**
-     * Deletes this user.
-     * @throws ServiceException If a database error occurs.
-     * @param connection The SQL connection.
-     */
-    public void delete(Connection connection) throws ServiceException {
-        User.delete(connection, this.getUsername());
-    }
-
-    /**
-     * Checks if two User objects refer to the same User account.
-     * @param o The object to compare.
-     * @return True if they are the same user.
-     */
-    @Override
-    public boolean equals(Object o) {
-        return ((User)o).getUid() == this.getUid();
-    }
-
-    /**
-     * Gets username.
-     * @return Unique username String.
-     */
-    public String getUsername() {
-        return this.username;
-    }
-
-    /**
-     * Gets date user joined the system.
-     * @return Joined date.
-     */
-    public Date getJoinDate() {
-        return this.joinDate;
-    }
-
-    /**
-     * Gets the user's email address.
-     * @return The user's email address.
-     */
-    public String getEmail() {
-        return this.email;
-    }
-
-    /**
-     * Gets the user's password hash. This method is intentionally
-     * package protected to keep password hashes from leaving the objectmodel.
-     * @return The SHA256 hashed user password.
-     */
-    String getPasswordHash() {
-        return this.passwordHash;
-    }
-
-    /**
-     * Gets the user's table UID. This method is intentionally package
-     * protected.
-     * @return The user's AUTO_INCREMENT id.
-     */
-    long getUid() {
-        return this.uid;
-    }
-
-    /**
-     * Gets the security roles that this user is authorized for.
-     * @return An unmodifiable collection of Roles.
-     */
-    public Collection<Role> getRoles() {
-        return Collections.unmodifiableCollection(this.roles);
-    }
-
-    /**
-     * Checks to see if this user is of the specified Role.
-     * @return True if this user is the specified role.
-     */
-    public boolean isRole(String role) {
-        return this.roles.contains(new Role(role, null));
-    }
-
-    /**
-     * Grants this user the specified role.
-     * @throws ServiceException If database error occurs or Role doesn't exist
-     * or User already has given Role.
-     * @param connection The database connection.
-     * @param role A unique role id string.
-     * @return The Role object that was added to the User's Roles.
-     */
-    public Role addRole(Connection connection, String role) throws ServiceException {
-        // Clean inputs.
-        OMUtil.sqlCheck(connection);
-        OMUtil.nullCheck(role);
-
-        try {
-            // Add Role to the user in the DB.
-            UserHasRoleTable.insertUserHasRole(connection, this.uid, role);
-
-            // Query Role from DB to get the description.
-            ResultSet roleResult = UserRoleTable.lookupUserRole(connection,
-                                                                role);
-
-            // Check that results were returned.
-            // This should be redundant, but good to have just in case.
-            if (!roleResult.next()) {
-                throw new ServiceException(ServiceStatus.APP_USER_HAS_ROLE_DUPLICATE);
-            }
-
-            // Create a wrapper object.
-            Role newRole = new Role(roleResult.getString("role"),
-                                    roleResult.getString("description"));
-
-            // Add wrapper object to Roles set for user.
-            this.roles.add(newRole);
-
-            return newRole;
-        } catch (SQLException ex) {
-            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
-        }
-    }
-
-    /**
-     * Removes a user's security Role.
-     * @throws ServiceException If user doesn't have the requested Role.
-     * @param connection The database connection.
-     * @param role The unique ROLE_[name] id.
-     */
-    public void removeRole(Connection connection, String role) throws ServiceException {
-
-        // Clean inputs.
-        OMUtil.sqlCheck(connection);
-        OMUtil.nullCheck(role);
-
-        // Remove Role from the Role set.
-        Role roleToRemove = new Role(role, null);
-
-        // Check if we have this Role first.
-        if (!this.roles.contains(roleToRemove)) {
-            throw new ServiceException(ServiceStatus.APP_USER_NOT_HAVE_ROLE);
-        }
-
-        // Remove Role from user in database.
-        UserHasRoleTable.deleteUserHasRole(connection, this.uid, role);
     }
 
     /**
