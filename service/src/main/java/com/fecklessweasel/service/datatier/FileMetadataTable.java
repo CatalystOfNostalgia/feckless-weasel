@@ -20,17 +20,17 @@ import com.fecklessweasel.service.objectmodel.ServiceStatus;
 public abstract class FileMetadataTable{
 
     public static final String INSERT_FILE_QUERY =
-        "INSERT INTO FileMetadata (user, course, creation_date)" +
+        "INSERT INTO FileMetadata (uid, cid, creation_date)" +
         " VALUES (?,?,?)";
 
     public static final String LOOKUP_FILE_QUERY =
         "SELECT * FROM Filemetadata F WHERE F.fid=?";
 
     public static final String LOOKUP_FILES_FROM_USER_QUERY =
-        "SELECT * FROM Filemetadata F WHERE F.user=?";
+        "SELECT * FROM Filemetadata F WHERE F.uid=?";
 
     public static final String LOOKUP_FILES_FROM_COURSE_QUERY =
-        "SELECT * FROM Filemetadata F WHERE F.course=?";
+        "SELECT * FROM Filemetadata F WHERE F.cid=?";
 
     public static final String DELETE_FILE_QUERY =
         "DELETE FROM FileMetadata WHERE fid=";
@@ -50,6 +50,7 @@ public abstract class FileMetadataTable{
         throws ServiceException {
         //ensure parameters are clean
         CodeContract.assertNotNull(connection, "connection");
+        CodeContract.assertNotNull(creationDate, "creationDate");
 
         try {
             PreparedStatement insertStatement = connection.prepareStatement(

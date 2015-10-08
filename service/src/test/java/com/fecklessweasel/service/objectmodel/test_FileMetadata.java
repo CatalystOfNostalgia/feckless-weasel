@@ -22,26 +22,25 @@ import com.fecklessweasel.service.objectmodel.ServiceStatus;
   * Unit tests for the object model FileMetadata
   */
 public class test_FileMetadata {
-  private Connection mockConnection;
+    private Connection mockConnection;
 
-  @Before
-  public void setup() {
-      this.mockConnection = mock(Connection.class);
-  }
+    @Before
+    public void setup() {
+        this.mockConnection = mock(Connection.class);
+    }
 
-  @Test
-  public void test_create_NullSQL_Exception() throws Exception {
-      try {
-          FileMetadata.create(null,
-                      "user",
-                      "course",
-                      "university",
+    @Test
+    public void test_create_NullSQL_Exception() throws Exception {
+        try {
+            FileMetadata.create(null,
+                      1,
+                      393,
                       new Date());
-      } catch (ServiceException ex) {
-          assertEquals(ServiceStatus.NO_SQL, ex.status);
-          return;
-      }
+        } catch (ServiceException ex) {
+            assertEquals(ServiceStatus.NO_SQL, ex.status);
+            return;
+        }
 
-      fail("No service exception thrown");
-  }
+        fail("No service exception thrown");
+    }
 }

@@ -79,8 +79,8 @@ public class FileMetadata{
            }
 
            FileMetadata fileData = new FileMetadata(result.getInt("fid"),
-                                            result.getInt("user"),
-                                            result.getInt("course"),
+                                            result.getInt("uid"),
+                                            result.getInt("cid"),
                                             result.getDate("creation_date"));
             result.close();
             return fileData;
@@ -105,8 +105,8 @@ public class FileMetadata{
        try{
            while (results.next()) {
                FileMetadata fileData = new FileMetadata(results.getInt("fid"),
-                                                results.getInt("user"),
-                                                results.getInt("course"),
+                                                results.getInt("uid"),
+                                                results.getInt("cid"),
                                                 results.getDate("creation_date"));
                 listOfFiles.add(fileData);
             }
@@ -132,8 +132,8 @@ public class FileMetadata{
         try{
             while( results.next() ){
                 FileMetadata fileData = new FileMetadata(results.getInt("fid"),
-                                                     results.getInt("user"),
-                                                     results.getInt("course"),
+                                                     results.getInt("uid"),
+                                                     results.getInt("cid"),
                                                      results.getDate("creation_date"));
                 listOfFiles.add(fileData);
             }
