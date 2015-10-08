@@ -207,5 +207,4 @@ public class FileMetadata{
     public Date getCreationDate() {
         return this.creationDate;
     }
-
  }
