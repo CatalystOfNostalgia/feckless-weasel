@@ -98,8 +98,8 @@ public abstract class FileMetadataTable{
     * @param user: The username whose files we want to return
     * @return files A ResultSet containing all file tuples associated with the username
     */
-    public static ResultSet lookUpUsersFiles(Connection connection, int user)
-        throws ServiceException{
+    public static ResultSet lookUpUserFiles(Connection connection, int user)
+        throws ServiceException {
         CodeContract.assertNotNull(connection, "connection");
 
         try{
@@ -120,7 +120,7 @@ public abstract class FileMetadataTable{
     * @result files A ResultSet containing all file tuples associated with the username
     */
     public static ResultSet lookUpCourseFiles(Connection connection, int course)
-        throws ServiceException{
+        throws ServiceException {
         CodeContract.assertNotNull(connection, "connection");
 
         try{
@@ -138,7 +138,7 @@ public abstract class FileMetadataTable{
     * @param connection Connection to the mySQL database
     * @param fid The file's unique identifier
     */
-    public static void deleteFile(Connection connection, int fid) throws ServiceException{
+    public static void deleteFile(Connection connection, int fid) throws ServiceException {
         try {
             PreparedStatement deleteStatement = connection.prepareStatement(DELETE_FILE_QUERY);
             deleteStatement.setInt(1, fid);
