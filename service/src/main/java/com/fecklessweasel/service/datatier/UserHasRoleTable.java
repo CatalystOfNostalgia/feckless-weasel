@@ -9,6 +9,7 @@ import java.sql.SQLIntegrityConstraintViolationException;
 
 import java.util.Date;
 
+import com.fecklessweasel.service.objectmodel.CodeContract;
 import com.fecklessweasel.service.objectmodel.ServiceException;
 import com.fecklessweasel.service.objectmodel.ServiceStatus;
 
@@ -21,12 +22,12 @@ import javax.mail.internet.InternetAddress;
 public abstract class UserHasRoleTable {
 
     /** Mark user as having a Role. */
-    private static final String INSERT_USER_HAS_ROLE_QUERY
+    public static final String INSERT_USER_HAS_ROLE_QUERY
         = "INSERT INTO UserHasRole (uid, rid) VALUES" +
         " (?, (SELECT rid FROM UserRole R WHERE R.role=?))";
 
     /** Mark user as having a Role by Role String id. */
-    private static final String DELETE_USER_HAS_ROLE_NAME_QUERY
+    public static final String DELETE_USER_HAS_ROLE_NAME_QUERY
         = "DELETE FROM UserHasRole WHERE uid=?" +
         " AND rid=(SELECT rid FROM UserRole R WHERE R.role=?)";
 
@@ -37,23 +38,20 @@ public abstract class UserHasRoleTable {
      * @param connection The SQL connection from SQLSource.
      * @param uid The user's unique AUTO_INCREMENT id from the table.
      * @param roleName The String id of the Role.
-     * @return The ResultSet containing the Role information.
      */
-    public static ResultSet insertUserHasRole(Connection connection,
-                                              long uid,
-                                              String roleName) throws ServiceException {
+    public static void insertUserHasRole(Connection connection,
+                                         long uid,
+                                         String roleName) throws ServiceException {
+        CodeContract.assertNotNull(connection, "connection");
+        CodeContract.assertNotNullOrEmptyOrWhitespace(roleName, "roleName");
+
         try {
             PreparedStatement insertStatement
-                = connection.prepareStatement(INSERT_USER_HAS_ROLE_QUERY,
-                                              Statement.RETURN_GENERATED_KEYS);
+                = connection.prepareStatement(INSERT_USER_HAS_ROLE_QUERY);
             insertStatement.setLong(1, uid);
             insertStatement.setString(2, roleName);
 
             insertStatement.execute();
-
-            ResultSet result = insertStatement.getGeneratedKeys();
-
-            return result;
         } catch (SQLIntegrityConstraintViolationException ex) {
             // User is already of given Role or Role not exist.
             throw new ServiceException(
@@ -68,17 +66,20 @@ public abstract class UserHasRoleTable {
      * @throws ServiceException If database error or user doesn't have Role.
      * @param connection The connection from SQLSource.
      * @param uid The user's unique AUTO_INCREMENT id from the table.
-     * @param rid The unique AUTO_INCREMENT id from the UserRole table.
+     * @param role The name of the role to delete.
      * @return The ResultSet containing the Role information.
      */
     public static void deleteUserHasRole(Connection connection,
                                          long uid,
-                                         String role) throws ServiceException {
+                                         String roleName) throws ServiceException {
+        CodeContract.assertNotNull(connection, "connection");
+        CodeContract.assertNotNullOrEmptyOrWhitespace(roleName, "roleName");
+
         try {
             PreparedStatement deleteStatement
                 = connection.prepareStatement(DELETE_USER_HAS_ROLE_NAME_QUERY);
             deleteStatement.setLong(1, uid);
-            deleteStatement.setString(2, role);
+            deleteStatement.setString(2, roleName);
 
             deleteStatement.execute();
 

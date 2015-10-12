@@ -9,6 +9,7 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Date;
 import java.util.UUID;
 
+import com.fecklessweasel.service.objectmodel.CodeContract;
 import com.fecklessweasel.service.objectmodel.ServiceException;
 import com.fecklessweasel.service.objectmodel.ServiceStatus;
 
@@ -26,20 +27,20 @@ import javax.mail.internet.InternetAddress;
  */
 public abstract class UserSessionTable {
 
-    private static final String INSERT_SESSION_QUERY
+    public static final String INSERT_SESSION_QUERY
         = "INSERT INTO UserSession (uid, session_id) VALUES (?, ?) " +
         "ON DUPLICATE KEY UPDATE session_id=VALUES(session_id)";
 
-    private static final String DELETE_SESSION_QUERY
+    public static final String DELETE_SESSION_QUERY
         = "DELETE FROM UserSession WHERE uid=? AND session_id=?";
 
-    private static final String DELETE_ALL_SESSIONS_QUERY
+    public static final String DELETE_ALL_SESSIONS_QUERY
         = "DELETE FROM UserSession WHERE uid=?";
 
-    private static final String QUERY_SESSION_QUERY
+    public static final String QUERY_SESSION_QUERY
         = "SELECT * FROM UserSession WHERE uid=? AND session_id=?";
 
-    private static final String DELETE_ALL_SESSIONS_NAME_QUERY
+    public static final String DELETE_ALL_SESSIONS_NAME_QUERY
         = "DELETE FROM UserSession WHERE " +
         "uid=(SELECT uid FROM User WHERE user=?)";
 
@@ -52,6 +53,9 @@ public abstract class UserSessionTable {
     public static void insertSession(Connection connection,
                                      long uid,
                                      UUID uuid) throws ServiceException {
+        CodeContract.assertNotNull(connection, "connection");
+        CodeContract.assertNotNull(uuid, "uuid");
+
         try {
             PreparedStatement insertStatement
                 = connection.prepareStatement(INSERT_SESSION_QUERY);
@@ -74,6 +78,9 @@ public abstract class UserSessionTable {
     public static void deleteSession(Connection connection,
                                      long uid,
                                      UUID sessionId) throws ServiceException {
+        CodeContract.assertNotNull(connection, "connection");
+        CodeContract.assertNotNull(sessionId, "sessionId");
+
         try {
             PreparedStatement deleteStatement
                 = connection.prepareStatement(DELETE_SESSION_QUERY);
@@ -94,6 +101,8 @@ public abstract class UserSessionTable {
      */
     public static void deleteAllSessions(Connection connection,
                                          long uid) throws ServiceException {
+        CodeContract.assertNotNull(connection, "connection");
+
         try {
             PreparedStatement deleteStatement
                 = connection.prepareStatement(DELETE_ALL_SESSIONS_QUERY);
@@ -113,6 +122,9 @@ public abstract class UserSessionTable {
      */
     public static void deleteAllSessions(Connection connection,
                                          String username) throws ServiceException {
+        CodeContract.assertNotNull(connection, "connection");
+        CodeContract.assertNotNullOrEmptyOrWhitespace(username, "username");
+
         try {
             PreparedStatement insertStatement
                 = connection.prepareStatement(DELETE_ALL_SESSIONS_NAME_QUERY);
@@ -135,6 +147,9 @@ public abstract class UserSessionTable {
     public static boolean sessionExists(Connection connection,
                                         long uid,
                                         UUID sessionId) throws ServiceException {
+        CodeContract.assertNotNull(connection, "connection");
+        CodeContract.assertNotNull(sessionId, "sessionId");
+
         try {
             PreparedStatement queryStatement
                 = connection.prepareStatement(QUERY_SESSION_QUERY);

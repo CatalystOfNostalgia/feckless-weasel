@@ -24,12 +24,12 @@ import com.fecklessweasel.service.objectmodel.ServiceStatus;
  */
 public class test_User {
     private Connection mockConnection;
-    
+
     @Before
     public void setup() {
         this.mockConnection = mock(Connection.class);
     }
-    
+
     @Test
     public void test_create_NullSQL_Exception() throws Exception {
         try {
