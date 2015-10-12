@@ -36,17 +36,17 @@ public abstract class FileMetadataTable{
         "DELETE FROM FileMetadata WHERE fid=";
 
     /**
-    * Inserts a file into the corresponding MySQL table. returns the generated fid
-    * @param connection Connection to the database from SQLSource.
-    * @param user An ID number that corresponds the user that uploaded the file
-    * @param course The ID of the course
-    * @param creationDate The user-specified creation date for the file.
-    * @return fid Returns the fid of the inserted file. This is a files unique identifier
-    */
+     * Inserts a file into the corresponding MySQL table. returns the generated fid
+     * @param connection Connection to the database from SQLSource.
+     * @param user An ID number that corresponds the user that uploaded the file
+     * @param course The ID of the course
+     * @param creationDate The user-specified creation date for the file.
+     * @return fid Returns the fid of the inserted file. This is a files unique identifier
+     */
     public static int insertFileData(Connection connection,
-                                        int user,
-                                        int course,
-                                        Date creationDate)
+                                     int user,
+                                     int course,
+                                     Date creationDate)
         throws ServiceException {
         //ensure parameters are clean
         CodeContract.assertNotNull(connection, "connection");
@@ -54,8 +54,7 @@ public abstract class FileMetadataTable{
 
         try {
             PreparedStatement insertStatement = connection.prepareStatement(
-            INSERT_FILE_QUERY, Statement.RETURN_GENERATED_KEYS
-            );
+                INSERT_FILE_QUERY, Statement.RETURN_GENERATED_KEYS);
             insertStatement.setInt(1, user);
             insertStatement.setInt(2, course);
             insertStatement.setDate(3, new java.sql.Date(creationDate.getTime()));
@@ -73,18 +72,19 @@ public abstract class FileMetadataTable{
             throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
         }
     }
+
     /**
-    * Looks up the file using its unique identifier
-    * @param connection Connection to the mySQL database
-    * @param fileId The files unique identifier
-    * @return file A ResultSet containing the file tuple - only a single row.
-    */
+     * Looks up the file using its unique identifier
+     * @param connection Connection to the mySQL database
+     * @param fileId The files unique identifier
+     * @return file A ResultSet containing the file tuple - only a single row.
+     */
     public static ResultSet lookUpFile(Connection connection, int fileId)
         throws ServiceException {
 
         CodeContract.assertNotNull(connection, "connection");
 
-        try{
+        try {
 
             PreparedStatement lookUpFileStatement = connection.prepareStatement(LOOKUP_FILE_QUERY);
             lookUpFileStatement.setInt(1, fileId);
@@ -94,19 +94,20 @@ public abstract class FileMetadataTable{
             throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
         }
     }
-    /**
 
-    * Looks up all files belonging to a certain user
-    * @param connection Connection to the mySQL database
-    * @param user: The username whose files we want to return
-    * @return files A ResultSet containing all file tuples associated with the username
-    */
+    /**
+     * Looks up all files belonging to a certain user
+     * @param connection Connection to the mySQL database
+     * @param user: The username whose files we want to return
+     * @return files A ResultSet containing all file tuples associated with the username
+     */
     public static ResultSet lookUpUserFiles(Connection connection, int user)
         throws ServiceException {
         CodeContract.assertNotNull(connection, "connection");
 
         try{
-            PreparedStatement lookUpFileStatement = connection.prepareStatement(LOOKUP_FILES_FROM_USER_QUERY);
+            PreparedStatement lookUpFileStatement
+                = connection.prepareStatement(LOOKUP_FILES_FROM_USER_QUERY);
             lookUpFileStatement.setInt(1, user);
 
             return lookUpFileStatement.executeQuery();
@@ -117,16 +118,16 @@ public abstract class FileMetadataTable{
     }
 
     /**
-    * Looks up all files belonging to a certain user
-    * @param connection Connection to the mySQL database
-    * @param course The course we want files from
-    * @result files A ResultSet containing all file tuples associated with the username
-    */
+     * Looks up all files belonging to a certain user
+     * @param connection Connection to the mySQL database
+     * @param course The course we want files from
+     * @result files A ResultSet containing all file tuples associated with the username
+     */
     public static ResultSet lookUpCourseFiles(Connection connection, int course)
         throws ServiceException {
         CodeContract.assertNotNull(connection, "connection");
 
-        try{
+        try {
             PreparedStatement lookUpFileStatement = connection.prepareStatement(LOOKUP_FILES_FROM_COURSE_QUERY);
             lookUpFileStatement.setInt(1, course);
 
@@ -137,13 +138,15 @@ public abstract class FileMetadataTable{
     }
 
     /**
-    * Deletes the specified file's metadata from the table
-    * @param connection Connection to the mySQL database
-    * @param fid The file's unique identifier
-    */
-    public static void deleteFile(Connection connection, int fid) throws ServiceException {
+     * Deletes the specified file's metadata from the table
+     * @param connection Connection to the mySQL database
+     * @param fid The file's unique identifier
+     */
+    public static void deleteFile(Connection connection, int fid)
+        throws ServiceException {
         try {
-            PreparedStatement deleteStatement = connection.prepareStatement(DELETE_FILE_QUERY);
+            PreparedStatement deleteStatement
+                = connection.prepareStatement(DELETE_FILE_QUERY);
             deleteStatement.setInt(1, fid);
 
             if (deleteStatement.executeUpdate() != 1) {
