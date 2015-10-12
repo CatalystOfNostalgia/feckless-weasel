@@ -16,40 +16,40 @@ import org.junit.runners.JUnit4;
 
 public class test_UniversityTable {
 
-	private Connection mockConnection;
-	
-	@Before
+    private Connection mockConnection;
+
+    @Before
     public void setup() {
         this.mockConnection = mock(Connection.class);
     }
-	
-	@Test(expected = IllegalArgumentException.class)
-    public void test_insertUser_nullConnection() throws Exception{
-    	UniversityTable.insertUniversity(null, "uname","uacro","city","state","country");
+
+    @Test(expected = IllegalArgumentException.class)
+    public void test_insertUser_nullConnection() throws Exception {
+        UniversityTable.insertUniversity(null, "uname", "uacro", "city", "state", "country");
     }
-	
-	@Test(expected = IllegalArgumentException.class)
-    public void test_insertUser_nullLongname() throws Exception{
-    	UniversityTable.insertUniversity(this.mockConnection, null,"uacro","city","state","country");
+
+    @Test(expected = IllegalArgumentException.class)
+    public void test_insertUser_nullLongname() throws Exception {
+        UniversityTable.insertUniversity(this.mockConnection, null, "uacro", "city", "state", "country");
     }
-	
-	@Test(expected = IllegalArgumentException.class)
-    public void test_insertUser_nullAcronym() throws Exception{
-    	UniversityTable.insertUniversity(this.mockConnection, "uname",null,"city","state","country");
+
+    @Test(expected = IllegalArgumentException.class)
+    public void test_insertUser_nullAcronym() throws Exception {
+        UniversityTable.insertUniversity(this.mockConnection, "uname", null, "city", "state", "country");
     }
-	
-	@Test(expected = IllegalArgumentException.class)
-    public void test_insertUser_nullCity() throws Exception{
-    	UniversityTable.insertUniversity(this.mockConnection, "uname","uacro",null,"state","country");
+
+    @Test(expected = IllegalArgumentException.class)
+    public void test_insertUser_nullCity() throws Exception {
+        UniversityTable.insertUniversity(this.mockConnection, "uname", "uacro", null, "state", "country");
     }
-	
-	@Test(expected = IllegalArgumentException.class)
-    public void test_insertUser_nullState() throws Exception{
-    	UniversityTable.insertUniversity(this.mockConnection, "uname","uacro","city",null,"country");
+
+    @Test(expected = IllegalArgumentException.class)
+    public void test_insertUser_nullState() throws Exception {
+        UniversityTable.insertUniversity(this.mockConnection, "uname", "uacro", "city", null, "country");
     }
-	
-	@Test(expected = IllegalArgumentException.class)
-    public void test_insertUser_nullCountry() throws Exception{
-    	UniversityTable.insertUniversity(this.mockConnection, "uname","uacro","city","state",null);
+
+    @Test(expected = IllegalArgumentException.class)
+    public void test_insertUser_nullCountry() throws Exception {
+        UniversityTable.insertUniversity(this.mockConnection, "uname", "uacro", "city", "state", null);
     }
 }
