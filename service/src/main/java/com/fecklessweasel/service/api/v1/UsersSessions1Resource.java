@@ -101,8 +101,8 @@ public class UsersSessions1Resource {
                 public UserSession run(Connection connection)
                     throws ServiceException, SQLException {
 
-                    UserSession session = UserSession.resume(connection,
-                                                             sessionHeader);
+                    UserSession session = UserSession.resumeFromSessionString(connection,
+                                                                              sessionHeader);
                     UserSession desired = UserSession.resume(connection,
                                                              username,
                                                              sessionId);
@@ -140,7 +140,7 @@ public class UsersSessions1Resource {
                 @Override
                 public UserSession run(Connection connection)
                     throws ServiceException, SQLException {
-                    UserSession session = UserSession.resume(connection, sessionHeader);
+                    UserSession session = UserSession.resumeFromSessionString(connection, sessionHeader);
                     UserSession forsaken = UserSession.resume(connection, username, sessionId);
 
                     OMUtil.adminOrOwnerCheck(session.getUser(), forsaken.getUser());
@@ -174,7 +174,7 @@ public class UsersSessions1Resource {
                 @Override
                 public UserSession run(Connection connection)
                     throws ServiceException, SQLException {
-                    UserSession session = UserSession.resume(connection, sessionHeader);
+                    UserSession session = UserSession.resumeFromSessionString(connection, sessionHeader);
 
                     if (!session.getUser().getUsername().equals(username) &&
                         !session.getUser().isRole("ROLE_ADMIN")) {
