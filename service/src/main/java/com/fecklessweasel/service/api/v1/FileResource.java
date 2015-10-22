@@ -2,6 +2,7 @@ package com.fecklessweasel.service.api.v1;
 
 import com.fecklessweasel.service.api.NotFoundExceptionMapper;
 import com.fecklessweasel.service.json.FileResponse;
+import com.fecklessweasel.service.objectmodel.ServiceException;
 import com.fecklessweasel.service.objectmodel.ServiceStatus;
 import com.sun.jersey.api.NotFoundException;
 import com.sun.jersey.core.header.FormDataContentDisposition;
@@ -57,7 +58,7 @@ public class FileResource {
      * @param fileName The name of the file being uploaded.
      * @param fileInputStream The file input stream.
      * @param contentHeader The file header information.
-     * @return
+     * @return JSON response with file location.
      */
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -65,18 +66,26 @@ public class FileResource {
     public Response postFile(@PathParam("class") String className,
                              @PathParam("file") String fileName,
                              @FormDataParam("file") InputStream fileInputStream,
-                             @FormDataParam("file") FormDataContentDisposition contentHeader) {
+                             @FormDataParam("file") FormDataContentDisposition contentHeader)
+                             throws ServiceException {
+
         String filePath = FILEPATH_PREFIX + "/" + className + "/" + fileName;
         if (Files.exists(Paths.get(filePath))) {
             return Response.status(400).build();
         }
 
-        saveFile(fileInputStream, filePath);
+        if (!saveFile(fileInputStream, filePath)) {
+            FileResponse fileResponse = new FileResponse(ServiceStatus.UNKNOWN_ERROR,
+                                                         fileName,
+                                                         filePath,
+                                                         false);
+            return Response.ok(fileResponse.serialize()).build();
+        }
 
         FileResponse fileResponse = new FileResponse(ServiceStatus.CREATED,
                                                      fileName,
-                                                     filePath);
-
+                                                     filePath,
+                                                     true);
         URI newPathURI = uriInfo.getRequestUriBuilder().build();
 
         return Response.created(newPathURI).entity(fileResponse.serialize()).build();
@@ -86,8 +95,9 @@ public class FileResource {
      * Saves a file to the server.
      * @param inputStream The file input stream.
      * @param filePath The file path the file will be saved to.
+     * @return Returns true if file is successfully saved, false otherwise.
      */
-    private void saveFile(InputStream inputStream, String filePath) {
+    private boolean saveFile(InputStream inputStream, String filePath) {
         try {
             int read;
             byte[] bytes = new byte[1024];
@@ -98,8 +108,11 @@ public class FileResource {
             }
             outputStream.flush();
             outputStream.close();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
+
+        return true;
     }
 }

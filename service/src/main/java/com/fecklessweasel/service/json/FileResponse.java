@@ -16,11 +16,15 @@ public class FileResponse extends JsonResponse {
     @JSON(include=true, name="file_path")
     public String filePath;
 
+    /** If file has been saved on server */
+    @JSON(include=true, name="file_saved")
+    public boolean fileSaved;
+
     /**
      * Create an uninitialized FileResponse.
      */
     public FileResponse() {
-        this(null, null, null);
+        this(null, null, null, false);
     }
 
     /**
@@ -28,9 +32,10 @@ public class FileResponse extends JsonResponse {
      * @param fileName The name of the file.
      * @param filePath The path to the file.
      */
-    public FileResponse(ServiceStatus status, String fileName, String filePath) {
+    public FileResponse(ServiceStatus status, String fileName, String filePath, boolean fileSaved) {
         super(status);
         this.fileName = fileName;
         this.filePath = filePath;
+        this.fileSaved = fileSaved;
     }
 }
