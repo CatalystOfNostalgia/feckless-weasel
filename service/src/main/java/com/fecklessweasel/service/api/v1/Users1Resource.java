@@ -37,7 +37,7 @@ public class Users1Resource {
     /** Injected information about the URI of the current request. */
     @Context
     UriInfo uriInfo;
-    
+
     /**
      * Post Request. Creates a new user in the database and returns a
      * CreateUserResponse, or an ErrorApiResponse in JSON.
@@ -66,7 +66,7 @@ public class Users1Resource {
                                        request.email);
                 }
             });
-                    
+
         UserResponse userResponse = new UserResponse(ServiceStatus.CREATED,
                                                      user.getUsername(),
                                                      user.getJoinDate(),
@@ -74,7 +74,7 @@ public class Users1Resource {
 
         URI newUserUri = uriInfo.getRequestUriBuilder()
             .path(user.getUsername()).build();
-        
+
         return Response.created(newUserUri)
             .entity(userResponse.serialize()).build();
     }
@@ -98,12 +98,12 @@ public class Users1Resource {
                     return User.lookup(connection, username);
                 }
             });
-        
+
         UserResponse userResponse = new UserResponse(ServiceStatus.OK,
                                                      user.getUsername(),
                                                      user.getJoinDate(),
                                                      user.getEmail());
-        
+
         return Response.ok(userResponse.serialize()).build();
     }
 
@@ -129,12 +129,12 @@ public class Users1Resource {
                     UserSession session = UserSession.resume(connection, sessionHeader);
 
                     User forsaken = User.lookup(connection, username);
-                    
+
                     // Only delete if user is deleting self or user is an admin.
                     OMUtil.adminOrOwnerCheck(session.getUser(), forsaken);
 
                     forsaken.delete(connection);
-                    
+
                     return forsaken;
                 }
             });

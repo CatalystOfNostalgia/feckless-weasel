@@ -35,3 +35,6 @@ SOURCE etc/db_schema_department_table.sql;
 
 /* Create Class table */
 SOURCE etc/db_schema_class_table.sql;
+
+/* Create FileMetadata Table */
+SOURCE etc/db_schema_filemetadata_table.sql;

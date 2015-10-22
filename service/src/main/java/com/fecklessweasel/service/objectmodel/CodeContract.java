@@ -7,7 +7,7 @@ package com.fecklessweasel.service.objectmodel;
  * @author Christian Gunderman
  */
 public abstract class CodeContract {
-    
+
     /**
      * Checks that the given object is not null.
      * @param obj The object to check.
@@ -18,7 +18,7 @@ public abstract class CodeContract {
 
         // Check argName isn't null or empty.
         CodeContract.assertNotNullOrEmptyOrWhitespace(argName, "argName");
-        
+
         if (obj == null) {
             throw new IllegalArgumentException(argName + " cannot be null.");
         }
@@ -35,7 +35,7 @@ public abstract class CodeContract {
             throw new IllegalArgumentException(
                 "argName cannot be null, empty, or whitespace");
         }
-        
+
         if (str == null || str.isEmpty() || str.trim().isEmpty()) {
             throw new IllegalArgumentException(argName
                 + " cannot be null, empty, or whitespace.");

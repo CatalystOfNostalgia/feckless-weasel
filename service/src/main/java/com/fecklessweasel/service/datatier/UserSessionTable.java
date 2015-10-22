@@ -55,7 +55,7 @@ public abstract class UserSessionTable {
                                      UUID uuid) throws ServiceException {
         CodeContract.assertNotNull(connection, "connection");
         CodeContract.assertNotNull(uuid, "uuid");
-        
+
         try {
             PreparedStatement insertStatement
                 = connection.prepareStatement(INSERT_SESSION_QUERY);
@@ -80,7 +80,7 @@ public abstract class UserSessionTable {
                                      UUID sessionId) throws ServiceException {
         CodeContract.assertNotNull(connection, "connection");
         CodeContract.assertNotNull(sessionId, "sessionId");
-        
+
         try {
             PreparedStatement deleteStatement
                 = connection.prepareStatement(DELETE_SESSION_QUERY);
@@ -102,7 +102,7 @@ public abstract class UserSessionTable {
     public static void deleteAllSessions(Connection connection,
                                          long uid) throws ServiceException {
         CodeContract.assertNotNull(connection, "connection");
-        
+
         try {
             PreparedStatement deleteStatement
                 = connection.prepareStatement(DELETE_ALL_SESSIONS_QUERY);
@@ -124,7 +124,7 @@ public abstract class UserSessionTable {
                                          String username) throws ServiceException {
         CodeContract.assertNotNull(connection, "connection");
         CodeContract.assertNotNullOrEmptyOrWhitespace(username, "username");
-        
+
         try {
             PreparedStatement insertStatement
                 = connection.prepareStatement(DELETE_ALL_SESSIONS_NAME_QUERY);
@@ -149,7 +149,7 @@ public abstract class UserSessionTable {
                                         UUID sessionId) throws ServiceException {
         CodeContract.assertNotNull(connection, "connection");
         CodeContract.assertNotNull(sessionId, "sessionId");
-        
+
         try {
             PreparedStatement queryStatement
                 = connection.prepareStatement(QUERY_SESSION_QUERY);

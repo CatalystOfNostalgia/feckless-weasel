@@ -58,7 +58,7 @@ public abstract class UserRoleTable {
         CodeContract.assertNotNull(connection, "connection");
         CodeContract.assertNotNullOrEmptyOrWhitespace(roleId, "roleId");
         CodeContract.assertNotNullOrEmptyOrWhitespace(description, "description");
-        
+
         try {
             PreparedStatement insertStatement
                 = connection.prepareStatement(INSERT_ROLE_QUERY);
@@ -85,7 +85,7 @@ public abstract class UserRoleTable {
                                            String roleId) throws ServiceException {
         CodeContract.assertNotNull(connection, "connection");
         CodeContract.assertNotNullOrEmptyOrWhitespace(roleId, "roleId");
-        
+
         try {
             PreparedStatement lookupStatement
                 = connection.prepareStatement(LOOKUP_ROLE_QUERY);
@@ -94,7 +94,7 @@ public abstract class UserRoleTable {
 
             ResultSet result = lookupStatement.executeQuery();
             lookupStatement.close();
-            
+
             return result;
         } catch (SQLException ex) {
             throw new ServiceException(ServiceStatus.DATABASE_ERROR);

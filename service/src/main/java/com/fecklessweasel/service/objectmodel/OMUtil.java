@@ -22,7 +22,7 @@ public class OMUtil {
             throw new ServiceException(ServiceStatus.NO_SQL);
         }
     }
-    
+
     /**
      * Checks object for null value.
      * @throws ServiceException with MALFORMED_REQUEST if value == null.
@@ -32,7 +32,7 @@ public class OMUtil {
             throw new ServiceException(ServiceStatus.MALFORMED_REQUEST);
         }
     }
-    
+
     /**
      * Checks the string for any unaccepted characters.
      * Allowed: a-z, A-Z, 0-9, _
@@ -43,10 +43,10 @@ public class OMUtil {
         if (str != null && str.matches("^[a-zA-Z0-9_]*$")){
             return true;
         }
-        
+
         return false;
     }
-    
+
     /**
      * Checks the string for any unaccepted characters.
      * Allowed: a-z, A-Z, spaces
@@ -57,7 +57,7 @@ public class OMUtil {
         if (str != null && str.trim().equals(str) && str.matches("^[a-zA-Z ]*$")){
             return true;
         }
-        
+
         return false;
     }
 
@@ -86,7 +86,7 @@ public class OMUtil {
      */
     public static String sha256(String data) throws ServiceException {
         CodeContract.assertNotNull(data, "data");
-        
+
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             md.update(data.getBytes());

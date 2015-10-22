@@ -110,7 +110,7 @@ public class User {
         UserHasRoleTable.insertUserHasRole(sql,
                                            uid,
                                            UserRoleTable.ROLE_USER_ID);
-        
+
         return new User(uid, username, password, joinDate, emailStr);
     }
 
@@ -137,7 +137,7 @@ public class User {
             if (!result.next()) {
                 throw new ServiceException(ServiceStatus.APP_USER_NOT_EXIST);
             }
-            
+
             User user = new User(result.getLong("uid"),
                                  result.getString("user"),
                                  result.getString("pass"),
@@ -337,7 +337,7 @@ public class User {
     }
 
     /**
-     * A Security Role. 
+     * A Security Role.
      * Get a user's Roles with getRoles() or isRole().
      * @author Christian Gunderman
      */

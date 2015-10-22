@@ -28,7 +28,7 @@ import com.fecklessweasel.service.objectmodel.ServiceStatus;
  */
 public class test_UserHasRoleTable {
     private Connection mockConnection;
-    
+
     @Before
     public void setup() {
         this.mockConnection = mock(Connection.class);
@@ -70,7 +70,7 @@ public class test_UserHasRoleTable {
                                                "ROLE_ADMIN");
         } catch (ServiceException ex) {
             assertEquals(ServiceStatus.APP_USER_HAS_ROLE_DUPLICATE, ex.status);
-            
+
             verify(mockPreparedStatement, times(1)).setLong(1, 11);
             verify(mockPreparedStatement, times(1)).setString(2, "ROLE_ADMIN");
             verify(mockPreparedStatement, times(1)).execute();
@@ -95,7 +95,7 @@ public class test_UserHasRoleTable {
                                                "ROLE_ADMIN");
         } catch (ServiceException ex) {
             assertEquals(ServiceStatus.DATABASE_ERROR, ex.status);
-            
+
             verify(mockPreparedStatement, times(1)).setLong(1, 11);
             verify(mockPreparedStatement, times(1)).setString(2, "ROLE_ADMIN");
             verify(mockPreparedStatement, times(1)).execute();
@@ -104,14 +104,14 @@ public class test_UserHasRoleTable {
 
         fail("No exception thrown");
     }
-    
+
     @Test
     public void test_InsertUserHasRole_SuccessCase() throws Exception {
         PreparedStatement mockPreparedStatement = mock(PreparedStatement.class);
 
         when(this.mockConnection.prepareStatement(UserHasRoleTable.INSERT_USER_HAS_ROLE_QUERY))
             .thenReturn(mockPreparedStatement);
-        
+
         UserHasRoleTable.insertUserHasRole(this.mockConnection,
                                            11,
                                            "ROLE_ADMIN");
@@ -158,7 +158,7 @@ public class test_UserHasRoleTable {
                                                "ROLE_ADMIN");
         } catch (ServiceException ex) {
             assertEquals(ServiceStatus.APP_USER_NOT_HAVE_ROLE, ex.status);
-            
+
             verify(mockPreparedStatement, times(1)).setLong(1, 11);
             verify(mockPreparedStatement, times(1)).setString(2, "ROLE_ADMIN");
             verify(mockPreparedStatement, times(1)).execute();
@@ -183,7 +183,7 @@ public class test_UserHasRoleTable {
                                                "ROLE_ADMIN");
         } catch (ServiceException ex) {
             assertEquals(ServiceStatus.DATABASE_ERROR, ex.status);
-            
+
             verify(mockPreparedStatement, times(1)).setLong(1, 11);
             verify(mockPreparedStatement, times(1)).setString(2, "ROLE_ADMIN");
             verify(mockPreparedStatement, times(1)).execute();
@@ -192,7 +192,7 @@ public class test_UserHasRoleTable {
 
         fail("No exception thrown");
     }
-    
+
     @Test
     public void test_DeleteUserHasRole_SuccessCase() throws Exception {
         PreparedStatement mockPreparedStatement = mock(PreparedStatement.class);
@@ -200,7 +200,7 @@ public class test_UserHasRoleTable {
         when(this.mockConnection.prepareStatement(UserHasRoleTable
                                                   .DELETE_USER_HAS_ROLE_NAME_QUERY))
             .thenReturn(mockPreparedStatement);
-        
+
         UserHasRoleTable.deleteUserHasRole(this.mockConnection,
                                            11,
                                            "ROLE_ADMIN");

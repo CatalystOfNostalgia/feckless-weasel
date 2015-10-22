@@ -28,12 +28,12 @@ import com.fecklessweasel.service.objectmodel.ServiceStatus;
  */
 public class test_UserTable {
     private Connection mockConnection;
-    
+
     @Before
     public void setup() {
         this.mockConnection = mock(Connection.class);
     }
-    
+
     @Test(expected = IllegalArgumentException.class)
     public void test_InsertUser_NullConnection_Exception() throws Exception {
         UserTable.insertUser(null,
@@ -60,7 +60,7 @@ public class test_UserTable {
                              new Date(),
                              new InternetAddress("gundermanc@gmail.com"));
     }
-    
+
     @Test(expected = IllegalArgumentException.class)
     public void test_InsertUser_NullDate_Exception() throws Exception {
         UserTable.insertUser(this.mockConnection,
@@ -87,7 +87,7 @@ public class test_UserTable {
                              new Date(),
                              new InternetAddress("gundermanc@gmail.com"));
     }
-    
+
     @Test(expected = IllegalArgumentException.class)
     public void test_InsertUser_WhitespacePass_Exception() throws Exception {
         UserTable.insertUser(this.mockConnection,
@@ -121,7 +121,7 @@ public class test_UserTable {
         when(mockConnection.prepareStatement(UserTable.INSERT_USER_QUERY,
                                              Statement.RETURN_GENERATED_KEYS))
             .thenThrow(new SQLException());
-        
+
         try {
             UserTable.insertUser(this.mockConnection,
                                  "user",
@@ -136,20 +136,20 @@ public class test_UserTable {
     @Test
     public void test_InsertUser_SuccessCase() throws Exception {
         final long id = 12345;
-        
+
         // Throw exception when insertUser called next:
         PreparedStatement mockPreparedStatement = mock(PreparedStatement.class);
         ResultSet mockResultSet = mock(ResultSet.class);
 
         when(mockResultSet.getLong(1)).thenReturn(id);
-        
+
         when(mockPreparedStatement.getGeneratedKeys())
             .thenReturn(mockResultSet);
-        
+
         when(mockConnection.prepareStatement(UserTable.INSERT_USER_QUERY,
                                              Statement.RETURN_GENERATED_KEYS))
             .thenReturn(mockPreparedStatement);
-        
+
 
         assert(UserTable.insertUser(this.mockConnection,
                                     "user",
@@ -205,7 +205,7 @@ public class test_UserTable {
         final String user = "username";
         PreparedStatement mockPreparedStatement = mock(PreparedStatement.class);
         ResultSet mockResultSet = mock(ResultSet.class);
-        
+
         when(this.mockConnection.prepareStatement(UserTable.LOOKUP_USER_QUERY))
             .thenReturn(mockPreparedStatement);
         when(mockPreparedStatement.executeQuery())
@@ -224,7 +224,7 @@ public class test_UserTable {
 
 
 
-    
+
     @Test(expected=IllegalArgumentException.class)
     public void test_DeleteUser_NullConnection() throws Exception {
         UserTable.deleteUser(null,
@@ -266,7 +266,7 @@ public class test_UserTable {
         final String user = "username";
         PreparedStatement mockPreparedStatement = mock(PreparedStatement.class);
         ResultSet mockResultSet = mock(ResultSet.class);
-        
+
         when(this.mockConnection.prepareStatement(UserTable.DELETE_USER_QUERY))
             .thenReturn(mockPreparedStatement);
         when(mockPreparedStatement.executeUpdate())
@@ -291,7 +291,7 @@ public class test_UserTable {
         final String user = "username";
         PreparedStatement mockPreparedStatement = mock(PreparedStatement.class);
         ResultSet mockResultSet = mock(ResultSet.class);
-        
+
         when(this.mockConnection.prepareStatement(UserTable.DELETE_USER_QUERY))
             .thenReturn(mockPreparedStatement);
         when(mockPreparedStatement.executeUpdate())

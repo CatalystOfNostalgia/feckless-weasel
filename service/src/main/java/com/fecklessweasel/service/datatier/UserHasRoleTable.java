@@ -44,7 +44,7 @@ public abstract class UserHasRoleTable {
                                          String roleName) throws ServiceException {
         CodeContract.assertNotNull(connection, "connection");
         CodeContract.assertNotNullOrEmptyOrWhitespace(roleName, "roleName");
-        
+
         try {
             PreparedStatement insertStatement
                 = connection.prepareStatement(INSERT_USER_HAS_ROLE_QUERY);
@@ -74,7 +74,7 @@ public abstract class UserHasRoleTable {
                                          String roleName) throws ServiceException {
         CodeContract.assertNotNull(connection, "connection");
         CodeContract.assertNotNullOrEmptyOrWhitespace(roleName, "roleName");
-        
+
         try {
             PreparedStatement deleteStatement
                 = connection.prepareStatement(DELETE_USER_HAS_ROLE_NAME_QUERY);

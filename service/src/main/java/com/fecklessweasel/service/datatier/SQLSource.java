@@ -43,7 +43,7 @@ public abstract class SQLSource {
             if (initialContext == null) {
                 initialContext = new InitialContext();
             }
-            
+
             // Obtain our environment naming context.
             Context environmentContext = (Context)initialContext.lookup("java:comp/env");
 
@@ -53,6 +53,7 @@ public abstract class SQLSource {
 
             // Get the connection and run actions.
             connection = dataSource.getConnection();
+
             connection.prepareStatement(USE_DB_STATEMENT).execute();
             result = actions.run(connection);
         } catch (NamingException ex) {
