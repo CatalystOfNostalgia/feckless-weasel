@@ -8,8 +8,17 @@
     <body class="four-column">
         <div class="column-beta">
             <br>
-            <h1>EECS 393</h1>
-            <h2>Case Western Reserve University</h2>
+            <p id= "course">
+              <script language="javascript" type="text/javascript">
+                function createClassAndUni(className, university){}
+                    var str1 = classname;
+                    var result1 = str1.bold();
+                    document.getElementByID("course").innerHTML = result1;
+                    var str2 = university;
+                    document.write(result2);
+                }
+            </p>
+            </script>
         </br>
         <!--code for embedding pdf into html-->
          <a href="/pdfobject.jsp">PDF</a>
