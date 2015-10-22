@@ -23,8 +23,9 @@ import java.nio.file.Paths;
  * @author James Flinn
  */
 @Path("v1/files/{class}/{file}")
-public class FileResource {
+public class Files1Resource {
 
+    // TODO: This prefix should be changed
     private static final String FILEPATH_PREFIX = "/Users/jamesflinn";
 
     @Context
@@ -70,8 +71,11 @@ public class FileResource {
                              throws ServiceException {
 
         String filePath = FILEPATH_PREFIX + "/" + className + "/" + fileName;
+
+        // TODO: Must check if user is authenticated (must get current user first)
+
         if (Files.exists(Paths.get(filePath))) {
-            return Response.status(400).build();
+            return new NotFoundExceptionMapper().toResponse(new NotFoundException());
         }
 
         if (!saveFile(fileInputStream, filePath)) {
