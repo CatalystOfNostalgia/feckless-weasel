@@ -21,8 +21,8 @@ public class FileMetadata {
 
     /** A files unique identifier */
     private int fid;
-    /** The id of the user who uploaded the file*/
-    private int user;
+    /** The user who uploaded the file*/
+    private User user;
     /** The id of the course that the file pertains to */
     private int course;
     /** The date the file was created */
@@ -37,7 +37,7 @@ public class FileMetadata {
      * @param creationDate The date the file was created
      * @param rating The Rating of the file
      */
-    private FileMetadata(int fid, int user, int course, Date creationDate) {
+    private FileMetadata(int fid, User user, int course, Date creationDate) {
         this.fid = fid;
         this.user = user;
         this.course = course;
@@ -52,7 +52,7 @@ public class FileMetadata {
      * @param creationDate The Date the file was created
      */
     public static FileMetadata create(Connection sql,
-                                      int user,
+                                      User user,
                                       int course,
                                       Date creationDate) throws ServiceException {
         OMUtil.sqlCheck(sql);
@@ -60,7 +60,7 @@ public class FileMetadata {
 
         // TODO Add validation for data members
 
-        int fid = FileMetadataTable.insertFileData(sql, user, course, creationDate);
+        int fid = FileMetadataTable.insertFileData(sql, user.getUid(), course, creationDate);
         return new FileMetadata(fid, user, course, creationDate);
     }
 
@@ -79,9 +79,9 @@ public class FileMetadata {
             if (!result.next()) {
                 throw new ServiceException(ServiceStatus.APP_FILE_NOT_EXIST);
             }
-
+            User user = User.lookupId(connection, result.getInt("uid"));
             FileMetadata fileData = new FileMetadata(result.getInt("fid"),
-                                                     result.getInt("uid"),
+                                                     user,
                                                      result.getInt("cid"),
                                                      result.getDate("creation_date"));
             result.close();

@@ -159,6 +159,41 @@ public class User {
         }
     }
 
+    public static User lookupId(Conneciton connection, int uid)
+        throws ServiceException {
+
+        OMUtil.sqlCheck(connection);
+
+        ResultSet result = UserTable.lookupUserWithId(connection, uid);
+
+        //build User object
+        try {
+            //Get the first (and only) row or throw if the user doesnt exist
+            if(!result.next()) {
+                throw new ServiceException(ServiceStatus.APP_USER_NOT_EXIST);
+            }
+
+            User user = new User(result.getLong("uid"),
+                                 result.getString("user"),
+                                 result.getString("pass"),
+                                 result.getDate("join_date"),
+                                 result.getString("email"));
+
+            // Populate user roles.
+            // NOTE: this implementation assumes that every user is AT LEAST
+            // one role.
+            do {
+                user.roles.add(new Role(result.getString("role"),
+                                        result.getString("description")));
+            } while(result.next());
+
+            result.close();
+            return user;
+        } catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        }
+    }
+
     /**
      * Deletes a user.
      * @throws ServiceException If a database error occurs.

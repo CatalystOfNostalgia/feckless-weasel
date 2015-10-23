@@ -34,6 +34,10 @@ public abstract class UserTable {
     public static final String DELETE_USER_QUERY =
         "DELETE FROM User WHERE user=?";
 
+    /** Lookup user with uid*/
+    public static final String LOOKUP_USERID_QUERY = 
+        "SELECT * FROM User U WHERE U.uid=?";
+
     /**
      * Inserts a user into the MySQL table with some minimal validation.
      * This method should NOT be called directly since most validation
@@ -137,6 +141,23 @@ public abstract class UserTable {
             }
 
             deleteStatement.close();
+        } catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        }
+    }
+
+    public static ResultSet lookupUserWithId(Connection connection, int uid) 
+        throws ServiceException{
+
+        CodeContract.assertNotNull(connection, "connection");
+
+        try {
+            PreparedStatement insertStatement 
+                = connection.prepareStatement(LOOKUP_USERID_QUERY);
+            insertStatement.setInt(1, uid);
+
+            //Execute and check that insertion was successful
+            return insertStatement.executeQuery();
         } catch (SQLException ex) {
             throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
         }
