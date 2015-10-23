@@ -79,9 +79,9 @@ public class FileMetadata {
             if (!result.next()) {
                 throw new ServiceException(ServiceStatus.APP_FILE_NOT_EXIST);
             }
-
+            User user = User.lookupId(connection, result.getInt("uid"));
             FileMetadata fileData = new FileMetadata(result.getInt("fid"),
-                                                     result.getInt("uid"),
+                                                     user,
                                                      result.getInt("cid"),
                                                      result.getDate("creation_date"));
             result.close();
