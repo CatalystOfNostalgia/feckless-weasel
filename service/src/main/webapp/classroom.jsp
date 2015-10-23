@@ -8,20 +8,6 @@
     <body class="four-column">
         <jsp:include page="header.jsp"/>
         <div class="column-beta">
-            <br>
-            <p id= "course">
-              <script language="javascript" type="text/javascript">
-                function createClassAndUni(className, university){}
-                    var str1 = classname;
-                    var result1 = str1.bold();
-                    document.getElementByID("course").innerHTML = result1;
-                    var str2 = university;
-                    document.write(result2);
-                }
-            </p>
-            </script>
-        </br>
-        <!--code for embedding pdf into html-->
          <a href="/pdfobject.jsp">PDF</a>
         <embed src="samplepdf.pdf" width="550" height="750"></embed>
             </div>
