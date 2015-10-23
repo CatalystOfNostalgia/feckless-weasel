@@ -48,7 +48,7 @@ public abstract class UserTable {
      * @param joinDate The date that the user joined.
      * @param email The user's email.
      */
-    public static long insertUser(Connection connection,
+    public static int insertUser(Connection connection,
                                   String user,
                                   String pass,
                                   Date joinDate,
@@ -77,7 +77,7 @@ public abstract class UserTable {
             ResultSet result = insertStatement.getGeneratedKeys();
             result.next();
 
-            long uid = result.getLong(1);
+            int uid = result.getInt(1);
 
             insertStatement.close();
 
