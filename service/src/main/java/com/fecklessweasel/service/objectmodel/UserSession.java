@@ -63,8 +63,8 @@ public class UserSession {
      * @param httpSessionHeader The HTTP auth header.
      * @return A session object to encapsulate the open session info.
      */
-    public static UserSession resume(Connection connection,
-                                     String httpSessionHeader)
+    public static UserSession resumeFromSessionString(Connection connection,
+                                                      String httpSessionHeader)
         throws ServiceException {
         OMUtil.sqlCheck(connection);
 
@@ -72,7 +72,7 @@ public class UserSession {
             throw new ServiceException(ServiceStatus.ACCESS_DENIED);
         }
 
-        String[] sessionParams = httpSessionHeader.split(";");
+        String[] sessionParams = httpSessionHeader.split("!");
 
         if (sessionParams.length != 2) {
             throw new ServiceException(ServiceStatus.INVALID_SESSION_HEADER);
@@ -180,6 +180,14 @@ public class UserSession {
      */
     public User getUser() {
         return this.sessionUser;
+    }
+
+    /**
+     * Get session header for cookies and REST requests.
+     * @return The serialized session header.
+     */
+    public String getSessionString() {
+        return this.getUser().getUsername() + '!' + this.getSessionId();
     }
 
     /**

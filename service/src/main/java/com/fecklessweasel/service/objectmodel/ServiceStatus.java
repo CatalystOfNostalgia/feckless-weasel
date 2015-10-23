@@ -23,6 +23,7 @@ public enum ServiceStatus {
     JSON_DS_ERROR(403, 400, "Unable to deserialize JSON request."),
     NOT_FOUND(404, 404, "Server resource not found."),
     INVALID_GENDER(405, 400, "Invalid gender. Gender must be MALE or FEMALE."),
+    NOT_AUTHENTICATED(406, 401, "Must log in to access this resource."),
 
     // Server errors.
     UNKNOWN_ERROR(500, 500, "Unknown error occurred."),
