@@ -1,9 +1,9 @@
 /* Class table */
-CREATE TABLE Class (
+CREATE TABLE Course (
 	id int AUTO_INCREMENT,
 	univid int,
 	deptid int,
-	classNumber int,
+	courseNumber int,
 	PRIMARY KEY(id),
 	INDEX USING HASH(univid, deptid, classnumber),
 	FOREIGN KEY (univid) REFERENCES University(id),

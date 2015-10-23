@@ -11,29 +11,29 @@ import com.fecklessweasel.service.objectmodel.ServiceException;
 import com.fecklessweasel.service.objectmodel.ServiceStatus;
 
 /**
- * Class to represent the class table in the database.
+ * Course to represent the Course table in the database.
  * @author Elliot Essman
  */
-public class ClassTable {
+public class CourseTable {
 
-    private static String INSERT_ROW = "insert into Class (univid, deptid, classnumber) values (?,?,?)";
+    private static String INSERT_ROW = "insert into Course (univid, deptid, courseNumber) values (?,?,?)";
 
     /**
-     * Inserts a class into the table.
+     * Inserts a Course into the table.
      * @param conn A connection to the database.
-     * @param univid ID of the university this class is at.
-     * @param deptid The ID f the department this class is in.
-     * @param classnum The number of this class.
-     * @return The id of the new class.
+     * @param univid ID of the university this Course is at.
+     * @param deptid The ID f the department this Course is in.
+     * @param Coursenum The number of this Course.
+     * @return The id of the new Course.
      */
-    public static int insertClass(Connection conn, int univid, int deptid, int classnumber) throws ServiceException,
+    public static int insertCourse(Connection conn, int univid, int deptid, int courseNumber) throws ServiceException,
             ServiceException {
         CodeContract.assertNotNull(conn, "conn");
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(INSERT_ROW, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setInt(1, univid);
             preparedStatement.setInt(2, deptid);
-            preparedStatement.setInt(3, classnumber);
+            preparedStatement.setInt(3, courseNumber);
             preparedStatement.executeUpdate();
 
             // Get new id

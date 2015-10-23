@@ -14,7 +14,7 @@ import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-public class test_ClassTable {
+public class test_CourseTable {
 
     private Connection mockConnection;
 
@@ -25,7 +25,7 @@ public class test_ClassTable {
 
     @Test(expected = IllegalArgumentException.class)
     public void test_insert_nullConnection() throws Exception {
-        ClassTable.insertClass(null, 9, 9, 9);
+        CourseTable.insertCourse(null, 9, 9, 9);
     }
 
 }
