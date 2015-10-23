@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.ResultSet;
+import java.sql.SQLIntegrityConstraintViolationException;
 
 import com.fecklessweasel.service.objectmodel.CodeContract;
 import com.fecklessweasel.service.objectmodel.ServiceException;
@@ -51,6 +52,8 @@ public class UniversityTable {
             int id = result.getInt(1);
             preparedStatement.close();
             return id;
+        } catch (SQLIntegrityConstraintViolationException ex){
+            throw new ServiceException(ServiceStatus.APP_UNIV_TAKEN, ex);
         } catch (SQLException ex) {
             throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
         }

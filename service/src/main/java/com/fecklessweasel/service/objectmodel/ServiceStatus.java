@@ -68,8 +68,10 @@ public enum ServiceStatus {
     APP_INVALID_DEPT_ACRONYM(726, 400, "Department acronym is invalid."),
     APP_INVALID_COURSE_NUMBER(727, 400, "Class number in invalid."),
     APP_COURSE_TAKEN(728, 400, "Class has already been created."),
+    APP_DEPT_TAKEN(729, 400, "Class has already been created."),
+    APP_UNIV_TAKEN(730, 400, "Class has already been created."),
 
-    APP_FILE_NOT_EXIST(729, 400, "The requested file does not exist");
+    APP_FILE_NOT_EXIST(731, 400, "The requested file does not exist");
 
 
     /** The String name of the state (OK, MALFORMED_REQUEST, ...) */
