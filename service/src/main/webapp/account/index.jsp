@@ -5,18 +5,16 @@
         <title>Feckless Weasel User Profile</title>
         <link href="${pageContext.request.contextPath}/assets/css/base.css" rel="stylesheet" type="text/css">
     </head>
-    <%
-        UserSession authSession = UserSessionUtil.resumeSession(request);
-
-        // Redirect to not authenticated page.
-        if (authSession == null) {
-            throw new ServiceException(ServiceStatus.NOT_AUTHENTICATED);
-        }
-
-        User user = authSession.getUser();
-     %>
     <body class="four-column">
         <jsp:include page="/header.jsp"/>
+        <%
+            // Redirect to not authenticated page.
+            if (authSession == null) {
+                throw new ServiceException(ServiceStatus.NOT_AUTHENTICATED);
+            }
+
+            User user = authSession.getUser();
+         %>
         <div class="column-beta">
             <h1><%= user.getUsername() %>'s Profile</h1>
             <ul>
