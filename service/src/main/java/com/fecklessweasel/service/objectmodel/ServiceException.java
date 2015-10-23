@@ -1,10 +1,12 @@
 package com.fecklessweasel.service.objectmodel;
 
+import javax.servlet.ServletException;
+
 /**
  * ServiceException for errors originating on the server side.
  * @author Christian Gunderman
  */
-public class ServiceException extends Exception {
+public class ServiceException extends ServletException {
 
     /** Application status code. */
     public final ServiceStatus status;

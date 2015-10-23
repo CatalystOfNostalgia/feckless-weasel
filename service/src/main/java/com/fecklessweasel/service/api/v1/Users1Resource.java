@@ -126,7 +126,8 @@ public class Users1Resource {
                 public User run(Connection connection)
                     throws ServiceException, SQLException {
 
-                    UserSession session = UserSession.resume(connection, sessionHeader);
+                    UserSession session = UserSession.resumeFromSessionString(connection,
+                                                                              sessionHeader);
 
                     User forsaken = User.lookup(connection, username);
 
