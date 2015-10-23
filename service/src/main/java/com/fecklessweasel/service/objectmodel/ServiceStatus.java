@@ -23,6 +23,7 @@ public enum ServiceStatus {
     JSON_DS_ERROR(403, 400, "Unable to deserialize JSON request."),
     NOT_FOUND(404, 404, "Server resource not found."),
     INVALID_GENDER(405, 400, "Invalid gender. Gender must be MALE or FEMALE."),
+    NOT_AUTHENTICATED(406, 401, "Must log in to access this resource."),
 
     // Server errors.
     UNKNOWN_ERROR(500, 500, "Unknown error occurred."),
@@ -65,7 +66,7 @@ public enum ServiceStatus {
     APP_INVALID_DEPTNAME_LENGTH(724, 400, "Department name is too long or too short."),
     APP_INVALID_DEPTNAME_CHARS(725, 400, "Department name contains invalid characters."),
     APP_INVALID_DEPT_ACRONYM(726, 400, "Department acronym is invalid."),
-    APP_INVALID_CLASS_NUMBER(727, 400, "Class number in invalid."),
+    APP_INVALID_COURSE_NUMBER(727, 400, "Class number in invalid."),
 
     APP_FILE_NOT_EXIST(728, 400, "The requested file does not exist");
 

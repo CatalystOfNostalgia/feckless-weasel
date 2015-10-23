@@ -24,18 +24,18 @@ import com.fecklessweasel.service.datatier.UserHasRoleTable;
  */
 public class User {
     /** Minimum user account length. */
-    private static final int USER_MIN = 6;
+    public static final int USER_MIN = 6;
     /**
      * Maximum user account length. You MUST make sure that this value is less
      * than or equal to the column width in UserTable.
      */
-    private static final int USER_MAX = 25;
+    public static final int USER_MAX = 25;
     /** Password minimum length */
-    private static final int PASS_MIN = 6;
+    public static final int PASS_MIN = 6;
     /** Maximum password length. */
-    private static final int PASS_MAX = 100;
+    public static final int PASS_MAX = 100;
     /** Maximum email length. */
-    private static final int EMAIL_MAX = 320;
+    public static final int EMAIL_MAX = 320;
 
     /** Unique User id integer. */
     private long uid;
