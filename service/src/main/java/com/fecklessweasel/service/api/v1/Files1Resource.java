@@ -1,13 +1,17 @@
 package com.fecklessweasel.service.api.v1;
 
+import com.fecklessweasel.service.UserSessionUtil;
 import com.fecklessweasel.service.api.NotFoundExceptionMapper;
+import com.fecklessweasel.service.datatier.SQLInteractionInterface;
+import com.fecklessweasel.service.datatier.SQLSource;
 import com.fecklessweasel.service.json.FileResponse;
-import com.fecklessweasel.service.objectmodel.ServiceException;
-import com.fecklessweasel.service.objectmodel.ServiceStatus;
+import com.fecklessweasel.service.objectmodel.*;
 import com.sun.jersey.api.NotFoundException;
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
 
+
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
@@ -17,6 +21,9 @@ import java.io.*;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Date;
 
 /**
  * Files resource for downloading/uploading files.
@@ -30,6 +37,9 @@ public class Files1Resource {
 
     @Context
     UriInfo uriInfo;
+
+    @Context
+    HttpServletRequest request;
 
     /**
      * Get request. Downloads the file at FILEPATH_PREFIX/class/{file}.
@@ -72,8 +82,6 @@ public class Files1Resource {
 
         String filePath = FILEPATH_PREFIX + "/" + className + "/" + fileName;
 
-        // TODO: Must check if user is authenticated (must get current user first)
-
         if (Files.exists(Paths.get(filePath))) {
             return new NotFoundExceptionMapper().toResponse(new NotFoundException());
         }
@@ -86,10 +94,24 @@ public class Files1Resource {
             return Response.ok(fileResponse.serialize()).build();
         }
 
+        final int classId = Integer.parseInt(className);
+        final UserSession authSession = UserSessionUtil.resumeSession(request);
+
+        // Open a SQL connection and create the file meta data.
+        FileMetadata fileMetadata = SQLSource.interact(new SQLInteractionInterface<FileMetadata>() {
+            @Override
+            public FileMetadata run(Connection connection)
+                    throws ServiceException, SQLException {
+
+                return FileMetadata.create(connection, authSession.getUser(), classId, new Date());
+            }
+        });
+
         FileResponse fileResponse = new FileResponse(ServiceStatus.CREATED,
                                                      fileName,
                                                      filePath,
                                                      true);
+
         URI newPathURI = uriInfo.getRequestUriBuilder().build();
 
         return Response.created(newPathURI).entity(fileResponse.serialize()).build();
