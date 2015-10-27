@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.eluder.coveralls:coveralls-maven-plugin:4.0.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.eluder.coveralls/coveralls-maven-plugin/4.0.0/9aaa8356d046de8ed8881728403d0f4883c8d629/coveralls-maven-plugin-4.0.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.eluder.coveralls/coveralls-maven-plugin/4.0.0/d08a1b9b2e2912f3186144573739dbd15f60ec69/coveralls-maven-plugin-4.0.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

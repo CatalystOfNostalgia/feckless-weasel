@@ -24,7 +24,7 @@ public class University {
     private String country;
 
     /** Max character length for longName. */
-    private static int NAME_MAX = 30;
+    private static int NAME_MAX = 50;
     /** Min character length for longName. */
     private static int NAME_MIN = 5;
     /** Max character length for acronym. */
