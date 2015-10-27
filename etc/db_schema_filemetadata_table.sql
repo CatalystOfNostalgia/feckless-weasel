@@ -11,4 +11,4 @@ CREATE TABLE FileMetadata(
     INDEX USING HASH(fid, uid),
 	PRIMARY KEY (fid),
     FOREIGN KEY (uid) REFERENCES User(uid),
-    FOREIGN KEY (cid) REFERENCES Class(id));
+    FOREIGN KEY (cid) REFERENCES Course(id));

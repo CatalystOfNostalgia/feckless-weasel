@@ -41,6 +41,10 @@ public final class UserSessionServlet extends HttpServlet {
                           final HttpServletResponse response)
         throws ServletException, IOException {
 
+        // Determine action.
+        String action = request.getParameter("action");
+        final boolean isDelete = action.equals("delete");
+
         // Open a SQL connection and create the user and log them in.
         SQLSource.interact(new SQLInteractionInterface<Integer>() {
 
@@ -58,9 +62,7 @@ public final class UserSessionServlet extends HttpServlet {
                 public Integer run(Connection connection)
                     throws ServiceException, SQLException {
 
-                    // Determine action.
-                    String action = request.getParameter("action");
-                    if (!action.equals("delete")) {
+                    if (!isDelete) {
                         
                         // "create" is default action. Creates a new session.
                         String username = request.getParameter("username");
@@ -78,7 +80,10 @@ public final class UserSessionServlet extends HttpServlet {
                 }
             });
 
-        // Redirect to homepage.
-        response.sendRedirect("/");
+        if (isDelete) {
+            response.sendRedirect("/");
+        } else {
+            response.sendRedirect(UserServlet.PROFILE_PATH);
+        }
     }
 }

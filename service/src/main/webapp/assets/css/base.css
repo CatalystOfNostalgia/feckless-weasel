@@ -35,6 +35,11 @@ button.button-large{
     width: 80px;
 }
 
+button.button-extra-large{
+    width: 100px;
+    height: 10%; 
+}
+
 a{
     font: 20px Verdana, sans-serif;
 }

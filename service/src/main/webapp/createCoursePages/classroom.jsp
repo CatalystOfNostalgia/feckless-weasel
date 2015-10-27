@@ -12,6 +12,13 @@
          <a href="/pdfobject.jsp">PDF</a>
         <embed src="samplepdf.pdf" width="550" height="750"></embed>
             </div>
+            <br>
+                <h1>EECS 393</h1>
+                <h2>Case Western Reserve University</h2>
+            </br>
+            <!--code for embedding pdf into html-->
+            <a href="/pdfobject.jsp">PDF</a>
+            <embed src="samplepdf.pdf" width="550" height="750"></embed>
         </div>
-    </body>>
+    </body>
 </html>

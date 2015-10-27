@@ -38,7 +38,7 @@ public class User {
     public static final int EMAIL_MAX = 320;
 
     /** Unique User id integer. */
-    private long uid;
+    private int uid;
     /** Username. */
     private String username;
     /** Password hashes. */
@@ -101,7 +101,7 @@ public class User {
 
         // Insert user query.
         Date joinDate = new Date();
-        long uid = UserTable.insertUser(sql, username, password,
+        int uid = UserTable.insertUser(sql, username, password,
                                         joinDate, emailAddr);
 
         // User role query.
@@ -138,7 +138,42 @@ public class User {
                 throw new ServiceException(ServiceStatus.APP_USER_NOT_EXIST);
             }
 
-            User user = new User(result.getLong("uid"),
+            User user = new User(result.getInt("uid"),
+                                 result.getString("user"),
+                                 result.getString("pass"),
+                                 result.getDate("join_date"),
+                                 result.getString("email"));
+
+            // Populate user roles.
+            // NOTE: this implementation assumes that every user is AT LEAST
+            // one role.
+            do {
+                user.roles.add(new Role(result.getString("role"),
+                                        result.getString("description")));
+            } while(result.next());
+
+            result.close();
+            return user;
+        } catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        }
+    }
+
+    public static User lookupId(Connection connection, int uid)
+        throws ServiceException {
+
+        OMUtil.sqlCheck(connection);
+
+        ResultSet result = UserTable.lookupUserWithId(connection, uid);
+
+        //build User object
+        try {
+            //Get the first (and only) row or throw if the user doesnt exist
+            if(!result.next()) {
+                throw new ServiceException(ServiceStatus.APP_USER_NOT_EXIST);
+            }
+
+            User user = new User(result.getInt("uid"),
                                  result.getString("user"),
                                  result.getString("pass"),
                                  result.getDate("join_date"),
@@ -233,7 +268,7 @@ public class User {
      * protected.
      * @return The user's AUTO_INCREMENT id.
      */
-    long getUid() {
+    int getUid() {
         return this.uid;
     }
 
@@ -326,7 +361,7 @@ public class User {
      * @param joinDate The date that the user joined.
      * @param email The user's email address.
      */
-    private User(long uid, String username, String passwordHash,
+    private User(int uid, String username, String passwordHash,
                  Date joinDate, String email) {
         this.uid = uid;
         this.username = username;

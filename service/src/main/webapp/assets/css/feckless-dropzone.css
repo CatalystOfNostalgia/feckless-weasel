@@ -1,0 +1,30 @@
+.preview-image{
+    display: inline-block;
+    width: 200px;
+}
+
+.text-fields{
+    display: inline-block;
+    vertical-align: top;
+    width: 400px;
+    margin-left: 0px;
+}
+
+.button-fields{
+    display: inline-block;
+    vertical-align: top;
+    width: 120px;
+    margin-left: 200px;
+}
+
+input.title{
+    width: 150%;
+    height: 3%;
+}
+
+textarea{
+    width: 150%;
+    height: 17%;
+    resize: none;
+    font: 15px Verdana, sans-serif
+}

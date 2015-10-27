@@ -135,13 +135,13 @@ public class test_UserTable {
 
     @Test
     public void test_InsertUser_SuccessCase() throws Exception {
-        final long id = 12345;
+        final int id = 12345;
 
         // Throw exception when insertUser called next:
         PreparedStatement mockPreparedStatement = mock(PreparedStatement.class);
         ResultSet mockResultSet = mock(ResultSet.class);
 
-        when(mockResultSet.getLong(1)).thenReturn(id);
+        when(mockResultSet.getInt(1)).thenReturn(id);
 
         when(mockPreparedStatement.getGeneratedKeys())
             .thenReturn(mockResultSet);
