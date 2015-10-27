@@ -23,6 +23,8 @@ public class FileUploadServlet extends HttpServlet {
         String description = request.getParameter("description");
 
         System.out.println("\n\n================\n\n");
+        System.out.println(title);
+        System.out.println(description);
         for (Part part : request.getParts()) {
             System.out.println(part.getName());
         }

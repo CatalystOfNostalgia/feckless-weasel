@@ -32,5 +32,15 @@ drop.on("maxfilesexceeded", function(file){
 });
 
 drop.on("addedfile", function(file) {
-    file.previewElement.querySelector("button[type=submit]").onclick = function() {drop.enqueueFile(file); };
+    file.previewElement.querySelector("button[type=submit]").addEventListener("click", function(e) {
+        drop.enqueueFile(file);
+        e.preventDefault();
+        e.stopPropagation();
+        drop.processQueue();
+    });
+});
+
+drop.on("sending", function(file, xhr, formData){
+    formData.append("title", this.element.querySelector("#title").value);
+    formData.append("description", this.element.querySelector("#description").value);
 });
