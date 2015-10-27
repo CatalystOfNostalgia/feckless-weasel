@@ -29,11 +29,12 @@ public class FileUploadServlet extends HttpServlet {
             System.out.println(part.getName());
         }
         System.out.println("\n\n================\n\n");
-        Part filePart = request.getPart("file[]");
+        Part filePart = request.getPart("file[0]");
+        System.out.println(filePart);
         String fileName = filePart.getSubmittedFileName();
 
         String filePath = FILEPATH_PREFIX + "/Documents/files/" + fileName;
-        saveFile(filePart.getInputStream(), title);
+        saveFile(filePart.getInputStream(), filePath);
     }
 
     /**
