@@ -43,4 +43,9 @@ drop.on("addedfile", function(file) {
 drop.on("sending", function(file, xhr, formData){
     formData.append("title", this.element.querySelector("#title").value);
     formData.append("description", this.element.querySelector("#description").value);
+    formData.append("class", "0");  // TODO: Un-hardcode this!!!!
+});
+
+drop.on("success", function(file, response){
+    window.location.href = "/";
 });

@@ -1,6 +1,15 @@
 package com.fecklessweasel.service;
 
+import com.fecklessweasel.service.datatier.SQLInteractionInterface;
+import com.fecklessweasel.service.datatier.SQLSource;
+import com.fecklessweasel.service.objectmodel.FileMetadata;
+import com.fecklessweasel.service.objectmodel.ServiceException;
+import com.fecklessweasel.service.objectmodel.UserSession;
+
 import java.io.*;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Date;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.ServletException;
@@ -13,27 +22,39 @@ import javax.servlet.http.Part;
 @MultipartConfig
 public class FileUploadServlet extends HttpServlet {
 
-    private static final String FILEPATH_PREFIX = "/Users/jamesflinn";
+    private static final String FILEPATH_PREFIX = "/files";
 
     @Override
     protected void doPost(final HttpServletRequest request,
                           final HttpServletResponse response)
             throws ServletException, IOException {
+
+        // TODO: These should go into database eventually
         String title = request.getParameter("title");
         String description = request.getParameter("description");
 
-        System.out.println("\n\n================\n\n");
-        System.out.println(title);
-        System.out.println(description);
-        for (Part part : request.getParts()) {
-            System.out.println(part.getName());
-        }
-        System.out.println("\n\n================\n\n");
         Part filePart = request.getPart("file[0]");
-        System.out.println(filePart);
         String fileName = filePart.getSubmittedFileName();
 
-        String filePath = FILEPATH_PREFIX + "/Documents/files/" + fileName;
+        final UserSession session = UserSessionUtil.resumeSession(request);
+        // If user is not authenticated
+        if (session == null) {
+            return;
+        }
+
+        // Open a SQL connection and create the file meta data.
+        FileMetadata fileMetadata = SQLSource.interact(new SQLInteractionInterface<FileMetadata>() {
+            @Override
+            public FileMetadata run(Connection connection)
+                    throws ServiceException, SQLException {
+
+
+                int classId = Integer.parseInt(request.getParameter("class"));
+                return FileMetadata.create(connection, session.getUser(), classId, new Date());
+            }
+        });
+
+        String filePath = FILEPATH_PREFIX + fileMetadata.getCourse() + fileName;
         saveFile(filePart.getInputStream(), filePath);
     }
 
