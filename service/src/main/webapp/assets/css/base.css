@@ -37,7 +37,7 @@ button.button-large{
 
 button.button-extra-large{
     width: 100px;
-    height: 10%; 
+    height: 10%;
 }
 
 a{
@@ -95,6 +95,15 @@ h2{
     background-color: #FFAF00
     margin-left: 0px;
     margin-top: 0px;
+}
+
+table.db-table th, table.db-table td  {
+    border: 1px solid black;
+    text-align: left;
+}
+
+table.db-table {
+    border-collapse: collapse;
 }
 
 html, body{

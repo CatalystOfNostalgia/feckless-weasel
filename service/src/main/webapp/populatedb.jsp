@@ -9,7 +9,7 @@
         <jsp:include page="/header.jsp"/>
         <h1>Database is populated  with the following information</h1>
         <div>
-            <table>
+            <table class="db-table">
                 <caption>User Table Additions</caption>
                 <tr>
                     <th>Username</th>
@@ -25,7 +25,7 @@
         </div>
         <br></br>
         <div>
-            <table>
+            <table class="db-table">
                 <caption>University Table Additions</caption>
                 <tr>
                     <th>Long Name</th>
@@ -47,7 +47,7 @@
         </div>
         <br></br>
         <div>
-            <table>
+            <table class="db-table">
                 <caption>Department Table Additions</caption>
                 <tr>
                     <th>University</th>
@@ -66,7 +66,7 @@
         <br></br>
         <div>
             <p>Note the University is not represented in the Course table, just included here for clarity</p>
-            <table>
+            <table class="db-table">
                 <caption>Course Table Additions</caption>
                 <tr>
                     <th>University</th>
