@@ -111,7 +111,7 @@ public final class PopulateServlet extends HttpServlet {
 
                     //create test Courses
                     for (int i = 0; i < course_nums.length; i++){
-                        //fill out 2 departments for two universities for testing purposes
+                        //using only two departments to make it simpler
                         Department dept;
                         if (i < 3) {
                             dept = depts.get(0); //CWRU EECS
