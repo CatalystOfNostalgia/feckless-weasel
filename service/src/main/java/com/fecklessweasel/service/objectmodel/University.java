@@ -1,8 +1,18 @@
 package com.fecklessweasel.service.objectmodel;
 
 import java.sql.Connection;
-
 import com.fecklessweasel.service.datatier.UniversityTable;
+import java.sql.Connection;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * Stores all information about a University.
@@ -10,34 +20,62 @@ import com.fecklessweasel.service.datatier.UniversityTable;
  */
 public class University {
 
-    /** Id in the database table. */
+    /**
+     * Id in the database table.
+     */
     private int id;
-    /** Official name of the university. */
+    /**
+     * Official name of the university.
+     */
     private String longName;
-    /** Acronym or short name of the university. */
+    /**
+     * Acronym or short name of the university.
+     */
     private String acronym;
-    /** City the university is in. */
+    /**
+     * City the university is in.
+     */
     private String city;
-    /** State the university is in. */
+    /**
+     * State the university is in.
+     */
     private String state;
-    /** Country the university is in. */
+    /**
+     * Country the university is in.
+     */
     private String country;
 
-    /** Max character length for longName. */
+    /**
+     * Max character length for longName.
+     */
     private static int NAME_MAX = 50;
-    /** Min character length for longName. */
+    /**
+     * Min character length for longName.
+     */
     private static int NAME_MIN = 5;
-    /** Max character length for acronym. */
+    /**
+     * Max character length for acronym.
+     */
     private static int ACRONYM_MAX = 5;
-    /** Min character length for acronym. */
+    /**
+     * Min character length for acronym.
+     */
     private static int ACRONYM_MIN = 2;
-    /** Max character length for city. */
+    /**
+     * Max character length for city.
+     */
     private static int CITY_MAX = 30;
-    /** Min character length for city. */
+    /**
+     * Min character length for city.
+     */
     private static int CITY_MIN = 3;
-    /** Max character length for country. */
+    /**
+     * Max character length for country.
+     */
     private static int COUNTRY_MAX = 30;
-    /** Min character length for country. */
+    /**
+     * Min character length for country.
+     */
     private static int COUNTRY_MIN = 3;
 
     /**
@@ -55,23 +93,24 @@ public class University {
 
     /**
      * Creates a university in the database.
-     * @param conn Connection to the database.
+     *
+     * @param conn     Connection to the database.
      * @param longName The official name of the university.
-     * @param acronym The acronym of the university.
-     * @param city The city of the university.
-     * @param state The state of the university.
-     * @param country The country of the university.
+     * @param acronym  The acronym of the university.
+     * @param city     The city of the university.
+     * @param state    The state of the university.
+     * @param country  The country of the university.
      * @return A university object which has been added to the database.
      */
     public static University create(Connection conn, String longName, String acronym, String city, String state,
-            String country) throws ServiceException {
+                                    String country) throws ServiceException {
 
         OMUtil.sqlCheck(conn);
         OMUtil.nullCheck(longName);
         OMUtil.nullCheck(acronym);
         OMUtil.nullCheck(city);
         OMUtil.nullCheck(state);// TODO null check state only when country is
-                                // USA
+        // USA
         OMUtil.nullCheck(country);
 
         // university name length
@@ -122,6 +161,7 @@ public class University {
 
     /**
      * Gets the database ID of the university.
+     *
      * @return The database ID of the university.
      */
     protected int getID() {
@@ -130,14 +170,16 @@ public class University {
 
     /**
      * Gets the official name of the university.
+     *
      * @return The official name of the university.
      */
-    public String getlongName() {
+    public String getLongName() {
         return this.longName;
     }
 
     /**
      * Gets the acronym of the university.
+     *
      * @return The acronym of the university.
      */
     public String getAcronym() {
@@ -146,6 +188,7 @@ public class University {
 
     /**
      * Gets the city of the university.
+     *
      * @return The city of the university.
      */
     public String getCity() {
@@ -154,6 +197,7 @@ public class University {
 
     /**
      * Gets the state of the university.
+     *
      * @return The state of the university.
      */
     public String getState() {
@@ -162,9 +206,47 @@ public class University {
 
     /**
      * Gets the country of the university.
+     *
      * @return The country of the university.
      */
     public String getCountry() {
         return this.country;
+    }
+
+
+    /**
+     * Gets the University from the database
+     *
+     * @return the university object.
+     */
+    public static University lookup(Connection connection, String longName)
+            throws ServiceException {
+
+        // Null check everything:
+        OMUtil.sqlCheck(connection);
+        OMUtil.nullCheck(longName);
+
+        //look up university with name
+        ResultSet result = UniversityTable.lookupUniversity(connection, longName);
+
+        // Build University object.
+        try {
+            if (!result.next()) {
+                throw new ServiceException(ServiceStatus.APP_USER_NOT_EXIST);
+            }
+
+            University university = new University(result.getInt("id"),
+                    result.getString("longName"),
+                    result.getString("acronym"),
+                    result.getString("city"),
+                    result.getString("state"),
+                    result.getString("country"));
+
+            result.close();
+            return university;
+        }
+        catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        }
     }
 }

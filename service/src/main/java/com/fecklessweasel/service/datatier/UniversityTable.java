@@ -1,10 +1,14 @@
 package com.fecklessweasel.service.datatier;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.sql.Statement;
+import java.util.Date;
+import javax.mail.internet.InternetAddress;
 
 import com.fecklessweasel.service.objectmodel.CodeContract;
 import com.fecklessweasel.service.objectmodel.ServiceException;
@@ -17,6 +21,9 @@ import com.fecklessweasel.service.objectmodel.ServiceStatus;
 public class UniversityTable {
 
     private static String INSERT_ROW = "insert into University (longName, acronym, city, state, country) values (?,?,?,?,?)";
+    /** Lookup user query. */
+    public static String LOOKUP_UNIVERSITY_QUERY =
+            "SELECT * FROM University WHERE University.longName=?";
 
     /**
      * Insert a university into the table.
@@ -51,6 +58,24 @@ public class UniversityTable {
             int id = result.getInt(1);
             preparedStatement.close();
             return id;
+        } catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        }
+    }
+
+    /**Looks up the University in the database based off of longName**/
+    public static ResultSet lookupUniversity(Connection connection, String longName)
+            throws ServiceException {
+
+        CodeContract.assertNotNull(connection, "connection");
+        CodeContract.assertNotNullOrEmptyOrWhitespace(longName, "longName");
+
+        try {
+            PreparedStatement lookupStatement =
+                    connection.prepareStatement(LOOKUP_UNIVERSITY_QUERY);
+            lookupStatement.setString(1, longName);
+
+            return lookupStatement.executeQuery();
         } catch (SQLException ex) {
             throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
         }

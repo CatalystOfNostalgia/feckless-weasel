@@ -21,7 +21,10 @@ public final class UniversityServlet extends HttpServlet {
 	 * of universities given a set of parameters.
 	 * **/
 	String longName;
+	String acronym;
+	String city;
 	String state;
+	String country;
 	@Override
 	protected void doPost(final HttpServletRequest request,
 						  final HttpServletResponse response)
@@ -31,11 +34,11 @@ public final class UniversityServlet extends HttpServlet {
 			@Override
 			public Integer run(Connection connection)
 					throws ServiceException, SQLException {
-					 longName = request.getParameter("longName");
-					String acronym = request.getParameter("acronym");
-				    String city = request.getParameter("city");
+					longName = request.getParameter("longName");
+					acronym = request.getParameter("acronym");
+				    city = request.getParameter("city");
 					state = request.getParameter("state");
-					String country = request.getParameter("country");
+					country = request.getParameter("country");
 					// Create university
 					University university = University.create(connection, longName, acronym, city, state, country);
 					// return int value
@@ -47,9 +50,6 @@ public final class UniversityServlet extends HttpServlet {
 			);
 
 			// Redirect to homepage.
-			//response.sendRedirect("/");
-		request.setAttribute("longName", longName);
-		request.setAttribute("state", state);
-		request.getRequestDispatcher("/index.jsp").forward(request, response);
+		response.sendRedirect("/university.jsp?name=" + longName);
 	}
 }

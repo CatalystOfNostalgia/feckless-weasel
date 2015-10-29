@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8" import="java.util.*"%>
+    pageEncoding="UTF-8" import="com.fecklessweasel.service.*, com.fecklessweasel.service.objectmodel.*"%>
 <html>
     <head>
         <title>${longName}</title>
@@ -8,8 +8,9 @@
         <body class="four-column">
         <jsp:include page="header.jsp"/>
         <div class="column-beta">
-                <h1><%= request.getAttribute("longName")%></h1>
-                <h2><%= request.getAttribute("state")%></h2>
+                <%University university = UniversityUtil.findUniversity(request);%>
+                <h1><%= university.getLongName()%></h1>
+                <h2><%= university.getState()%></h2>
                 <h3>Create a Department</h3>
                 <form class="form-default" action="/servlet/department" method="post" enctype="application/x-www-form-urlencoded">
                      <input type="text" class="text-large" id="university" name="university" placeholder="University">
@@ -18,7 +19,7 @@
                      <div>
                         <button type="submit" class="button-large" id="submit" name="submit">Create</button>
                      </div>
+                </form>
         </div>
-        </form>
     </body>
 </html>
