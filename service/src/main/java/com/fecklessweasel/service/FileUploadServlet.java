@@ -4,6 +4,7 @@ import com.fecklessweasel.service.datatier.SQLInteractionInterface;
 import com.fecklessweasel.service.datatier.SQLSource;
 import com.fecklessweasel.service.objectmodel.FileMetadata;
 import com.fecklessweasel.service.objectmodel.ServiceException;
+import com.fecklessweasel.service.objectmodel.ServiceStatus;
 import com.fecklessweasel.service.objectmodel.UserSession;
 
 import java.io.*;
@@ -48,14 +49,15 @@ public class FileUploadServlet extends HttpServlet {
             public FileMetadata run(Connection connection)
                     throws ServiceException, SQLException {
 
-
                 int classId = Integer.parseInt(request.getParameter("class"));
                 return FileMetadata.create(connection, session.getUser(), classId, new Date());
             }
         });
 
         String filePath = FILEPATH_PREFIX + fileMetadata.getCourse() + fileName;
-        saveFile(filePart.getInputStream(), filePath);
+        if (!saveFile(filePart.getInputStream(), filePath, fileName)) {
+            throw new ServiceException(ServiceStatus.SERVER_UPLOAD_ERROR);
+        }
     }
 
     /**
