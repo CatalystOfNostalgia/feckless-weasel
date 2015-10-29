@@ -8,8 +8,8 @@
     <body class="four-column">
         <jsp:include page="header.jsp"/>
         <div class="column-beta">
-                <h1><%= request.getAttribute("deptName")%></h1>
-                <h2><%= request.getAttribute("university")%></h2>
+            <h1><%= request.getAttribute("deptName")%></h1>
+            <h2><%= request.getAttribute("university")%></h2>
         </div>
         <p>
         </p>

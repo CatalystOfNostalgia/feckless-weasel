@@ -50,6 +50,6 @@ public final class UniversityServlet extends HttpServlet {
 			//response.sendRedirect("/");
 		request.setAttribute("longName", longName);
 		request.setAttribute("state", state);
-		request.getRequestDispatcher("/UniversityPage.jsp").forward(request, response);
+		request.getRequestDispatcher("/index.jsp").forward(request, response);
 	}
 }
