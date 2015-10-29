@@ -40,7 +40,7 @@ public class FileUploadServlet extends HttpServlet {
         final UserSession session = UserSessionUtil.resumeSession(request);
         // If user is not authenticated
         if (session == null) {
-            return;
+            throw new ServiceException(ServiceStatus.NOT_AUTHENTICATED);
         }
 
         // Open a SQL connection and create the file meta data.
