@@ -28,10 +28,11 @@ cobertura.coverageFormats = ['html', 'xml'] // coveralls plugin depends on xml f
 dependencies {
 
     compile 'javax.mail:mail:1.4.1'
+    compile 'javax.servlet:jstl:1.2'
 
     compile "javax.ws.rs:jsr311-api:1.1.1"
 
-    compile 'com.sun.jersey:jersey-server:1.13'
+    compile 'com.sun.jersey:jersey-server:1.9'
     compile 'com.sun.jersey:jersey-core:1.13'
     compile 'com.sun.jersey:jersey-servlet:1.13'
     compile 'javax:javaee-api:7.0'
