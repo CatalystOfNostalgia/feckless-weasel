@@ -23,7 +23,7 @@ import javax.servlet.http.Part;
 @MultipartConfig
 public class FileUploadServlet extends HttpServlet {
 
-    private static final String FILEPATH_PREFIX = "/files";
+    private static final String FILEPATH_PREFIX = "files";
 
     @Override
     protected void doPost(final HttpServletRequest request,
@@ -66,11 +66,16 @@ public class FileUploadServlet extends HttpServlet {
      * @param filePath The file path the file will be saved to.
      * @return Returns true if file is successfully saved, false otherwise.
      */
-    private boolean saveFile(InputStream inputStream, String filePath) {
+    private boolean saveFile(InputStream inputStream, String filePath, String fileName) {
         try {
             int read;
             byte[] bytes = new byte[1024];
-            OutputStream outputStream = new FileOutputStream(new File(filePath));
+
+            File directory = new File(filePath);
+            if (!directory.exists()) {
+                directory.mkdirs();
+            }
+            OutputStream outputStream = new FileOutputStream(new File(filePath + fileName));
 
             while ((read = inputStream.read(bytes)) != -1) {
                 outputStream.write(bytes, 0, read);

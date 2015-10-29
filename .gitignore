@@ -5,10 +5,6 @@
 [#]*[#]
 .\#*
 
-# Intellij files
-.idea/
-*.iml
-
 # Gradle wrappers
 gradle/*
 .gradle/
@@ -28,3 +24,6 @@ hs_err_pid*
 # Intellij files
 .idea/
 *.iml
+
+# File upload files
+files/
