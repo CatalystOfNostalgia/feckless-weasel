@@ -87,6 +87,7 @@ public class Department {
      * Gets the official department name.
      * @return The official department name.
      */
+
     public String getDeptName() {
         return this.deptName;
     }

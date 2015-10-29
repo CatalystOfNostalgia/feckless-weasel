@@ -8,10 +8,10 @@
     <body class="four-column">
         <jsp:include page="header.jsp"/>
         <div class="column-beta">
-        <h2><%= request.getAttribute("longName")%></h3>
-         <a href="/pdfobject.jsp">PDF</a>
-        <embed src="samplepdf.pdf" width="550" height="750"></embed>
-            </div>
+                <h1><%= request.getAttribute("deptName")%></h1>
+                <h2><%= request.getAttribute("university")%></h2>
         </div>
-    </body>>
-</html>c
+        <p>
+        </p>
+    </body>
+</html>

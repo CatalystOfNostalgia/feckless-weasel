@@ -20,13 +20,6 @@
                 </div>
             </form>
             <h3> Universities </h3>
-            <script type="text/javascript">
-            function listUni(){
-                var p = document.createElement("P");
-                var t = document.createTextNode(longName);
-                p = p.appendChild(t)
-                document.body.appendChild(p);
-           }
         </div>
     </body>
 </html>
