@@ -24,6 +24,9 @@ import com.fecklessweasel.service.objectmodel.UserSession;
 @WebServlet("/servlet/user")
 public final class UserServlet extends HttpServlet {
 
+    /** Profile page URL. */
+    public static String PROFILE_PATH = "/account";
+
     /**
      * Handles post requests to this servlet and address.
      * @param request The HTTP request containing the form data for
@@ -78,7 +81,7 @@ public final class UserServlet extends HttpServlet {
                 }
             });
 
-        // Redirect to homepage.
-        response.sendRedirect("/");
+        // Redirect to profile page.
+        response.sendRedirect(PROFILE_PATH);
     }
 }

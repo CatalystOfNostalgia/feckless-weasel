@@ -27,6 +27,7 @@ public enum ServiceStatus {
 
     // Server errors.
     UNKNOWN_ERROR(500, 500, "Unknown error occurred."),
+    SERVER_UPLOAD_ERROR(500, 500, "Upload to server failed."),
     DATABASE_ERROR(501, 500, "Error processing database request."),
     INSTALL_ERROR(502, 500, "Incorrect server configuration."),
     NO_SQL(503, 500, "No SQL instance provided."),

@@ -34,7 +34,7 @@ SOURCE etc/db_schema_university_table.sql;
 SOURCE etc/db_schema_department_table.sql;
 
 /* Create Class table */
-SOURCE etc/db_schema_class_table.sql;
+SOURCE etc/db_schema_course_table.sql;
 
 /* Create FileMetadata Table */
 SOURCE etc/db_schema_filemetadata_table.sql;

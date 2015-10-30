@@ -5,7 +5,7 @@ CREATE TABLE Course (
 	deptid int,
 	courseNumber int,
 	PRIMARY KEY(id),
-	INDEX USING HASH(univid, deptid, classnumber),
+	INDEX USING HASH(univid, deptid, courseNumber),
 	FOREIGN KEY (univid) REFERENCES University(id),
 	FOREIGN KEY (deptid) REFERENCES Department(id)
 );
