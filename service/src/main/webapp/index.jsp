@@ -9,8 +9,7 @@
        <jsp:include page="header.jsp"/>
        <div class="column-beta">
             <h1>Welcome to Feckless Weasel!</h1>
-            <h4>  <a href="/createUniversity.jsp">Create a University</a></h4>
-
+            <h4><a href='/create.jsp'>Create a University</a></h4>
         </div>
     </body>
 </html>
