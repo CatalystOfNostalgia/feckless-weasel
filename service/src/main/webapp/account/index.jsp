@@ -6,7 +6,7 @@
         <link href="${pageContext.request.contextPath}/assets/css/base.css" rel="stylesheet" type="text/css">
     </head>
     <body class="four-column">
-        <jsp:include page="/header.jsp"/>
+        <%@ include file="/header.jsp" %>
         <%
             // Redirect to not authenticated page.
             if (authSession == null) {

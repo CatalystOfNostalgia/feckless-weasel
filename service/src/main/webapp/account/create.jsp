@@ -46,7 +46,7 @@
                 <input type="password" class="text-large" id="password-retype" name="password-retype" placeholder="retype password">
                 <input type="text" class="text-large" id="email" name="email" placeholder="email">
                 <div>
-                    <button type="submit" class="button-large" id="submit" name="submit">Create Account</button>
+                    <input type="submit" class="button-large" id="submit" name="submit" value="Sign up" \>
                 </div>
             </form>
         </div>
