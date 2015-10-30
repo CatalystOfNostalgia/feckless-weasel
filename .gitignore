@@ -24,3 +24,6 @@ hs_err_pid*
 # Intellij files
 .idea/
 *.iml
+
+# File upload files
+files/

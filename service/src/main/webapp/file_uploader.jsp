@@ -9,6 +9,7 @@
         <script src="${pageContext.request.contextPath}/assets/js/dropzone/dropzone.js"></script>
     </head>
     <body>
+        <form action="/servlet/file/upload" method="post" enctype="multipart/form-data">
         <div class="table table-striped column-center files" id="previews">
             <div id="template" class="file-row column-center">
                 <!-- This is used as the file preview template -->
@@ -17,15 +18,15 @@
                 </div>
                 <div class="text-fields">
                     <div>
-                        <input type="text" class="title" placeholder="Enter title here">
+                        <input type="text" class="title" name="title" id="title" placeholder="Enter title here">
                     </div>    
                     <div>
-                        <textarea rows="4" cols="200" placeholder="Enter a description here">
+                        <textarea rows="4" cols="200" id="description" name="description" placeholder="Enter a description here">
                         </textarea>
                     </div>
                 </div>
                 <div class="button-fields">
-                    <button class="btn btn-primary button-extra-large start">
+                    <button type="submit" class="btn btn-primary button-extra-large start" id="submit">
                         <i class="glyphicon glyphicon-upload"></i>
                         <span>Submit</span>
                     </button>
@@ -35,7 +36,8 @@
                     </button>
                 </div>
             </div>
-        </div>  
+        </div>
         <script src="${pageContext.request.contextPath}/assets/js/dropzone/feckless_dropzone.js"></script>
+        </form>
     </body>
 </html>
