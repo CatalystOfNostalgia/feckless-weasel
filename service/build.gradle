@@ -32,10 +32,6 @@ dependencies {
 
     compile "javax.ws.rs:jsr311-api:1.1.1"
 
-    compile 'com.sun.jersey:jersey-server:1.9'
-    compile 'com.sun.jersey:jersey-core:1.13'
-    compile 'com.sun.jersey:jersey-servlet:1.13'
-    compile 'com.sun.jersey.contribs:jersey-multipart:1.13'
     compile 'javax:javaee-api:7.0'
 
     compile 'net.sf.flexjson:flexjson:3.3'
