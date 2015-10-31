@@ -10,7 +10,7 @@
 
         <%-- Instantiate the session if there is one. You can use this in pages that include this. --%>
         <%
-            UserSession authSession = UserSessionUtil.resumeSession(request);
+            final UserSession authSession = UserSessionUtil.resumeSession(request);
          %>
 
         <%-- Show signup and login or logout button --%>
