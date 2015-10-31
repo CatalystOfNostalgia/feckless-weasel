@@ -29,13 +29,7 @@ dependencies {
 
     compile 'javax.mail:mail:1.4.1'
     compile 'javax.servlet:jstl:1.2'
-
-    compile "javax.ws.rs:jsr311-api:1.1.1"
-
     compile 'javax:javaee-api:7.0'
-
-    compile 'net.sf.flexjson:flexjson:3.3'
-
     compile 'mysql:mysql-connector-java:5.1.6'
 
     testCompile 'org.eluder.coveralls:coveralls-maven-plugin:4.0.0'
