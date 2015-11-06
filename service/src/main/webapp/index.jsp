@@ -6,12 +6,10 @@
         <link href="${pageContext.request.contextPath}/assets/css/base.css" rel="stylesheet" type="text/css">
     </head>
     <body>
-        <jsp:include page="header.jsp"/>
-        <div class="column-beta">
+       <jsp:include page="header.jsp"/>
+       <div class="column-beta">
             <h1>Welcome to Feckless Weasel!</h1>
-            <p>
-                Hello World! Today is <%= new java.util.Date() %>
-            </p>
+            <h4><a href='/create.jsp'>Create a University</a></h4>
         </div>
     </body>
 </html>

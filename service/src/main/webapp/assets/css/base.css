@@ -35,6 +35,11 @@ button.button-large{
     width: 80px;
 }
 
+button.button-extra-large{
+    width: 100px;
+    height: 10%;
+}
+
 a{
     font: 20px Verdana, sans-serif;
 }
@@ -82,14 +87,23 @@ h2{
 
 .column-delta{
     margin-lefth: 85%;
-    width: 15%;:w
+    width: 15%;
 
 }
 
 .top{
-    background-color: #FFAF00
+    background-color: #FFAF00;
     margin-left: 0px;
     margin-top: 0px;
+}
+
+table.db-table th, table.db-table td  {
+    border: 1px solid black;
+    text-align: left;
+}
+
+table.db-table {
+    border-collapse: collapse;
 }
 
 html, body{

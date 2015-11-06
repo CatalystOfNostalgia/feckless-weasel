@@ -22,7 +22,5 @@
             "<a href='/account/create.jsp'>Sign up</a>" +
             " <a href='/account/login.jsp'>Login</a>"
          %>
-        
-        <a href="/classroom.jsp">Visit a Class</a>
     </div>
 </div>

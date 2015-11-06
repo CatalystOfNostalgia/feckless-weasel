@@ -17,17 +17,17 @@
                 }
 
                 if (usernameInput.value.length < <%= User.USER_MIN %> || usernameInput.value.length > <%= User.USER_MAX %>) {
-                    alert("Username is either too short or too long.");
+                    alert("Username must be between <%= User.USER_MIN %> and <%= User.USER_MAX %> characters.");
                     return false;
                 }
 
                 if (passwordInput.value.length < <%= User.PASS_MIN %> || passwordInput.value.length > <%= User.PASS_MAX %>) {
-                    alert("Password is either too long or too short.");
+                    alert("Password must be <%= User.PASS_MIN %> and <%= User.PASS_MAX %> characters.");
                     return false;
                 }
 
                 if (emailInput.value.length > <%= User.EMAIL_MAX %>) {
-                    alert("Email is too long.")
+                    alert("Email should be no greater than <%= User.EMAIL_MAX %> characters.")
                     return false;
                 }
 
@@ -46,7 +46,7 @@
                 <input type="password" class="text-large" id="password-retype" name="password-retype" placeholder="retype password">
                 <input type="text" class="text-large" id="email" name="email" placeholder="email">
                 <div>
-                    <button type="submit" class="button-large" id="submit" name="submit">Create Account</button>
+                    <input type="submit" class="button-large" id="submit" name="submit" value="Sign up" \>
                 </div>
             </form>
         </div>
