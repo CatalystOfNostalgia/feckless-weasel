@@ -21,10 +21,13 @@ import com.fecklessweasel.service.objectmodel.ServiceStatus;
 public class UniversityTable {
 
     private static String INSERT_ROW = "insert into University (longName, acronym, city, state, country) values (?,?,?,?,?)";
-    /** Lookup user query. */
+    /** Lookup university query. */
     public static String LOOKUP_UNIVERSITY_QUERY =
             "SELECT * FROM University WHERE University.longName=?";
 
+    /** lookup all  universities*/
+    public static String LOOKUP_ALL_QUERY =
+            "SELECT * FROM University";
     /**
      * Insert a university into the table.
      * @param conn The connection tot he database.
@@ -74,6 +77,20 @@ public class UniversityTable {
             PreparedStatement lookupStatement =
                     connection.prepareStatement(LOOKUP_UNIVERSITY_QUERY);
             lookupStatement.setString(1, longName);
+
+            return lookupStatement.executeQuery();
+        } catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        }
+    }
+
+    public static ResultSet lookupAll(Connection connection) throws ServiceException {
+
+        CodeContract.assertNotNull(connection, "connection");
+
+        try {
+            PreparedStatement lookupStatement =
+                    connection.prepareStatement(LOOKUP_ALL_QUERY);
 
             return lookupStatement.executeQuery();
         } catch (SQLException ex) {

@@ -2,6 +2,7 @@ package com.fecklessweasel.service.objectmodel;
 
 import java.sql.Connection;
 import com.fecklessweasel.service.datatier.UniversityTable;
+import com.fecklessweasel.service.datatier.DepartmentTable;
 import java.sql.Connection;
 import java.util.Collection;
 import java.util.Collections;
@@ -13,6 +14,8 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Stores all information about a University.
@@ -213,7 +216,6 @@ public class University {
         return this.country;
     }
 
-
     /**
      * Gets the University from the database
      *
@@ -246,6 +248,34 @@ public class University {
             return university;
         }
         catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        }
+    }
+
+    /**
+     *@author Hayden Schmackpfeffer
+     *@param connection The SQL Connection
+     *@return the list of ALL universities in the database
+     */
+    public static ArrayList<University> getAll(Connection connection) throws ServiceException{
+        OMUtil.sqlCheck(connection);
+
+        ResultSet results = UniversityTable.lookupAll(connection);
+        ArrayList<University> univs = new ArrayList<University>();
+
+        try{
+            while (results.next()) {
+                University univ = new University(results.getInt("id"),
+                                    results.getString("longName"),
+                                    results.getString("acronym"),
+                                    results.getString("city"),
+                                    results.getString("state"),
+                                    results.getString("country"));
+                univs.add(univ);
+            }
+            results.close();
+            return univs;
+        } catch (SQLException ex){
             throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
         }
     }

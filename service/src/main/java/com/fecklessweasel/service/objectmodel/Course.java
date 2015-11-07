@@ -1,6 +1,9 @@
 package com.fecklessweasel.service.objectmodel;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 import com.fecklessweasel.service.datatier.CourseTable;
 
@@ -54,6 +57,33 @@ public class Course {
         return new Course(id, department, courseNum);
     }
 
+    /**
+     *@author Hayden Schmackpfeffer
+     *@param conn SQL Connection
+     *@param dept Department which all returned courses belong to
+     *@return list of all courses in dept
+     */
+    public static ArrayList<Course> getAllWithDept(Connection conn, Department dept) throws ServiceException {
+        OMUtil.sqlCheck(conn);
+        OMUtil.nullCheck(dept);
+
+        ResultSet results = CourseTable.getAllWithDept(conn, dept.getID());
+        ArrayList<Course> courses = new ArrayList<Course>();
+
+        try{
+            while (results.next()) {
+                Course course = new Course(results.getInt("id"),
+                                    dept,
+                                    results.getInt("courseNumber"));
+                courses.add(course);
+            }
+            results.close();
+            return courses;
+        } catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        }
+    }
+    
     /**
      * Gets the database ID of the Course.
      * @return The database ID of the Course.
