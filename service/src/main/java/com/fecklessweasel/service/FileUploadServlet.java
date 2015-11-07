@@ -50,7 +50,7 @@ public class FileUploadServlet extends HttpServlet {
                     throws ServiceException, SQLException {
 
                 int classId = Integer.parseInt(request.getParameter("class"));
-                return FileMetadata.create(connection, session.getUser(), classId, new Date());
+                return FileMetadata.create(connection, session.getUser(), classId, new Date(), "TODO: ADD TITLE", "TODO: ADD DESCRIPTION");
             }
         });
 

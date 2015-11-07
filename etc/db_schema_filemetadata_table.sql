@@ -8,6 +8,8 @@ CREATE TABLE FileMetadata(
 	uid INT NOT NULL,
 	cid INT NOT NULL,
 	creation_date DATETIME,
+    title VARCHAR(64) NOT NULL,
+    description VARCHAR(255) NOT NULL,
     INDEX USING HASH(fid, uid),
 	PRIMARY KEY (fid),
     FOREIGN KEY (uid) REFERENCES User(uid),

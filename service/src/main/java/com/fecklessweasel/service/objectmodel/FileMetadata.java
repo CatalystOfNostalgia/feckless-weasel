@@ -28,6 +28,11 @@ public class FileMetadata {
     /** The date the file was created */
     private Date creationDate;
 
+    /** The title of the file*/
+    private String title;
+    /** The description of the file*/
+    private String description;
+
     /**
      * Private constructor to the FileMetadata object, is only called in create();
      * @param fid The Files Unique Identifier in the table
@@ -37,11 +42,12 @@ public class FileMetadata {
      * @param creationDate The date the file was created
      * @param rating The Rating of the file
      */
-    private FileMetadata(int fid, User user, int course, Date creationDate) {
+    private FileMetadata(int fid, User user, int course, Date creationDate, String title, String description) {
         this.fid = fid;
         this.user = user;
         this.course = course;
         this.creationDate = creationDate;
+        this.title = title;
     }
 
     /**
@@ -54,14 +60,19 @@ public class FileMetadata {
     public static FileMetadata create(Connection sql,
                                       User user,
                                       int course,
-                                      Date creationDate) throws ServiceException {
+                                      Date creationDate,
+                                      String title,
+                                      String description) throws ServiceException {
         OMUtil.sqlCheck(sql);
         OMUtil.nullCheck(creationDate);
+        OMUtil.nullCheck(title);
+        OMUtil.nullCheck(description);
+
 
         // TODO Add validation for data members
 
-        int fid = FileMetadataTable.insertFileData(sql, user.getUid(), course, creationDate);
-        return new FileMetadata(fid, user, course, creationDate);
+        int fid = FileMetadataTable.insertFileData(sql, user.getUid(), course, creationDate, title, description);
+        return new FileMetadata(fid, user, course, creationDate, title, description);
     }
 
     /**
@@ -83,7 +94,9 @@ public class FileMetadata {
             FileMetadata fileData = new FileMetadata(result.getInt("fid"),
                                                      user,
                                                      result.getInt("cid"),
-                                                     result.getDate("creation_date"));
+                                                     result.getDate("creation_date"),
+                                                     result.getString("title"),
+                                                     result.getString("description"));
             result.close();
             return fileData;
         } catch (SQLException ex) {
@@ -110,7 +123,9 @@ public class FileMetadata {
                 FileMetadata fileData = new FileMetadata(results.getInt("fid"),
                                                          user,
                                                          results.getInt("cid"),
-                                                         results.getDate("creation_date"));
+                                                         results.getDate("creation_date"),
+                                                         results.getString("title"),
+                                                         results.getString("description"));
                 listOfFiles.add(fileData);
             }
             results.close();
@@ -139,7 +154,9 @@ public class FileMetadata {
                 FileMetadata fileData = new FileMetadata(results.getInt("fid"),
                                                          user,
                                                          results.getInt("cid"),
-                                                         results.getDate("creation_date"));
+                                                         results.getDate("creation_date"),
+                                                         results.getString("title"),
+                                                         results.getString("description"));
                 listOfFiles.add(fileData);
             }
             results.close();
