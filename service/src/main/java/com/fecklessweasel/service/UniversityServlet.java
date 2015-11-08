@@ -50,6 +50,6 @@ public final class UniversityServlet extends HttpServlet {
 			);
 
 			// Redirect to homepage.
-		response.sendRedirect("/university.jsp?name=" + longName);
+		response.sendRedirect("/university/university.jsp?name=" + longName);
 	}
 }
