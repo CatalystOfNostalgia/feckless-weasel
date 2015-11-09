@@ -50,6 +50,15 @@ public class User {
     /** User's security roles. */
     private final Set<Role> roles;
 
+    /**
+     * Creates a new user and stores in the database.
+     * @param sql A connection from SQLSource.
+     * @param username The username for the new user.
+     * @param password The password for the new user.
+     * @param emailStr The email address for the new user.
+     * @throws ServiceException Thrown if an error occurs.
+     * @return Returns the new user object.
+     */
     public static User create(Connection sql,
                               String username,
                               String password,
