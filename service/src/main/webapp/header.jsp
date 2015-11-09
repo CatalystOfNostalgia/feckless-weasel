@@ -6,7 +6,7 @@
     <div class="container">
         <div class="navbar-header">    
             <a href="/index.jsp" class="pull-left">
-                <img style="max-width:50px; margin-top: -7px" src="${pageContext.request.contextPath}/assets/img/logo.png">
+                <img style="padding-top: 15%; max-width:50px; margin-top: -7px" src="${pageContext.request.contextPath}/assets/img/logo.png">
             </a>
         </div>  
         <div id="navbar" class="navbar-collapse collapse">
@@ -26,10 +26,11 @@
              %>
             <%-- Show signup and login or logout button --%>
             <%= authSession != null ?
-                "<form class='navbar-form navbar-nav' action='/servlet/user_session' method='post'>" +
+                "<li><a href='/account/index.jsp'>Profile</a></li>"+
+                "<li><form class='navbar-form navbar-nav' action='/servlet/user_session' method='post'>" +
                 "<input type='hidden' name='action' value='delete'>"+
-                "<li><a href='javascript:;' onclick='parentNode.parentNode.submit();\'>Logout</a></li>" +
-                "</form>":
+                "<a href='javascript:;' onclick='parentNode.submit();\'><span class='glyphicon glyphicon-log-out' style='color:#f0ad4e; font-size:2em;''></a>" +
+                "</form></li>":
                 "<li><a href='/account/create.jsp'>Sign up</a></li>" +
                 "<li><a href='/account/login.jsp'>Login</a></li>"
                 %>

@@ -3,7 +3,8 @@
 <html>
     <head>
         <title>Feckless Weasel Account Creation</title>
-        <link href="${pageContext.request.contextPath}/assets/css/base.css" rel="stylesheet" type="text/css">
+        <link href="${pageContext.request.contextPath}/assets/bootstrap-3.3.5-dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="${pageContext.request.contextPath}/assets/css/login.css" rel="stylesheet">
         <script language="javascript">
             function validate(event) {
                 var usernameInput = document.getElementById('username');
@@ -37,17 +38,20 @@
     </head>
     <body class="four-column">
         <jsp:include page="/header.jsp"/>
-        <div class="column-beta">
-            <h1>Create an account</h1>
-            <h2>It's free!</h2>
-            <form class="form-default" action="/servlet/user" method="post" enctype="application/x-www-form-urlencoded" onsubmit="return validate()">
-                <input type="text" class="text-large" id="username" name="username" placeholder="username">
-                <input type="password" class="text-large" id="password" name="password" placeholder="password">
-                <input type="password" class="text-large" id="password-retype" name="password-retype" placeholder="retype password">
-                <input type="text" class="text-large" id="email" name="email" placeholder="email">
-                <div>
-                    <input type="submit" class="button-large" id="submit" name="submit" value="Sign up" \>
-                </div>
+        <div class="container">
+            <form class="form-signin" action="/servlet/user" method="post" enctype="application/x-www-form-urlencoded" onsubmit="return validate()">
+                <h2 class="form-signin-heading">Create an account!</h2>
+                <h2 class="form-signin-heading">It's free</h2>
+                <label for="username" class="sr-only">Username</label>
+                <input type="text" class="form-control" id="username" name="username" placeholder="username">
+                <label for="email" class="sr-only">Email</label>
+                <input type="text" class="form-control" id="email" name="email" placeholder="email">
+                <label for="password" class="sr-only">Password</label>
+                <input type="password" style="margin-bottom: 0px;" class="form-control" id="password" name="password" placeholder="password">
+                <label for="password-retype" class="sr-only">Retype-password</label>
+                <input type="password" class="form-control" id="password-retype" name="password-retype" placeholder="retype password">
+                <button type="submit" class="btn btn-lg btn-warning btn-block" id="submit" name"submit">Create</button>
+                <p>Already have an account? Login <a href="/account/login.jsp">here</a></p>
             </form>
         </div>
     </body>
