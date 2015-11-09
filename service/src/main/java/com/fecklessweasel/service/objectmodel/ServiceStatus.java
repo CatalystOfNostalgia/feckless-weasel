@@ -72,7 +72,10 @@ public enum ServiceStatus {
     APP_DEPT_TAKEN(729, 400, "Class has already been created."),
     APP_UNIV_TAKEN(730, 400, "Class has already been created."),
 
-    APP_FILE_NOT_EXIST(731, 400, "The requested file does not exist");
+    APP_FILE_NOT_EXIST(731, 400, "The requested file does not exist"),
+    
+    APP_COMMENT_TAKEN(732, 400, "Comment has already been taken for this file."),
+    APP_RATING_TAKEN(733, 400, "Rating has already been taken for this file.");
 
 
     /** The String name of the state (OK, MALFORMED_REQUEST, ...) */

@@ -4,11 +4,11 @@
  */
 
 CREATE TABLE FileMetadata(
-	fid INT AUTO_INCREMENT,
-	uid INT NOT NULL,
-	cid INT NOT NULL,
-	creation_date DATETIME,
+    fid INT AUTO_INCREMENT,
+    uid INT NOT NULL,
+    cid INT NOT NULL,
+    creation_date DATETIME,
     INDEX USING HASH(fid, uid),
-	PRIMARY KEY (fid),
+    PRIMARY KEY (fid),
     FOREIGN KEY (uid) REFERENCES User(uid),
     FOREIGN KEY (cid) REFERENCES Course(id));
