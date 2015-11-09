@@ -20,7 +20,7 @@ import com.fecklessweasel.service.objectmodel.UserSession;
 import com.fecklessweasel.service.objectmodel.Course;
 import com.fecklessweasel.service.objectmodel.Department;
 import com.fecklessweasel.service.objectmodel.University;
-import com.fecklessweasel.service.objectmodel.FileMetadata;
+import com.fecklessweasel.service.objectmodel.StoredFile;
 
 /**
  * A servlet that will fill the Database with testing data when posted to

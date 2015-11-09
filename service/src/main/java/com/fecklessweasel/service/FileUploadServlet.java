@@ -2,7 +2,8 @@ package com.fecklessweasel.service;
 
 import com.fecklessweasel.service.datatier.SQLInteractionInterface;
 import com.fecklessweasel.service.datatier.SQLSource;
-import com.fecklessweasel.service.objectmodel.FileMetadata;
+import com.fecklessweasel.service.objectmodel.Course;
+import com.fecklessweasel.service.objectmodel.StoredFile;
 import com.fecklessweasel.service.objectmodel.ServiceException;
 import com.fecklessweasel.service.objectmodel.ServiceStatus;
 import com.fecklessweasel.service.objectmodel.UserSession;
@@ -19,12 +20,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
+/**
+ * Servlet for file uploads.
+ * @author James Flinn
+ * @author Christian Gunderman
+ */
 @WebServlet("/servlet/file/upload")
 @MultipartConfig
 public class FileUploadServlet extends HttpServlet {
 
-    private static final String FILEPATH_PREFIX = "files";
-
+    /**
+     * HTTP Post servlet method.
+     * @param request The HTTP POST request from the client.
+     * @param response The HTTP response to return to the client.
+     */
     @Override
     protected void doPost(final HttpServletRequest request,
                           final HttpServletResponse response)
@@ -34,8 +43,7 @@ public class FileUploadServlet extends HttpServlet {
         String title = request.getParameter("title");
         String description = request.getParameter("description");
 
-        Part filePart = request.getPart("file[0]");
-        String fileName = filePart.getSubmittedFileName();
+        final Part filePart = request.getPart("file[0]");
 
         final UserSession session = UserSessionUtil.resumeSession(request);
         // If user is not authenticated
@@ -44,49 +52,25 @@ public class FileUploadServlet extends HttpServlet {
         }
 
         // Open a SQL connection and create the file meta data.
-        FileMetadata fileMetadata = SQLSource.interact(new SQLInteractionInterface<FileMetadata>() {
+        StoredFile fileMetadata = SQLSource.interact(new SQLInteractionInterface<StoredFile>() {
             @Override
-            public FileMetadata run(Connection connection)
-                    throws ServiceException, SQLException {
+            public StoredFile run(Connection connection)
+                throws ServiceException, SQLException {
 
-                int classId = Integer.parseInt(request.getParameter("class"));
-                return FileMetadata.create(connection, session.getUser(), classId, new Date());
+                int courseId = Integer.parseInt(request.getParameter("class"));
+
+                // Write and store file.
+                try {
+                    return StoredFile.create(connection,
+                                             session.getUser(),
+                                             Course.lookupById(connection, courseId),
+                                             filePart.getInputStream());
+                } catch (IOException ex) {
+                    throw new ServiceException(ServiceStatus.SERVER_UPLOAD_ERROR);
+                }
             }
         });
 
-        String filePath = FILEPATH_PREFIX + fileMetadata.getCourse() + fileName;
-        if (!saveFile(filePart.getInputStream(), filePath, fileName)) {
-            throw new ServiceException(ServiceStatus.SERVER_UPLOAD_ERROR);
-        }
-    }
-
-    /**
-     * Saves a file to the server.
-     * @param inputStream The file input stream.
-     * @param filePath The file path the file will be saved to.
-     * @return Returns true if file is successfully saved, false otherwise.
-     */
-    private boolean saveFile(InputStream inputStream, String filePath, String fileName) {
-        try {
-            int read;
-            byte[] bytes = new byte[1024];
-
-            File directory = new File(filePath);
-            if (!directory.exists()) {
-                directory.mkdirs();
-            }
-            OutputStream outputStream = new FileOutputStream(new File(filePath + fileName));
-
-            while ((read = inputStream.read(bytes)) != -1) {
-                outputStream.write(bytes, 0, read);
-            }
-            outputStream.flush();
-            outputStream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-
-        return true;
+        // TODO: redirect to uploaded file page.
     }
 }

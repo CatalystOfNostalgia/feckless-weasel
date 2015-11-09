@@ -51,7 +51,7 @@ public class UserSession {
         UUID sessionId = UUID.randomUUID();
 
         // Create new session.
-        UserSessionTable.insertSession(connection, user.getUid(), sessionId);
+        UserSessionTable.insertSession(connection, user.getID(), sessionId);
 
         return new UserSession(sessionId, user);
     }
@@ -131,7 +131,7 @@ public class UserSession {
         User user = User.lookup(connection, username);
 
         // Check if a session exists for this user.
-        if (!UserSessionTable.sessionExists(connection, user.getUid(), sessionId)) {
+        if (!UserSessionTable.sessionExists(connection, user.getID(), sessionId)) {
             throw new ServiceException(ServiceStatus.INVALID_SESSION);
         }
 
@@ -154,7 +154,7 @@ public class UserSession {
      * @param username The username of the user.
      */
     public void endAll(Connection connection) throws ServiceException {
-        UserSessionTable.deleteAllSessions(connection, this.sessionUser.getUid());
+        UserSessionTable.deleteAllSessions(connection, this.sessionUser.getID());
     }
 
     /**
@@ -163,7 +163,7 @@ public class UserSession {
      */
     public void end(Connection connection) throws ServiceException {
         UserSessionTable.deleteSession(connection,
-                                       this.sessionUser.getUid(),
+                                       this.sessionUser.getID(),
                                        this.sessionId);
     }
 

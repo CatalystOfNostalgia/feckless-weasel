@@ -22,10 +22,4 @@ public class test_CourseTable {
     public void setup() {
         this.mockConnection = mock(Connection.class);
     }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void test_insert_nullConnection() throws Exception {
-        CourseTable.insertCourse(null, 9, 9, 9);
-    }
-
 }
