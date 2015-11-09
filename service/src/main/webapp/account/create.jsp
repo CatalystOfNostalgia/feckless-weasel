@@ -27,6 +27,11 @@
                     return false;
                 }
 
+                if (emailInput.value.length === 0) {
+                    alert("Email cannot be empty.");
+                    return false;
+                }
+
                 if (emailInput.value.length > <%= User.EMAIL_MAX %>) {
                     alert("Email should be no greater than <%= User.EMAIL_MAX %> characters.")
                     return false;
@@ -50,6 +55,7 @@
                 <input type="password" style="margin-bottom: 0px;" class="form-control" id="password" name="password" placeholder="password">
                 <label for="password-retype" class="sr-only">Retype-password</label>
                 <input type="password" class="form-control" id="password-retype" name="password-retype" placeholder="retype password">
+		<input type="hidden" name="action" value="create" />
                 <button type="submit" class="btn btn-lg btn-warning btn-block" id="submit" name"submit">Create</button>
                 <p>Already have an account? Login <a href="/account/login.jsp">here</a></p>
             </form>

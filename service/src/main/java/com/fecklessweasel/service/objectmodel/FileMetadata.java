@@ -79,7 +79,7 @@ public class FileMetadata {
             if (!result.next()) {
                 throw new ServiceException(ServiceStatus.APP_FILE_NOT_EXIST);
             }
-            User user = User.lookupId(sql, result.getInt("uid"));
+            User user = User.lookupById(sql, result.getInt("uid"));
             FileMetadata fileData = new FileMetadata(result.getInt("fid"),
                                                      user,
                                                      result.getInt("cid"),
@@ -106,7 +106,7 @@ public class FileMetadata {
 
         try{
             while (results.next()) {
-                User user = User.lookupId(sql, results.getInt("uid"));
+                User user = User.lookupById(sql, results.getInt("uid"));
                 FileMetadata fileData = new FileMetadata(results.getInt("fid"),
                                                          user,
                                                          results.getInt("cid"),
@@ -135,7 +135,7 @@ public class FileMetadata {
 
         try {
             while( results.next() ){
-                User user = User.lookupId(sql, results.getInt("uid"));
+                User user = User.lookupById(sql, results.getInt("uid"));
                 FileMetadata fileData = new FileMetadata(results.getInt("fid"),
                                                          user,
                                                          results.getInt("cid"),

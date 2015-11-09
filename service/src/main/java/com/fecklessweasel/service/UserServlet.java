@@ -18,7 +18,7 @@ import com.fecklessweasel.service.objectmodel.UserSession;
 
 /**
  * A servlet that handles post requests from an HTML form and produces
- * new users.
+ * new users and modifies their values.
  * @author Christian Gunderman
  */
 @WebServlet("/servlet/user")
@@ -43,6 +43,13 @@ public final class UserServlet extends HttpServlet {
                           final HttpServletResponse response)
         throws ServletException, IOException {
 
+        // Get action form parameter or send bad request if not given.
+        final String action = request.getParameter("action");
+        if (action == null) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
+
         // Open a SQL connection and create the user and log them in.
         SQLSource.interact(new SQLInteractionInterface<Integer>() {
 
@@ -64,18 +71,41 @@ public final class UserServlet extends HttpServlet {
                     String username = request.getParameter("username");
                     String password = request.getParameter("password");
 
-                    // Create a new user.
-                    User user = User.create(connection,
-                                            username,
-                                            password,
-                                            request.getParameter("email"));
+                    if (action.equals("create")) {
+                        // Create a new user.
+                        User user = User.create(connection,
+                                                username,
+                                                password,
+                                                request.getParameter("email"));
 
-                    // Log in new user.
-                    UserSession session = UserSessionUtil.startSession(connection,
-                                                                       response,
-                                                                       username,
-                                                                       password);
-                    
+                        // Log in new user.
+                        UserSession session = UserSessionUtil.startSession(connection,
+                                                                           response,
+                                                                           username,
+                                                                           password);
+                    } else if (action.equals("update_password")) {
+                        String newPassword = request.getParameter("new-password");
+
+                        // Lookup user (we'll need to compare their passwords).
+                        User user = User.lookup(connection,
+                                                username);
+
+                        // Update the user's password.
+                        user.updatePassword(connection,
+                                            password,
+                                            newPassword);
+                    } else if (action.equals("update_email")) {
+                        String newEmail = request.getParameter("email");
+
+                        // Lookup user (we'll need to compare their passwords).
+                        User user = User.lookup(connection,
+                                                username);
+
+                        // Update the user's email.
+                        user.updateEmail(connection,
+                                         newEmail);
+                    }
+
                     // Have to return something.
                     return 0;
                 }

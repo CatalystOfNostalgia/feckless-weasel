@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"
     import="com.fecklessweasel.service.objectmodel.UserSession,com.fecklessweasel.service.UserSessionUtil" %>
-
 <nav class="navbar navbar-fixed-top navbar-inverse">
     <div class="container">
         <div class="navbar-header">    
@@ -22,7 +21,7 @@
         <ul class="nav navbar-nav navbar-right">
             <%-- Instantiate the session if there is one. You can use this in pages that include this. --%>
             <%
-                UserSession authSession = UserSessionUtil.resumeSession(request);
+                final UserSession authSession = UserSessionUtil.resumeSession(request);
              %>
             <%-- Show signup and login or logout button --%>
             <%= authSession != null ?
