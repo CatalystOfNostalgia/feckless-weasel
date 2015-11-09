@@ -52,7 +52,9 @@ public class test_FileMetadataTable {
         FileMetadataTable.insertFileData(this.mockConnection,
                                          1,
                                          393,
-                                         null);
+                                         null,
+                                         "ex",
+                                         "ex desc");
     }
 
 
@@ -65,7 +67,9 @@ public class test_FileMetadataTable {
             FileMetadataTable.insertFileData(this.mockConnection,
                                                 1,
                                                 393,
-                                                new Date());
+                                                new Date(),
+                                                "ex",
+                                                "ex desc");
         } catch (ServiceException ex) {
             assert(ex.status == ServiceStatus.DATABASE_ERROR);
         }
