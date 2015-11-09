@@ -25,12 +25,7 @@
                     return false;
                 }
 
-                if (emailInput.value.length > <%= User.EMAIL_MAX %>) {
-                    alert("Email should be no greater than <%= User.EMAIL_MAX %> characters.")
-                    return false;
-                }
-
-              return true;
+                return true;
             }
         </script>
     </head>
@@ -43,7 +38,7 @@
             }
         %>
         <div class="column-beta">
-            <h1>Reset Password</h1>
+            <h1>Update Password</h1>
             <form class="form-default" action="/servlet/user" method="post" enctype="application/x-www-form-urlencoded" onsubmit="return validate()">
                 <input type="hidden" name="action" value="update_password" />
                 <input type="hidden" class="text-large" id="username" name="username" placeholder="username" value="<%= authSession.getUser().getUsername() %>" />

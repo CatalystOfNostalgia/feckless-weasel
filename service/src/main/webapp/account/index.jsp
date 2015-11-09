@@ -27,19 +27,22 @@
 
                      return authSession.getUser();
                 }
-             });
+            });
+
+            boolean isCurrentUsersProfile
+                = authSession != null && (user.getUsername().equals(authSession.getUser().getUsername()));
          %>
         <div class="column-beta">
             <h1><%= user.getUsername() %>'s Profile</h1>
             <ul>
                 <li>Joined on: <%= user.getJoinDate() %></li>
-                <li>Contact via: <%= user.getEmail() %></li>
+                <li>
+                    Contact via: <%= user.getEmail() %>
+                    <%= isCurrentUsersProfile ? "<a href='/account/email_update.jsp'>Update Email</a>" : "" %>
+                </li>
 
                 <%-- If this is the current users profile, display a password reset link. --%>
-                <%=
-                    authSession != null && (user.getUsername().equals(authSession.getUser().getUsername())) ?
-                        "<li><a href='/account/password_update.jsp'>Change password</a></li>" : ""
-                %>
+                <%= isCurrentUsersProfile ? "<li><a href='/account/password_update.jsp'>Change password</a></li>" : "" %>
             </ul>
         </div>
     </body>

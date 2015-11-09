@@ -26,6 +26,11 @@
                     return false;
                 }
 
+                if (emailInput.value.length === 0) {
+                    alert("Email cannot be empty.");
+                    return false;
+                }
+
                 if (emailInput.value.length > <%= User.EMAIL_MAX %>) {
                     alert("Email should be no greater than <%= User.EMAIL_MAX %> characters.")
                     return false;

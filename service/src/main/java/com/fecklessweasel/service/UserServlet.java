@@ -94,6 +94,16 @@ public final class UserServlet extends HttpServlet {
                         user.updatePassword(connection,
                                             password,
                                             newPassword);
+                    } else if (action.equals("update_email")) {
+                        String newEmail = request.getParameter("email");
+
+                        // Lookup user (we'll need to compare their passwords).
+                        User user = User.lookup(connection,
+                                                username);
+
+                        // Update the user's email.
+                        user.updateEmail(connection,
+                                         newEmail);
                     }
 
                     // Have to return something.

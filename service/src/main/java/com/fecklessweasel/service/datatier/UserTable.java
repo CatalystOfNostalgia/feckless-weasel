@@ -29,6 +29,10 @@ public abstract class UserTable {
     public static final String UPDATE_USER_PASSWORD_QUERY =
         "UPDATE User SET pass=? WHERE uid=?";
 
+    /** Set user email query. */
+    public static final String UPDATE_USER_EMAIL_QUERY =
+        "UPDATE User SET email=? WHERE uid=?";
+
     /** Lookup user query. */
     public static final String LOOKUP_USER_QUERY =
         "SELECT * FROM User U, UserRole R, UserHasRole H WHERE U.user=? " +
@@ -54,10 +58,10 @@ public abstract class UserTable {
      * @param email The user's email.
      */
     public static int insertUser(Connection connection,
-                                  String user,
-                                  String pass,
-                                  Date joinDate,
-                                  InternetAddress email)
+                                 String user,
+                                 String pass,
+                                 Date joinDate,
+                                 InternetAddress email)
         throws ServiceException {
 
         // Check basic checks for clean arguments.
@@ -118,6 +122,41 @@ public abstract class UserTable {
                 = connection.prepareStatement(UPDATE_USER_PASSWORD_QUERY);
 
             updateStatement.setString(1, newPass);
+            updateStatement.setInt(2, uid);
+
+            if (updateStatement.executeUpdate() != 1) {
+                updateStatement.close();
+                throw new ServiceException(ServiceStatus.APP_USER_NOT_EXIST);
+            }
+
+            updateStatement.close();
+        } catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        }
+    }
+
+    /**
+     * Updates the email for the user with the specified ID.
+     * @param connection A connection from SQLSource.
+     * @param uid The user ID.
+     * @param newEmail The new email for the user.
+     * @throws ServiceException Thrown if unable to update user's password,
+     * such as if user does not exist.
+     */
+    public static void updateEmail(Connection connection,
+                                   int uid,
+                                   InternetAddress newEmail)
+        throws ServiceException {
+
+        // Check basic checks for clean arguments.
+        CodeContract.assertNotNull(connection, "connection");
+        CodeContract.assertNotNull(newEmail, "newEmail");
+
+        try {
+            PreparedStatement updateStatement
+                = connection.prepareStatement(UPDATE_USER_EMAIL_QUERY);
+
+            updateStatement.setString(1, newEmail.getAddress());
             updateStatement.setInt(2, uid);
 
             if (updateStatement.executeUpdate() != 1) {

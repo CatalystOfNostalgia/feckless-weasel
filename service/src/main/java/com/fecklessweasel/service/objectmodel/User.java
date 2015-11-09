@@ -82,21 +82,7 @@ public class User {
 
         validatePassword(password);
 
-        // Check for valid email and convert to internet address.
-        // REGEX from: http://www.mkyong.com/regular-expressions/
-        // how-to-validate-email-address-with-regular-expression/
-        if (emailStr.length() > EMAIL_MAX ||
-            !emailStr.matches("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" +
-                              "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")) {
-            throw new ServiceException(ServiceStatus.APP_INVALID_EMAIL);
-        }
-        InternetAddress emailAddr = null;
-        try {
-            emailAddr = new InternetAddress(emailStr, /*Strict:*/ true);
-            emailAddr.validate();
-        } catch(AddressException e) {
-            throw new ServiceException(ServiceStatus.APP_INVALID_EMAIL);
-        }
+        InternetAddress emailAddr = validateAndCreateInternetAddress(emailStr);
 
         // Hash password.
         password = OMUtil.sha256(password);
@@ -233,7 +219,7 @@ public class User {
     }
 
     /**
-     * Updates and saves the user's password in the database and update's
+     * Updates the user's password in the database and updates
      * this user object.
      * @param connection A connection from SQLSource.
      * @param oldPassword The current password.
@@ -263,6 +249,29 @@ public class User {
 
         // Update the object's state.
         this.passwordHash = newPasswordHash;
+    }
+
+    /**
+     * Updates the user's email in the database and updates
+     * this user object.
+     * @param connection A connection from SQLSource.
+     * @param newEmail The new email.
+     * @throws ServiceException Thrown if database error occurs or if
+     * user does not exist or passwords do not match.
+     */
+    public void updateEmail(Connection connection,
+                            String newEmail) throws ServiceException {
+        OMUtil.sqlCheck(connection);
+        OMUtil.nullCheck(newEmail);
+
+        // Validate the email.
+        InternetAddress emailAddr = validateAndCreateInternetAddress(newEmail);
+
+        // Update the email in the database.
+        UserTable.updateEmail(connection, this.getUid(), emailAddr);
+
+        // Update the object state.
+        this.email = emailAddr.getAddress();
     }
 
     /**
@@ -432,6 +441,36 @@ public class User {
         if (password.contains(" ")){
             throw new ServiceException(ServiceStatus.APP_INVALID_PASSWORD);
         }
+    }
+
+    /**
+     * Validates the email address and turns it into an InternetAddress object.
+     * Validation is based solely upon format.
+     * @param email The email to validate.
+     * @throws ServiceException Thrown if the email address is of an invalid format.
+     * @return The InternetAddress containing the email address.
+     */
+    private static InternetAddress validateAndCreateInternetAddress(String email)
+        throws ServiceException {
+
+        // Check for valid email and convert to internet address.
+        // REGEX from: http://www.mkyong.com/regular-expressions/
+        // how-to-validate-email-address-with-regular-expression/
+        if (email.length() > EMAIL_MAX ||
+            !email.matches("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" +
+                              "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")) {
+            throw new ServiceException(ServiceStatus.APP_INVALID_EMAIL);
+        }
+
+        InternetAddress emailAddr = null;
+        try {
+            emailAddr = new InternetAddress(email, /*Strict:*/ true);
+            emailAddr.validate();
+        } catch(AddressException e) {
+            throw new ServiceException(ServiceStatus.APP_INVALID_EMAIL);
+        }
+
+        return emailAddr;
     }
 
     /**
