@@ -35,7 +35,11 @@
                 <li>Joined on: <%= user.getJoinDate() %></li>
                 <li>Contact via: <%= user.getEmail() %></li>
 
-                <%-- TODO: Add more to the profile page --%>
+                <%-- If this is the current users profile, display a password reset link. --%>
+                <%=
+                    authSession != null && (user.getUsername().equals(authSession.getUser().getUsername())) ?
+                        "<li><a href='/account/password_update.jsp'>Change password</a></li>" : ""
+                %>
             </ul>
         </div>
     </body>

@@ -25,6 +25,10 @@ public abstract class UserTable {
         "INSERT INTO User (user, pass, join_date, email)" +
         " VALUES (?,?,?,?)";
 
+    /** Set user password query. */
+    public static final String UPDATE_USER_PASSWORD_QUERY =
+        "UPDATE User SET pass=? WHERE uid=?";
+
     /** Lookup user query. */
     public static final String LOOKUP_USER_QUERY =
         "SELECT * FROM User U, UserRole R, UserHasRole H WHERE U.user=? " +
@@ -35,9 +39,9 @@ public abstract class UserTable {
         "DELETE FROM User WHERE user=?";
 
     /** Lookup user with uid*/
-    public static final String LOOKUP_USERID_QUERY = 
+    public static final String LOOKUP_USERID_QUERY =
         "SELECT * FROM User U, UserRole R, UserHasRole H WHERE U.uid=?" +
-	" AND U.uid=H.uid AND H.rid=R.rid";
+        " AND U.uid=H.uid AND H.rid=R.rid";
 
     /**
      * Inserts a user into the MySQL table with some minimal validation.
@@ -93,6 +97,41 @@ public abstract class UserTable {
     }
 
     /**
+     * Updates the password for the user with the specified ID.
+     * @param connection A connection from SQLSource.
+     * @param uid The user ID.
+     * @param newPass The new password hash for the user.
+     * @throws ServiceException Thrown if unable to update user's password,
+     * such as if user does not exist.
+     */
+    public static void updatePassword(Connection connection,
+                                      int uid,
+                                      String newPass)
+        throws ServiceException {
+
+        // Check basic checks for clean arguments.
+        CodeContract.assertNotNull(connection, "connection");
+        CodeContract.assertNotNullOrEmptyOrWhitespace(newPass, "pass");
+
+        try {
+            PreparedStatement updateStatement
+                = connection.prepareStatement(UPDATE_USER_PASSWORD_QUERY);
+
+            updateStatement.setString(1, newPass);
+            updateStatement.setInt(2, uid);
+
+            if (updateStatement.executeUpdate() != 1) {
+                updateStatement.close();
+                throw new ServiceException(ServiceStatus.APP_USER_NOT_EXIST);
+            }
+
+            updateStatement.close();
+        } catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        }
+    }
+
+    /**
      * Looks up a user in the database and returns the associated ResultSet with
      * with additional rows for each security UserRole the user has.
      * @throws ServiceException If a SQL error occurs.
@@ -101,7 +140,8 @@ public abstract class UserTable {
      * @return user A ResultSet containing the user. Should contain only a
      * single row.
      */
-    public static ResultSet lookupUserWithRoles(Connection connection, String user)
+    public static ResultSet lookupUserWithRoles(Connection connection,
+                                                String user)
         throws ServiceException {
 
         CodeContract.assertNotNull(connection, "connection");
@@ -158,7 +198,7 @@ public abstract class UserTable {
         CodeContract.assertNotNull(connection, "connection");
 
         try {
-            PreparedStatement insertStatement 
+            PreparedStatement insertStatement
                 = connection.prepareStatement(LOOKUP_USERID_QUERY);
             insertStatement.setInt(1, uid);
 

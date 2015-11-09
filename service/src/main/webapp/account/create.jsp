@@ -41,10 +41,11 @@
             <h1>Create an account</h1>
             <h2>It's free!</h2>
             <form class="form-default" action="/servlet/user" method="post" enctype="application/x-www-form-urlencoded" onsubmit="return validate()">
-                <input type="text" class="text-large" id="username" name="username" placeholder="username">
-                <input type="password" class="text-large" id="password" name="password" placeholder="password">
-                <input type="password" class="text-large" id="password-retype" name="password-retype" placeholder="retype password">
-                <input type="text" class="text-large" id="email" name="email" placeholder="email">
+                <input type="text" class="text-large" id="username" name="username" placeholder="username" />
+                <input type="password" class="text-large" id="password" name="password" placeholder="password" />
+                <input type="password" class="text-large" id="password-retype" name="password-retype" placeholder="retype password" />
+                <input type="text" class="text-large" id="email" name="email" placeholder="email" />
+                <input type="hidden" name="action" value="create" />
                 <div>
                     <input type="submit" class="button-large" id="submit" name="submit" value="Sign up" \>
                 </div>

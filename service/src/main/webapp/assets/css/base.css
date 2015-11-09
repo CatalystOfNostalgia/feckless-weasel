@@ -40,6 +40,10 @@ button.button-extra-large{
     height: 10%;
 }
 
+li{
+    font: 20px Verdana, sans-serif;
+}
+
 a{
     font: 20px Verdana, sans-serif;
 }

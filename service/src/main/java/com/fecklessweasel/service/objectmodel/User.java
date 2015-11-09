@@ -80,14 +80,7 @@ public class User {
             throw new ServiceException(ServiceStatus.APP_INVALID_USERNAME);
         }
 
-        // Check password length.
-        if (password.length() < PASS_MIN) {
-            throw new ServiceException(ServiceStatus.APP_INVALID_PASS_LENGTH);
-        }
-        // Check for spaces.
-        if (password.contains(" ")){
-            throw new ServiceException(ServiceStatus.APP_INVALID_PASSWORD);
-        }
+        validatePassword(password);
 
         // Check for valid email and convert to internet address.
         // REGEX from: http://www.mkyong.com/regular-expressions/
@@ -240,6 +233,39 @@ public class User {
     }
 
     /**
+     * Updates and saves the user's password in the database and update's
+     * this user object.
+     * @param connection A connection from SQLSource.
+     * @param oldPassword The current password.
+     * @param newPassword The new password.
+     * @throws ServiceException Thrown if database error occurs or if
+     * user does not exist or passwords do not match.
+     */
+    public void updatePassword(Connection connection,
+                               String oldPassword,
+                               String newPassword) throws ServiceException {
+        OMUtil.sqlCheck(connection);
+        OMUtil.nullCheck(newPassword);
+
+        String oldPasswordHash = OMUtil.sha256(oldPassword);
+
+        // Check that the given old password matches the stored password hashes.
+        if (!oldPasswordHash.equals(this.getPasswordHash())) {
+            throw new ServiceException(ServiceStatus.APP_INVALID_PASSWORD);
+        }
+
+        // Check that password meets minimum criterion.
+        validatePassword(newPassword);
+
+        // Hash and store new password.
+        String newPasswordHash = OMUtil.sha256(newPassword);
+        UserTable.updatePassword(connection, this.getUid(), newPasswordHash);
+
+        // Update the object's state.
+        this.passwordHash = newPasswordHash;
+    }
+
+    /**
      * Checks if two User objects refer to the same User account.
      * @param o The object to compare.
      * @return True if they are the same user.
@@ -388,6 +414,24 @@ public class User {
         this.joinDate = joinDate;
         this.email = email;
         this.roles = new HashSet<Role>();
+    }
+
+    /**
+     * Checks that a password matches the required criterion.
+     * @param password The new password.
+     * @throws ServiceException Thrown if password is invalid.
+     */
+    private static void validatePassword(String password)
+        throws ServiceException {
+        
+        // Check password length.
+        if (password.length() < PASS_MIN) {
+            throw new ServiceException(ServiceStatus.APP_INVALID_PASS_LENGTH);
+        }
+        // Check for spaces.
+        if (password.contains(" ")){
+            throw new ServiceException(ServiceStatus.APP_INVALID_PASSWORD);
+        }
     }
 
     /**
