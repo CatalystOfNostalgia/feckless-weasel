@@ -5,7 +5,7 @@
 <nav class="navbar navbar-fixed-top navbar-inverse">
     <div class="container">
         <div class="navbar-header">    
-            <a href="#" class="pull-left">
+            <a href="/index.jsp" class="pull-left">
                 <img style="max-width:50px; margin-top: -7px" src="${pageContext.request.contextPath}/assets/img/logo.png">
             </a>
         </div>  
@@ -25,11 +25,11 @@
                 UserSession authSession = UserSessionUtil.resumeSession(request);
              %>
             <%-- Show signup and login or logout button --%>
-            <%= authSession != null ? String.format(
-                "<form class='form-default' action='/servlet/user_session' method='post'>" +
-                "<input type='hidden' name='action' value='delete'/><input type='submit' " +
-                "class='button-large' id='submit' name='submit' value='Logout %s'/></form>",
-                    authSession.getUser().getUsername()) :
+            <%= authSession != null ?
+                "<form class='navbar-form navbar-nav' action='/servlet/user_session' method='post'>" +
+                "<input type='hidden' name='action' value='delete'>"+
+                "<li><a href='javascript:;' onclick='parentNode.parentNode.submit();\'>Logout</a></li>" +
+                "</form>":
                 "<li><a href='/account/create.jsp'>Sign up</a></li>" +
                 "<li><a href='/account/login.jsp'>Login</a></li>"
                 %>
