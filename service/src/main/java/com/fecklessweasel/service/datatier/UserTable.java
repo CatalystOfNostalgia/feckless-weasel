@@ -36,7 +36,8 @@ public abstract class UserTable {
 
     /** Lookup user with uid*/
     public static final String LOOKUP_USERID_QUERY = 
-        "SELECT * FROM User U WHERE U.uid=?";
+        "SELECT * FROM User U, UserRole R, UserHasRole H WHERE U.uid=?" +
+	" AND U.uid=H.uid AND H.rid=R.rid";
 
     /**
      * Inserts a user into the MySQL table with some minimal validation.
@@ -44,7 +45,7 @@ public abstract class UserTable {
      * occurs in the object model.
      * @param connection Connection to the database from SQLSource.
      * @param user The username.
-     * @param pass The password.
+     * @param pass The password hashes.
      * @param joinDate The date that the user joined.
      * @param email The user's email.
      */
@@ -146,7 +147,12 @@ public abstract class UserTable {
         }
     }
 
-    public static ResultSet lookupUserWithId(Connection connection, int uid) 
+    /**
+     * Looks up a user with their roles by their unique ID.
+     * @param connection A connection from SQLSource.
+     * @param uid The user's unique ID.
+     */
+    public static ResultSet lookupUserWithRolesById(Connection connection, int uid) 
         throws ServiceException{
 
         CodeContract.assertNotNull(connection, "connection");
@@ -156,7 +162,7 @@ public abstract class UserTable {
                 = connection.prepareStatement(LOOKUP_USERID_QUERY);
             insertStatement.setInt(1, uid);
 
-            //Execute and check that insertion was successful
+            // Execute and check that insertion was successful
             return insertStatement.executeQuery();
         } catch (SQLException ex) {
             throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);

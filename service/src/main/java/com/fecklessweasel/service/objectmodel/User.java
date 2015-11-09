@@ -168,16 +168,26 @@ public class User {
         }
     }
 
-    public static User lookupId(Connection connection, int uid)
+    /**
+     * Looks up a user by his or her user ID. Package protected intentionally.
+     * Keep this method in the objectmodel unless absolutely neccessary since
+     * we can and SHOULD be identifying users by their User name in the Service
+     * itself.
+     * @param connection A SQL Source connection.
+     * @param uid The user's ID.
+     * @throws ServiceException If unable to lookup or find the user.
+     * @return The user.
+     */
+    static User lookupById(Connection connection, int uid)
         throws ServiceException {
 
         OMUtil.sqlCheck(connection);
 
-        ResultSet result = UserTable.lookupUserWithId(connection, uid);
+        ResultSet result = UserTable.lookupUserWithRolesById(connection, uid);
 
-        //build User object
+        // Build User object
         try {
-            //Get the first (and only) row or throw if the user doesnt exist
+            // Get the first (and only) row or throw if the user doesnt exist
             if(!result.next()) {
                 throw new ServiceException(ServiceStatus.APP_USER_NOT_EXIST);
             }
