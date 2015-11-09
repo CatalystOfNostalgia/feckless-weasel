@@ -44,18 +44,17 @@ public class FileUploadServlet extends HttpServlet {
         }
 
         // Open a SQL connection and create the file meta data.
-//        FileMetadata fileMetadata = SQLSource.interact(new SQLInteractionInterface<FileMetadata>() {
-//            @Override
-//            public FileMetadata run(Connection connection)
-//                    throws ServiceException, SQLException {
-//
-//                int classId = Integer.parseInt(request.getParameter("class"));
-//                return FileMetadata.create(connection, session.getUser(), classId, new Date());
-//            }
-//        });
+        FileMetadata fileMetadata = SQLSource.interact(new SQLInteractionInterface<FileMetadata>() {
+            @Override
+            public FileMetadata run(Connection connection)
+                    throws ServiceException, SQLException {
 
-//        String filePath = FILEPATH_PREFIX + fileMetadata.getCourse() + fileName;
-        String filePath = FILEPATH_PREFIX + "/" + fileName;
+                int classId = Integer.parseInt(request.getParameter("class"));
+                return FileMetadata.create(connection, session.getUser(), classId, new Date());
+            }
+        });
+
+        String filePath = FILEPATH_PREFIX + fileMetadata.getCourse() + fileName;
         if (!saveFile(filePart.getInputStream(), filePath, fileName)) {
             throw new ServiceException(ServiceStatus.SERVER_UPLOAD_ERROR);
         }
