@@ -4,6 +4,7 @@
 
 <div class="header">
     <div class="column-center">
+        <a href="/"><img class="logo-default" src="/assets/img/logo.png" alt="logo"/></a>
         <input type="text" class="text-large" id="college" name="college" placeholder="Enter your university">
         <input type="text" class="text-large" id="class" name="class" placeholder="Enter your class (i.e. EECS-390)">
         <button type="submit" class="button-small" id="search-submit" name="search-submit">Go</button>
