@@ -71,7 +71,9 @@ public enum ServiceStatus {
     APP_INVALID_COURSE_NUMBER(727, 400, "Class number in invalid."),
     APP_COURSE_NOT_EXIST(728, 400, "Course does not exist."),
     APP_FILE_NOT_EXIST(729, 400, "The requested file does not exist"),
-    APP_DEPARTMENT_NOT_EXIST(730, 400, "Department does not exist.");
+    APP_DEPARTMENT_NOT_EXIST(730, 400, "Department does not exist."),
+    APP_INVALID_TITLE_LENGTH(731, 400, "Title is either too long or too short."),
+    APP_INVALID_DESCRIPTION_LENGTH(732, 400, "Title is either too long or too short.");
 
 
     /** The String name of the state (OK, MALFORMED_REQUEST, ...) */

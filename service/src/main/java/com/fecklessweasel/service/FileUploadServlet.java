@@ -39,10 +39,8 @@ public class FileUploadServlet extends HttpServlet {
                           final HttpServletResponse response)
             throws ServletException, IOException {
 
-        // TODO: These should go into database eventually
-        String title = request.getParameter("title");
-        String description = request.getParameter("description");
-
+        final String title = request.getParameter("title");
+        final String description = request.getParameter("description");
         final Part filePart = request.getPart("file[0]");
 
         final UserSession session = UserSessionUtil.resumeSession(request);
@@ -64,6 +62,8 @@ public class FileUploadServlet extends HttpServlet {
                     return StoredFile.create(connection,
                                              session.getUser(),
                                              Course.lookupById(connection, courseId),
+                                             title,
+                                             description,
                                              filePart.getInputStream());
                 } catch (IOException ex) {
                     throw new ServiceException(ServiceStatus.SERVER_UPLOAD_ERROR);

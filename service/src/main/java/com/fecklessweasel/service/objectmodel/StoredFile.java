@@ -24,6 +24,15 @@ import com.fecklessweasel.service.datatier.FileMetadataTable;
  * @author Christian Gunderman
  */
 public class StoredFile {
+    /** Minimum StoredFile title length. */
+    public static final int MIN_TITLE = 1;
+    /** Maximum StoredFile title length. */
+    public static final int MAX_TITLE = 255;
+    /** Minimum StoredFile description length. */
+    public static final int MIN_DESCRIPTION = 1;
+    /** Maximum StoredFile description length. */
+    public static final int MAX_DESCRIPTION = 255;
+
     /**
      * Directory name where files are stored.
      * TODO: before deployment, make sure that this path is absolute or files
@@ -37,24 +46,31 @@ public class StoredFile {
     /** The user id of the user who uploaded the file. */
     private int uid;
     /** The id of the course that the file pertains to */
-    private int course;
+    private int cid;
     /** The date the file was created */
     private Date creationDate;
+    /** The file title. */
+    private String title;
+    /** The file description. */
+    private String description;
 
     /**
      * Private constructor to the StoredFile object. Is only called in create();
      * @param fid The Files Unique Identifier in the table
-     * @param user The ID of the user who uploaded the file
-     * @param course The course the file pertains to
-     * @param university The University that the course belongs to
+     * @param uid The ID of the user who uploaded the file
+     * @param cid The course the file pertains to
      * @param creationDate The date the file was created
-     * @param rating The Rating of the file
+     * @param title The title for the file.
+     * @param description The description for the file.
      */
-    private StoredFile(int fid, int uid, int course, Date creationDate) {
+    private StoredFile(int fid, int uid, int cid, Date creationDate,
+                       String title, String description) {
         this.fid = fid;
         this.uid = uid;
-        this.course = course;
+        this.cid = cid;
         this.creationDate = creationDate;
+        this.title = title;
+        this.description = description;
     }
 
     /**
@@ -62,20 +78,40 @@ public class StoredFile {
      * wrapper that represents the filemetadata.
      * @param user The uploading user.
      * @param course The course that the file is for.
+     * @param title The title for the file.
+     * @param description The description for the file.
+     * @param fileData The input stream for the file data to write to the file.
      */
     public static StoredFile create(Connection sql,
                                     User user,
                                     Course course,
+                                    String title,
+                                    String description,
                                     InputStream fileData) throws ServiceException {
         OMUtil.sqlCheck(sql);
         OMUtil.nullCheck(user);
         OMUtil.nullCheck(course);
+        OMUtil.nullCheck(title);
+        OMUtil.nullCheck(description);
+        OMUtil.nullCheck(fileData);
+
+        // Check title length.
+        if (title.length() < MIN_TITLE || title.length() > MAX_TITLE) {
+            throw new ServiceException(ServiceStatus.APP_INVALID_TITLE_LENGTH);
+        }
+
+        // Check description length.
+        if (description.length() < MIN_DESCRIPTION || description.length() > MAX_DESCRIPTION) {
+            throw new ServiceException(ServiceStatus.APP_INVALID_DESCRIPTION_LENGTH);
+        }
 
         // Write metadata to the database.
         Date creationDate = new Date();
         int fid = FileMetadataTable.insertFileData(sql,
                                                    user.getID(),
                                                    course.getID(),
+                                                   title,
+                                                   description,
                                                    creationDate);
 
         // Attempt to write the uploaded data to a file mapped to the ID.
@@ -92,7 +128,12 @@ public class StoredFile {
             throw new ServiceException(ServiceStatus.SERVER_UPLOAD_ERROR);
         }
 
-        return new StoredFile(fid, user.getID(), course.getID(), creationDate);
+        return new StoredFile(fid,
+                              user.getID(),
+                              course.getID(),
+                              creationDate,
+                              title,
+                              description);
     }
 
     /**
@@ -114,7 +155,9 @@ public class StoredFile {
             StoredFile fileData = new StoredFile(result.getInt("fid"),
                                                  result.getInt("uid"),
                                                  result.getInt("cid"),
-                                                 result.getDate("creation_date"));
+                                                 result.getDate("creation_date"),
+                                                 result.getString("title"),
+                                                 result.getString("description"));
             result.close();
             return fileData;
         } catch (SQLException ex) {
@@ -159,11 +202,14 @@ public class StoredFile {
     }
 
     /**
-     * Get's the course the file pertains to
-     * @return The id of the course that the file is in
+     * Looks up the course the file is associated with.
+     * @param conn The connection to the MySQL database.
+     * @return The course that this file belongs to.
      */
-    public int getCourse() {
-        return this.course;
+    public Course lookupCourse(Connection conn) throws ServiceException {
+        OMUtil.sqlCheck(conn);
+
+        return Course.lookupById(conn, this.cid);
     }
 
     /**
@@ -172,6 +218,22 @@ public class StoredFile {
      */
     public Date getCreationDate() {
         return this.creationDate;
+    }
+
+    /**
+     * Gets the title for this StoredFile.
+     * @return The file's title.
+     */
+    public String getTitle() {
+        return this.title;
+    }
+
+    /**
+     * Gets the description for this StoredFile.
+     * @return The file's description.
+     */
+    public String getDescription() {
+        return this.description;
     }
 
     /**
@@ -193,7 +255,9 @@ public class StoredFile {
                 StoredFile fileData = new StoredFile(results.getInt("fid"),
                                                      results.getInt("uid"),
                                                      results.getInt("cid"),
-                                                     results.getDate("creation_date"));
+                                                     results.getDate("creation_date"),
+                                                     results.getString("title"),
+                                                     results.getString("description"));
                 listOfFiles.add(fileData);
             }
             results.close();
@@ -221,7 +285,9 @@ public class StoredFile {
                 StoredFile fileData = new StoredFile(results.getInt("fid"),
                                                      results.getInt("uid"),
                                                      results.getInt("cid"),
-                                                     results.getDate("creation_date"));
+                                                     results.getDate("creation_date"),
+                                                     results.getString("title"),
+                                                     results.getString("description"));
                 listOfFiles.add(fileData);
             }
 
