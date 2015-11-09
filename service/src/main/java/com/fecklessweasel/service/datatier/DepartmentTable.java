@@ -18,6 +18,8 @@ public class DepartmentTable {
 
     private static String INSERT_ROW = "insert into Department (univid, deptName, acronym) values (?,?,?)";
 
+    private static String LOOKUP_ALL_IN_UNIV = "SELECT * FROM Department WHERE Department.univid=?";
+
     /**
      * Insert a department into the table.
      * @param conn A connection to the database.
@@ -44,6 +46,24 @@ public class DepartmentTable {
             int id = result.getInt(1);
             preparedStatement.close();
             return id;
+        } catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        }
+    }
+    /**
+     *@author Hayden Schmackpfeffer
+     *@param conn The SQL Connection
+     *@param universityID The ID of the university that owns all returned Departmetns
+     *@return All tuples in the department table where univid = universityID
+     */
+    public static ResultSet lookupAllInUniversity(Connection conn, int universityID) throws ServiceException {
+        CodeContract.assertNotNull(conn, "conn");
+
+        try {
+            PreparedStatement lookupStatement = conn.prepareStatement(LOOKUP_ALL_IN_UNIV);
+            lookupStatement.setInt(1, universityID);
+
+            return lookupStatement.executeQuery();
         } catch (SQLException ex) {
             throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
         }

@@ -97,7 +97,7 @@ public class FileMetadata {
      * @param course The course whose file info we want
      * @return A List of FileMetadata objects that represent each files info
      */
-    public static List<FileMetadata> lookUpCourseFiles(Connection sql, int course)
+    public static ArrayList<FileMetadata> lookUpCourseFiles(Connection sql, int course)
         throws ServiceException{
         OMUtil.sqlCheck(sql);
 

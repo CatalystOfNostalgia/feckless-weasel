@@ -3,6 +3,10 @@ package com.fecklessweasel.service.objectmodel;
 import java.sql.Connection;
 
 import com.fecklessweasel.service.datatier.DepartmentTable;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Stores all information about a school's department.
@@ -65,6 +69,36 @@ public class Department {
 
         int id = DepartmentTable.insertDepartment(conn, university.getID(), deptName, acronym);
         return new Department(id, university, deptName, acronym);
+    }
+
+    /**
+     *@Author Hayden Schmackpfeffer
+     *@param connection the SQL Connection
+     *@param univ University object model
+     *@return all departments belonging to passed in university
+     */
+    public static ArrayList<Department> getAllInUniversity(Connection conn, University univ)
+        throws ServiceException {
+
+        OMUtil.sqlCheck(conn);
+        OMUtil.nullCheck(univ);
+
+        ArrayList<Department> depts = new ArrayList<Department>();
+        ResultSet results = DepartmentTable.lookupAllInUniversity(conn, univ.getID());
+
+        try{
+            while (results.next()) {
+                Department dept = new Department(results.getInt("id"),
+                                    univ,
+                                    results.getString("deptName"),
+                                    results.getString("acronym"));
+                depts.add(dept);
+            }
+            results.close();
+            return depts;
+        } catch (SQLException ex){
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        }
     }
 
     /**
