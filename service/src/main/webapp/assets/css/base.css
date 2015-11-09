@@ -57,6 +57,10 @@ h2{
     padding: 10px;
 }
 
+.logo-default{
+    max-height: 70px;
+}
+
 .column-left{
     width: 15%;
 }
