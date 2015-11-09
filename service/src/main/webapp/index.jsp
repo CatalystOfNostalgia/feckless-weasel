@@ -3,7 +3,7 @@
 <html>
     <head>
         <title>Feckless Weasel Hello World Index Page</title>
-        <link href="${pageContext.request.contextPath}/assets/css/base.css" rel="stylesheet" type="text/css">
+        <link href="${pageContext.request.contextPath}/assets/bootstrap-3.3.5-dist/css/bootstrap.min.css" rel="stylesheet">
     </head>
     <body>
        <jsp:include page="header.jsp"/>
