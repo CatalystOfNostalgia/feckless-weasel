@@ -22,6 +22,7 @@ import com.fecklessweasel.service.datatier.FileMetadataTable;
  * to the service.
  * @author Hayden Schmackpfeffer
  * @author Christian Gunderman
+ * @author James Flinn
  */
 public class StoredFile {
     /** Minimum StoredFile title length. */
