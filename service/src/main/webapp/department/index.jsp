@@ -10,11 +10,11 @@
         <div class="column-beta">
                 <%Department department = DepartmentUtil.findDepartment(request);%>
                 <h1><%= department.getDeptName()%></h1>
-                <h3>Create a Department</h3>
+                <h2><%= department.getAcronym()%></h2>
+                <h3>Create a Course</h3>
                 <form class="form-default" action="/servlet/course" method="post" enctype="application/x-www-form-urlencoded">
-                     <input type="text" class="text-large" id="university" name="university" placeholder="University">
-                     <input type="text" class="text-large" id="deptName" name="deptName" placeholder="Department Name (i.e. Biology)">
-                     <input type="text" class="text-large" id="acronym" name="acronym" placeholder="Acronym (i.e. BIOL)">
+                     <input type="hidden" class="text-large" id="" name="department" placeholder="get input">
+                     <input type="text" class="text-large" id="course" name="course" placeholder="Course Number">
                      <div>
                         <button type="submit" class="button-large" id="submit" name="submit">Create</button>
                      </div>

@@ -16,9 +16,6 @@ import com.fecklessweasel.service.objectmodel.ServiceStatus;
  */
 public class DepartmentTable {
 
-
-    public static String LOOKUP_DEPARTMENT_QUERY =
-            "SELECT * FROM Department WHERE Department.id=?";
     private static String INSERT_ROW = "insert into Department (univid, deptName, acronym) values (?,?,?)";
 
     private static String LOOKUP_ROW

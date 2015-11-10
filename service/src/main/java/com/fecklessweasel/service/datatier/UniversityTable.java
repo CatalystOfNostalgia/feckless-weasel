@@ -23,7 +23,6 @@ public class UniversityTable {
     private static String INSERT_ROW = "insert into University (longName, acronym, city, state, country) values (?,?,?,?,?)";
     /** Lookup user query. */
     public static String LOOKUP_UNIVERSITY_QUERY =
-    public static String LOOKUP_UNIVERSITY_QUERY =
             "SELECT * FROM University WHERE University.longName=?";
     public static String LOOKUP_UNIVERSITY_ID_QUERY =
             "SELECT * FROM University WHERE University.id=?";

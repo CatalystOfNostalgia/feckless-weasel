@@ -21,10 +21,10 @@ public final class DepartmentServlet extends HttpServlet {
      * Handles post requests to this end point. Performs the creation
      * of departments given a set of parameters.
      * **/
-    String uni;
-    String deptName;
-    String acronym;
-    public int ID;
+    protected int uniID;
+    protected String deptName;
+    protected String acronym;
+    protected int ID;
     @Override
     protected void doPost(final HttpServletRequest request,
                           final HttpServletResponse response)
@@ -34,8 +34,8 @@ public final class DepartmentServlet extends HttpServlet {
                                @Override
                                public Integer run(Connection connection)
                                        throws ServiceException, SQLException {
-                                   uni = request.getParameter("university");
-                                   University university = UniversityUtil.getUniversity(uni);
+                                   uniID = Integer.parseInt(request.getParameter("university"));
+                                   University university = UniversityUtil.getUniversityID(uniID);
                                    deptName = request.getParameter("deptName");
                                    acronym = request.getParameter("acronym");
                                    // Create university

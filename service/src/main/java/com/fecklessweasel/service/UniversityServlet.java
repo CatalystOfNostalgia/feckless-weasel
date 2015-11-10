@@ -25,6 +25,7 @@ public final class UniversityServlet extends HttpServlet {
 	String city;
 	String state;
 	String country;
+	int univid;
 	@Override
 	protected void doPost(final HttpServletRequest request,
 						  final HttpServletResponse response)
@@ -41,6 +42,7 @@ public final class UniversityServlet extends HttpServlet {
 					country = request.getParameter("country");
 					// Create university
 					University university = University.create(connection, longName, acronym, city, state, country);
+					univid = university.getID();
 					// return int value
 					return 0;
 				}
@@ -49,6 +51,6 @@ public final class UniversityServlet extends HttpServlet {
 			);
 
 			// Redirect to homepage.
-		response.sendRedirect("/university/index.jsp?name=" + longName);
+		response.sendRedirect("/university/index.jsp?uid=" + univid);
 	}
 }

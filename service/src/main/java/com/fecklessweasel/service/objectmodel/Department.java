@@ -1,7 +1,6 @@
 package com.fecklessweasel.service.objectmodel;
 
 import java.sql.Connection;
-<<<<<<< HEAD
 import com.fecklessweasel.service.datatier.UniversityTable;
 import java.sql.Connection;
 import java.util.Collection;
@@ -15,28 +14,20 @@ import javax.mail.internet.InternetAddress;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import com.fecklessweasel.service.UniversityUtil;
-=======
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
->>>>>>> 7d399caa9d687923966efe3696b9a6cde7a48827
 import com.fecklessweasel.service.datatier.DepartmentTable;
 
 /**
  * Stores all information about a school's department.
  * @author Elliot Essman
 <<<<<<< HEAD
- **/
-public class Department {
-=======
- */
+*/
 public final class Department {
-    >>>>>>>7d399caa9d687923966efe3696b9a6cde7a48827
-
     /**
      * ID in the database table.
      */
-    private static int id;
+    public static int id;
     /**
      * The university this department is in.
      */
@@ -161,7 +152,6 @@ public final class Department {
 
     /**
      * Gets the department acronym name.
-     *
      * @return The department acronym name.
      */
     public String getAcronym() {
@@ -173,7 +163,7 @@ public final class Department {
      *
      * @return The database ID of the department.
      */
-    int getID() {
+    public int getID() {
         return this.id;
     }
 }

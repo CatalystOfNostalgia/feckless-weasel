@@ -11,7 +11,7 @@
         <div id="navbar" class="navbar-collapse collapse">
         <form class="navbar-form navbar-nav">
             <div class="form-group">
-                <input type="text" class="form-control" id="college" name="college" placeholder="Universty">
+                <input type="text" class="form-control" id="college" name="college" placeholder="University">
             </div>
             <div class="form-group">
                 <input type="text" class="form-control" id="class" name="class" placeholder="Class">

@@ -29,29 +29,17 @@ public final class UniversityUtil {
     public static University findUniversity(HttpServletRequest request)
             throws ServiceException {
         //create university by looking up request
-        uniName = request.getParameter("name");
+        univid = Integer.parseInt(request.getParameter("uid"));
         // Open a SQL connection, find University in database
         return SQLSource.interact(new SQLInteractionInterface<University>() {
             @Override
             public University run(Connection connection)
                     throws ServiceException, SQLException {
-                return University.lookup(connection, uniName);
+                return University.lookup(connection, univid);
             }
         });
     }
-    /**helper method retrieves the university with the lookup method**/
-    public static University getUniversity(String university)
-        throws ServiceException {
-        return SQLSource.interact(new SQLInteractionInterface<University>() {
-            @Override
-            public University run(Connection connection)
-                    throws ServiceException, SQLException {
-                return University.lookup(connection, uniName);
-            }
-            });*/
 
-        return null;
-    }
     /**helper method takes in university and returns university with lookup method**/
     public static University getUniversityID(final int univid)
             throws ServiceException {
@@ -59,7 +47,7 @@ public final class UniversityUtil {
             @Override
             public University run(Connection connection)
                     throws ServiceException, SQLException {
-                return University.lookupID(connection, univid);
+                return University.lookup(connection, univid);
             }
         });
 
