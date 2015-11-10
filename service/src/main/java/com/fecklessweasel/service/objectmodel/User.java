@@ -245,7 +245,7 @@ public class User {
 
         // Hash and store new password.
         String newPasswordHash = OMUtil.sha256(newPassword);
-        UserTable.updatePassword(connection, this.getUid(), newPasswordHash);
+        UserTable.updatePassword(connection, this.getID(), newPasswordHash);
 
         // Update the object's state.
         this.passwordHash = newPasswordHash;
@@ -268,7 +268,7 @@ public class User {
         InternetAddress emailAddr = validateAndCreateInternetAddress(newEmail);
 
         // Update the email in the database.
-        UserTable.updateEmail(connection, this.getUid(), emailAddr);
+        UserTable.updateEmail(connection, this.getID(), emailAddr);
 
         // Update the object state.
         this.email = emailAddr.getAddress();
@@ -281,7 +281,7 @@ public class User {
      */
     @Override
     public boolean equals(Object o) {
-        return ((User)o).getUid() == this.getUid();
+        return ((User)o).getID() == this.getID();
     }
 
     /**
@@ -322,7 +322,7 @@ public class User {
      * protected.
      * @return The user's AUTO_INCREMENT id.
      */
-    int getUid() {
+    int getID() {
         return this.uid;
     }
 

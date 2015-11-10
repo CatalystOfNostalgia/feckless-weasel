@@ -30,7 +30,7 @@
             });
 
             boolean isCurrentUsersProfile
-                = authSession != null && (user.getUsername().equals(authSession.getUser().getUsername()));
+                = authSession != null && (user.equals(authSession.getUser()));
          %>
         <div class="column-beta">
             <h1><%= user.getUsername() %>'s Profile</h1>

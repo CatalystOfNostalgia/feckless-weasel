@@ -1,6 +1,8 @@
 package com.fecklessweasel.service.objectmodel;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import com.fecklessweasel.service.datatier.DepartmentTable;
 
@@ -8,12 +10,12 @@ import com.fecklessweasel.service.datatier.DepartmentTable;
  * Stores all information about a school's department.
  * @author Elliot Essman
  */
-public class Department {
+public final class Department {
 
     /** ID in the database table. */
     private int id;
     /** The university this department is in. */
-    private University university;
+    private int uid;
     /** Acronym or short name of this department. */
     private String acronym;
     /** Official name of the department. */
@@ -28,9 +30,9 @@ public class Department {
      * Private constructor. Should be created from the database or create
      * method.
      */
-    private Department(int id, University university, String deptName, String acronym) {
+    private Department(int id, int uid, String deptName, String acronym) {
         this.id = id;
-        this.university = university;
+        this.uid = uid;
         this.deptName = deptName;
         this.acronym = acronym;
     }
@@ -64,23 +66,47 @@ public class Department {
         }
 
         int id = DepartmentTable.insertDepartment(conn, university.getID(), deptName, acronym);
-        return new Department(id, university, deptName, acronym);
+        return new Department(id, university.getID(), deptName, acronym);
     }
 
     /**
-     * Gets the database ID of the department.
-     * @return The database ID of the department.
+     * Look up a specific department and return it in object form.
+     * @param sql The Sql connection to the FecklessWeaselDB.
+     * @param did The department's unique identifier.
+     * @return The Department's object representation.
      */
-    protected int getID() {
-        return this.id;
+    public static Department lookup(Connection sql, int did)
+        throws ServiceException {
+
+        OMUtil.sqlCheck(sql);
+        ResultSet result = DepartmentTable.lookupDepartment(sql, did);
+
+        try {
+            // If no tuples returned, throw error.
+            if (!result.next()) {
+                throw new ServiceException(ServiceStatus.APP_DEPARTMENT_NOT_EXIST);
+            }
+
+            Department dept = new Department(result.getInt("id"),
+                                             result.getInt("univid"),
+                                             result.getString("deptName"),
+                                             result.getString("acronym"));
+            result.close();
+            return dept;
+        } catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        }
     }
 
     /**
      * Gets The university this department is in.
      * @return The university this department is in.
      */
-    public University getUniversity() {
-        return this.university;
+    public University lookupUniversity(Connection conn)
+        throws ServiceException {
+
+        OMUtil.sqlCheck(conn);
+        return University.lookup(conn, this.uid);
     }
 
     /**
@@ -97,5 +123,13 @@ public class Department {
      */
     public String getAcronym() {
         return this.acronym;
+    }
+
+    /**
+     * Gets the database ID of the department.
+     * @return The database ID of the department.
+     */
+    int getID() {
+        return this.id;
     }
 }

@@ -27,11 +27,12 @@ public enum ServiceStatus {
 
     // Server errors.
     UNKNOWN_ERROR(500, 500, "Unknown error occurred."),
-    SERVER_UPLOAD_ERROR(500, 500, "Upload to server failed."),
-    DATABASE_ERROR(501, 500, "Error processing database request."),
-    INSTALL_ERROR(502, 500, "Incorrect server configuration."),
-    NO_SQL(503, 500, "No SQL instance provided."),
-    ACCESS_DENIED(503, 403, "Access denied."),
+    SERVER_UPLOAD_ERROR(501, 500, "Upload to server failed."),
+    SERVER_DELETE_ERROR(502, 500, "Deleting file from server failed."),
+    DATABASE_ERROR(503, 500, "Error processing database request."),
+    INSTALL_ERROR(504, 500, "Incorrect server configuration."),
+    NO_SQL(505, 500, "No SQL instance provided."),
+    ACCESS_DENIED(506, 403, "Access denied."),
 
     // App logic errors.
     APP_INVALID_USER_LENGTH(701, 400, "Username is either too short or too long."),
@@ -68,8 +69,11 @@ public enum ServiceStatus {
     APP_INVALID_DEPTNAME_CHARS(725, 400, "Department name contains invalid characters."),
     APP_INVALID_DEPT_ACRONYM(726, 400, "Department acronym is invalid."),
     APP_INVALID_COURSE_NUMBER(727, 400, "Class number in invalid."),
-
-    APP_FILE_NOT_EXIST(728, 400, "The requested file does not exist");
+    APP_COURSE_NOT_EXIST(728, 400, "Course does not exist."),
+    APP_FILE_NOT_EXIST(729, 400, "The requested file does not exist"),
+    APP_DEPARTMENT_NOT_EXIST(730, 400, "Department does not exist."),
+    APP_INVALID_TITLE_LENGTH(731, 400, "Title is either too long or too short."),
+    APP_INVALID_DESCRIPTION_LENGTH(732, 400, "Title is either too long or too short.");
 
 
     /** The String name of the state (OK, MALFORMED_REQUEST, ...) */

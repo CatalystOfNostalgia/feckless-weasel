@@ -17,16 +17,18 @@ import com.fecklessweasel.service.objectmodel.University;
  * Utility class for looking up universities from servlet request
  * @author Anjana Rao
  */
-public final class UniversityUtil{
+public final class UniversityUtil {
     /**
      * Private constructor to prevent instantiation.
      */
     private static String uniName;
     private UniversityUtil() { }
     public static University findUniversity(HttpServletRequest request)
-            throws ServiceException{
-        //create university by looking up reques
-        uniName = request.getParameter("name");
+            throws ServiceException {
+
+        // AWAITING CODE FROM ANJANA's branch.
+        /*   //create university by looking up reques
+        uniName = request.getParameter("id");
         // Open a SQL connection, find University in database
         return SQLSource.interact(new SQLInteractionInterface<University>() {
             @Override
@@ -34,6 +36,8 @@ public final class UniversityUtil{
                     throws ServiceException, SQLException{
                 return University.lookup(connection, uniName);
             }
-        });
+            });*/
+
+        return null;
     }
 }

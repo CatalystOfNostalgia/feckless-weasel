@@ -1,11 +1,9 @@
-/* Class table */
+/* Course table */
 CREATE TABLE Course (
-	id int AUTO_INCREMENT,
-	univid int,
-	deptid int,
-	courseNumber int,
+	id INT AUTO_INCREMENT,
+	deptid INT,
+	courseNumber INT,
 	PRIMARY KEY(id),
-	INDEX USING HASH(univid, deptid, courseNumber),
-	FOREIGN KEY (univid) REFERENCES University(id),
+	INDEX USING HASH(deptid, courseNumber),
 	FOREIGN KEY (deptid) REFERENCES Department(id)
 );
