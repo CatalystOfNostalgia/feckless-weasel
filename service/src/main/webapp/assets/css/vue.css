@@ -1,5 +1,7 @@
 html, body, #editor {
     margin: 0;
+    margin-left: auto;
+    margin-right: auto;
     height: 100%;
     font-family: 'Helvetica Neue', Arial, sans-serif;
     color: #333;
@@ -29,4 +31,17 @@ textarea {
 
 code {
     color: #f66;
+}
+
+.container {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.editor {
+    border-style: solid;
+}
+
+.submit-btn {
+    padding-top: 1%;
 }
