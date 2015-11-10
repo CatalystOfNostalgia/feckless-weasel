@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+import java.util.List;
+import java.util.ArrayList;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import java.sql.ResultSet;
@@ -249,5 +251,46 @@ public class University {
         catch (SQLException ex) {
             throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
         }
+    }
+
+    /**
+     * Look up all rows in the university, but add int bounds
+     * @param connection MySQL connection
+     * @param offset The first x Results to skip
+     * @param amt The max amount of University objects returned
+     * @throws ServiceException Thrown upon error.
+     * @return List of University Objects 
+     */
+    public static List<University> lookUpPaginated(Connection connection, int offset, int amt) 
+            throws ServiceException {
+
+        OMUtil.sqlCheck(connection);
+        ResultSet results = UniversityTable.lookUpPaginated(connection, offset, amt);
+        List<University> univs = new ArrayList<University>();
+
+        try {
+            while(results.next()) {
+                University univ = new University(results.getInt("id"),
+                                                 results.getString("longName"),
+                                                 results.getString("acronym"),
+                                                 results.getString("city"),
+                                                 results.getString("state"),
+                                                 results.getString("country"));
+                univs.add(univ);
+            }
+        } catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        }
+        return univs;
+    }
+
+    /**
+     * Return ALL universities
+     * @param connection MySQL connection
+     * @throws ServiceException Thrown upon error
+     * @return List<University> contains ALL universities in the list
+     */
+    public static List<University> lookUpAll(Connection connection) throws ServiceException {
+        return lookUpPaginated(connection, 0, 2147483647 );
     }
 }
