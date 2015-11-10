@@ -30,6 +30,7 @@ public final class UniversityUtil {
             throws ServiceException {
         //create university by looking up request
         uniName = request.getParameter("name");
+        // Open a SQL connection, find University in database
         return SQLSource.interact(new SQLInteractionInterface<University>() {
             @Override
             public University run(Connection connection)
@@ -47,7 +48,9 @@ public final class UniversityUtil {
                     throws ServiceException, SQLException {
                 return University.lookup(connection, uniName);
             }
-        });
+            });*/
+
+        return null;
     }
     /**helper method takes in university and returns university with lookup method**/
     public static University getUniversityID(final int univid)

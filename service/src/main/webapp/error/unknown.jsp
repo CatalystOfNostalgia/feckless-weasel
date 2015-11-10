@@ -3,15 +3,17 @@
 <html>
     <head>
         <title>Feckless Weasel - Unknown Error</title>
-        <link href="${pageContext.request.contextPath}/assets/css/base.css" rel="stylesheet" type="text/css">
+        <link href="${pageContext.request.contextPath}/assets/bootstrap-3.3.5-dist/css/bootstrap.min.css" rel="stylesheet">
     </head>
     <body>
         <jsp:include page="/header.jsp"/>
-        <div class="column-beta">
-            <h1>Unknown Error</h1>
-            <p>
-                An unknown error was encountered.
-            </p>
+        <div class="jumbotron">
+            <div class="container">
+                <h1>Unknown Error</h1>
+                <p>
+                    An unknown error was encountered.
+                </p>
+            </div>
         </div>
     </body>
 </html>

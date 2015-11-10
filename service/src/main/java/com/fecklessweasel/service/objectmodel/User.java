@@ -50,6 +50,15 @@ public class User {
     /** User's security roles. */
     private final Set<Role> roles;
 
+    /**
+     * Creates a new user and stores in the database.
+     * @param sql A connection from SQLSource.
+     * @param username The username for the new user.
+     * @param password The password for the new user.
+     * @param emailStr The email address for the new user.
+     * @throws ServiceException Thrown if an error occurs.
+     * @return Returns the new user object.
+     */
     public static User create(Connection sql,
                               String username,
                               String password,
@@ -71,30 +80,9 @@ public class User {
             throw new ServiceException(ServiceStatus.APP_INVALID_USERNAME);
         }
 
-        // Check password length.
-        if (password.length() < PASS_MIN) {
-            throw new ServiceException(ServiceStatus.APP_INVALID_PASS_LENGTH);
-        }
-        // Check for spaces.
-        if (password.contains(" ")){
-            throw new ServiceException(ServiceStatus.APP_INVALID_PASSWORD);
-        }
+        validatePassword(password);
 
-        // Check for valid email and convert to internet address.
-        // REGEX from: http://www.mkyong.com/regular-expressions/
-        // how-to-validate-email-address-with-regular-expression/
-        if (emailStr.length() > EMAIL_MAX ||
-            !emailStr.matches("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" +
-                              "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")) {
-            throw new ServiceException(ServiceStatus.APP_INVALID_EMAIL);
-        }
-        InternetAddress emailAddr = null;
-        try {
-            emailAddr = new InternetAddress(emailStr, /*Strict:*/ true);
-            emailAddr.validate();
-        } catch(AddressException e) {
-            throw new ServiceException(ServiceStatus.APP_INVALID_EMAIL);
-        }
+        InternetAddress emailAddr = validateAndCreateInternetAddress(emailStr);
 
         // Hash password.
         password = OMUtil.sha256(password);
@@ -159,16 +147,26 @@ public class User {
         }
     }
 
-    public static User lookupId(Connection connection, int uid)
+    /**
+     * Looks up a user by his or her user ID. Package protected intentionally.
+     * Keep this method in the objectmodel unless absolutely neccessary since
+     * we can and SHOULD be identifying users by their User name in the Service
+     * itself.
+     * @param connection A SQL Source connection.
+     * @param uid The user's ID.
+     * @throws ServiceException If unable to lookup or find the user.
+     * @return The user.
+     */
+    static User lookupById(Connection connection, int uid)
         throws ServiceException {
 
         OMUtil.sqlCheck(connection);
 
-        ResultSet result = UserTable.lookupUserWithId(connection, uid);
+        ResultSet result = UserTable.lookupUserWithRolesById(connection, uid);
 
-        //build User object
+        // Build User object
         try {
-            //Get the first (and only) row or throw if the user doesnt exist
+            // Get the first (and only) row or throw if the user doesnt exist
             if(!result.next()) {
                 throw new ServiceException(ServiceStatus.APP_USER_NOT_EXIST);
             }
@@ -221,13 +219,69 @@ public class User {
     }
 
     /**
+     * Updates the user's password in the database and updates
+     * this user object.
+     * @param connection A connection from SQLSource.
+     * @param oldPassword The current password.
+     * @param newPassword The new password.
+     * @throws ServiceException Thrown if database error occurs or if
+     * user does not exist or passwords do not match.
+     */
+    public void updatePassword(Connection connection,
+                               String oldPassword,
+                               String newPassword) throws ServiceException {
+        OMUtil.sqlCheck(connection);
+        OMUtil.nullCheck(newPassword);
+
+        String oldPasswordHash = OMUtil.sha256(oldPassword);
+
+        // Check that the given old password matches the stored password hashes.
+        if (!oldPasswordHash.equals(this.getPasswordHash())) {
+            throw new ServiceException(ServiceStatus.APP_INVALID_PASSWORD);
+        }
+
+        // Check that password meets minimum criterion.
+        validatePassword(newPassword);
+
+        // Hash and store new password.
+        String newPasswordHash = OMUtil.sha256(newPassword);
+        UserTable.updatePassword(connection, this.getID(), newPasswordHash);
+
+        // Update the object's state.
+        this.passwordHash = newPasswordHash;
+    }
+
+    /**
+     * Updates the user's email in the database and updates
+     * this user object.
+     * @param connection A connection from SQLSource.
+     * @param newEmail The new email.
+     * @throws ServiceException Thrown if database error occurs or if
+     * user does not exist or passwords do not match.
+     */
+    public void updateEmail(Connection connection,
+                            String newEmail) throws ServiceException {
+        OMUtil.sqlCheck(connection);
+        OMUtil.nullCheck(newEmail);
+
+        // Validate the email.
+        InternetAddress emailAddr = validateAndCreateInternetAddress(newEmail);
+
+        // Update the email in the database.
+        UserTable.updateEmail(connection, this.getID(), emailAddr);
+
+        // Update the object state.
+        this.email = emailAddr.getAddress();
+    }
+
+    /**
      * Checks if two User objects refer to the same User account.
      * @param o The object to compare.
      * @return True if they are the same user.
      */
     @Override
     public boolean equals(Object o) {
-        return ((User)o).getUid() == this.getUid();
+        return ((User)o).getID() == this.getID();
     }
 
     /**
@@ -268,7 +322,7 @@ public class User {
      * protected.
      * @return The user's AUTO_INCREMENT id.
      */
-    int getUid() {
+    int getID() {
         return this.uid;
     }
 
@@ -369,6 +423,54 @@ public class User {
         this.joinDate = joinDate;
         this.email = email;
         this.roles = new HashSet<Role>();
+    }
+
+    /**
+     * Checks that a password matches the required criterion.
+     * @param password The new password.
+     * @throws ServiceException Thrown if password is invalid.
+     */
+    private static void validatePassword(String password)
+        throws ServiceException {
+        
+        // Check password length.
+        if (password.length() < PASS_MIN) {
+            throw new ServiceException(ServiceStatus.APP_INVALID_PASS_LENGTH);
+        }
+        // Check for spaces.
+        if (password.contains(" ")){
+            throw new ServiceException(ServiceStatus.APP_INVALID_PASSWORD);
+        }
+    }
+
+    /**
+     * Validates the email address and turns it into an InternetAddress object.
+     * Validation is based solely upon format.
+     * @param email The email to validate.
+     * @throws ServiceException Thrown if the email address is of an invalid format.
+     * @return The InternetAddress containing the email address.
+     */
+    private static InternetAddress validateAndCreateInternetAddress(String email)
+        throws ServiceException {
+
+        // Check for valid email and convert to internet address.
+        // REGEX from: http://www.mkyong.com/regular-expressions/
+        // how-to-validate-email-address-with-regular-expression/
+        if (email.length() > EMAIL_MAX ||
+            !email.matches("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" +
+                              "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")) {
+            throw new ServiceException(ServiceStatus.APP_INVALID_EMAIL);
+        }
+
+        InternetAddress emailAddr = null;
+        try {
+            emailAddr = new InternetAddress(email, /*Strict:*/ true);
+            emailAddr.validate();
+        } catch(AddressException e) {
+            throw new ServiceException(ServiceStatus.APP_INVALID_EMAIL);
+        }
+
+        return emailAddr;
     }
 
     /**

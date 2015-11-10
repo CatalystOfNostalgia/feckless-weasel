@@ -23,6 +23,7 @@ public class UniversityTable {
     private static String INSERT_ROW = "insert into University (longName, acronym, city, state, country) values (?,?,?,?,?)";
     /** Lookup user query. */
     public static String LOOKUP_UNIVERSITY_QUERY =
+    public static String LOOKUP_UNIVERSITY_QUERY =
             "SELECT * FROM University WHERE University.longName=?";
     public static String LOOKUP_UNIVERSITY_ID_QUERY =
             "SELECT * FROM University WHERE University.id=?";
@@ -65,17 +66,22 @@ public class UniversityTable {
         }
     }
 
-    /**Looks up the University in the database based off of longName**/
-    public static ResultSet lookupUniversity(Connection connection, String longName)
+    /**
+     * Looks up a university by it's ID.
+     * @param connection MySQL database connection.
+     * @param uid The university ID.
+     * @throws ServiceException Thrown upon error (except not exist error).
+     * @return A result set containing the university tuple or no results if not exist.
+     */
+    public static ResultSet lookupUniversity(Connection connection, int uid)
             throws ServiceException {
 
         CodeContract.assertNotNull(connection, "connection");
-        CodeContract.assertNotNullOrEmptyOrWhitespace(longName, "longName");
 
         try {
             PreparedStatement lookupStatement =
                     connection.prepareStatement(LOOKUP_UNIVERSITY_QUERY);
-            lookupStatement.setString(1, longName);
+            lookupStatement.setInt(1, uid);
 
             return lookupStatement.executeQuery();
         } catch (SQLException ex) {

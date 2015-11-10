@@ -16,9 +16,13 @@ import com.fecklessweasel.service.objectmodel.ServiceStatus;
  */
 public class DepartmentTable {
 
+
     public static String LOOKUP_DEPARTMENT_QUERY =
             "SELECT * FROM Department WHERE Department.id=?";
     private static String INSERT_ROW = "insert into Department (univid, deptName, acronym) values (?,?,?)";
+
+    private static String LOOKUP_ROW
+        = "SELECT * FROM Department D WHERE D.id=?";
 
     /**
      * Insert a department into the table.
@@ -50,18 +54,23 @@ public class DepartmentTable {
             throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
         }
     }
-    /**Looks up the Department in the database based off of university ID and acronym**/
-    public static ResultSet lookupDepartment(Connection connection, int id)
-            throws ServiceException {
+    /**
+     * Looks up the department using its unique identifier.
+     * @param connection Connection to the MySQL database.
+     * @param did The department's unique identifier.
+     * @return A ResultSet containing the department tuple.
+     */
+    public static ResultSet lookupDepartment(Connection connection, int did)
+        throws ServiceException {
+
         CodeContract.assertNotNull(connection, "connection");
-        CodeContract.assertNotNull(id, "");
 
         try {
-            PreparedStatement lookupStatement =
-                    connection.prepareStatement(LOOKUP_DEPARTMENT_QUERY);
-            lookupStatement.setInt(1, id);
+            PreparedStatement lookupDeptQuery =
+                connection.prepareStatement(LOOKUP_ROW);
+            lookupDeptQuery.setInt(1, did);
 
-            return lookupStatement.executeQuery();
+            return lookupDeptQuery.executeQuery();
         } catch (SQLException ex) {
             throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
         }

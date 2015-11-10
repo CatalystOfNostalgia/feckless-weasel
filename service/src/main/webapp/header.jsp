@@ -1,27 +1,39 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"
     import="com.fecklessweasel.service.objectmodel.UserSession,com.fecklessweasel.service.UserSessionUtil" %>
-
-<div class="header">
-    <div class="column-center">
-        <a href="/"><img class="logo-default" src="/assets/img/logo.png" alt="logo"/></a>
-        <input type="text" class="text-large" id="college" name="college" placeholder="Enter your university">
-        <input type="text" class="text-large" id="class" name="class" placeholder="Enter your class (i.e. EECS-390)">
-        <button type="submit" class="button-small" id="search-submit" name="search-submit">Go</button>
-
-        <%-- Instantiate the session if there is one. You can use this in pages that include this. --%>
-        <%
-            UserSession authSession = UserSessionUtil.resumeSession(request);
-         %>
-
-        <%-- Show signup and login or logout button --%>
-        <%= authSession != null ? String.format(
-            "<form class='form-default' action='/servlet/user_session' method='post'>" +
-            "<input type='hidden' name='action' value='delete'/><input type='submit' " +
-            "class='button-large' id='submit' name='submit' value='Logout %s'/></form>",
-                authSession.getUser().getUsername()) :
-            "<a href='/account/create.jsp'>Sign up</a>" +
-            " <a href='/account/login.jsp'>Login</a>"
-         %>
+<nav class="navbar navbar-fixed-top navbar-inverse">
+    <div class="container">
+        <div class="navbar-header">    
+            <a href="/index.jsp" class="pull-left">
+                <img style="padding-top: 15%; max-width:50px; margin-top: -7px" src="${pageContext.request.contextPath}/assets/img/logo.png">
+            </a>
+        </div>  
+        <div id="navbar" class="navbar-collapse collapse">
+        <form class="navbar-form navbar-nav">
+            <div class="form-group">
+                <input type="text" class="form-control" id="college" name="college" placeholder="Universty">
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" id="class" name="class" placeholder="Class">
+            </div>
+            <button type="submit" class="btn btn-warning" id="search-submit" name="search-submit">Go</button>
+        </form>
+        <ul class="nav navbar-nav navbar-right">
+            <%-- Instantiate the session if there is one. You can use this in pages that include this. --%>
+            <%
+                final UserSession authSession = UserSessionUtil.resumeSession(request);
+             %>
+            <%-- Show signup and login or logout button --%>
+            <%= authSession != null ?
+                "<li><a href='/account/index.jsp'>Profile</a></li>"+
+                "<li><form class='navbar-form navbar-nav' action='/servlet/user_session' method='post'>" +
+                "<input type='hidden' name='action' value='delete'>"+
+                "<a href='javascript:;' onclick='parentNode.submit();\'><span class='glyphicon glyphicon-log-out' style='color:#f0ad4e; font-size:2em;''></a>" +
+                "</form></li>":
+                "<li><a href='/account/create.jsp'>Sign up</a></li>" +
+                "<li><a href='/account/login.jsp'>Login</a></li>"
+                %>
+        </ul>
+        </div>
     </div>
-</div>
+</nav>

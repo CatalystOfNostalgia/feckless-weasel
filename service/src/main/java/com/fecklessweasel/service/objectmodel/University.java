@@ -216,18 +216,19 @@ public class University {
 
     /**
      * Gets the University from the database
-     *
-     * @return the university object.
+     * @throws ServiceException Thrown if unable to find the specified university
+     * or if another error occurs.
+     * @param uid Unique university ID.
+     * @return The university object.
      */
-    public static University lookup(Connection connection, String longName)
+    public static University lookup(Connection connection, int uid)
             throws ServiceException {
 
         // Null check everything:
         OMUtil.sqlCheck(connection);
-        OMUtil.nullCheck(longName);
 
         //look up university with name
-        ResultSet result = UniversityTable.lookupUniversity(connection, longName);
+        ResultSet result = UniversityTable.lookupUniversity(connection, uid);
 
         // Build University object.
         try {
@@ -236,11 +237,11 @@ public class University {
             }
 
             University university = new University(result.getInt("id"),
-                    result.getString("longName"),
-                    result.getString("acronym"),
-                    result.getString("city"),
-                    result.getString("state"),
-                    result.getString("country"));
+                                                   result.getString("longName"),
+                                                   result.getString("acronym"),
+                                                   result.getString("city"),
+                                                   result.getString("state"),
+                                                   result.getString("country"));
 
             result.close();
             return university;
@@ -249,33 +250,7 @@ public class University {
             throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
         }
     }
-    public static University lookupID(Connection connection, int univID)
-        throws ServiceException {
-        // Null check everything:
-        OMUtil.sqlCheck(connection);
-        OMUtil.nullCheck(univID);
 
-        //look up university with name
-        ResultSet result = UniversityTable.lookupUniversityID(connection, univID);
-
-        //Build University object
-        try {
-            if (!result.next()) {
-                throw new ServiceException(ServiceStatus.APP_USER_NOT_EXIST);
-            }
-
-            University university = new University(result.getInt("id"),
-                    result.getString("longName"),
-                    result.getString("acronym"),
-                    result.getString("city"),
-                    result.getString("state"),
-                    result.getString("country"));
-            result.close();
-
-            return university;
-        }
-        catch (SQLException ex) {
-            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
-        }
-    }
 }
+
+
