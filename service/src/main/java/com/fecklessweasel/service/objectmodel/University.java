@@ -249,4 +249,33 @@ public class University {
             throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
         }
     }
+    public static University lookupID(Connection connection, int univID)
+        throws ServiceException {
+        // Null check everything:
+        OMUtil.sqlCheck(connection);
+        OMUtil.nullCheck(univID);
+
+        //look up university with name
+        ResultSet result = UniversityTable.lookupUniversityID(connection, univID);
+
+        //Build University object
+        try {
+            if (!result.next()) {
+                throw new ServiceException(ServiceStatus.APP_USER_NOT_EXIST);
+            }
+
+            University university = new University(result.getInt("id"),
+                    result.getString("longName"),
+                    result.getString("acronym"),
+                    result.getString("city"),
+                    result.getString("state"),
+                    result.getString("country"));
+            result.close();
+
+            return university;
+        }
+        catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        }
+    }
 }

@@ -19,7 +19,7 @@ public final class UniversityServlet extends HttpServlet {
 	/**
 	 * Handles post requests to this end point. Performs the creation
 	 * of universities given a set of parameters.
-	 * **/
+	 **/
 	String longName;
 	String acronym;
 	String city;
@@ -43,13 +43,12 @@ public final class UniversityServlet extends HttpServlet {
 					University university = University.create(connection, longName, acronym, city, state, country);
 					// return int value
 					return 0;
-
 				}
 			}
 
 			);
 
 			// Redirect to homepage.
-		response.sendRedirect("/university/university.jsp?name=" + longName);
+		response.sendRedirect("/university/index.jsp?name=" + longName);
 	}
 }

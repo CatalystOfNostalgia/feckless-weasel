@@ -16,6 +16,8 @@ import com.fecklessweasel.service.objectmodel.ServiceStatus;
  */
 public class DepartmentTable {
 
+    public static String LOOKUP_DEPARTMENT_QUERY =
+            "SELECT * FROM Department WHERE Department.id=?";
     private static String INSERT_ROW = "insert into Department (univid, deptName, acronym) values (?,?,?)";
 
     /**
@@ -44,6 +46,22 @@ public class DepartmentTable {
             int id = result.getInt(1);
             preparedStatement.close();
             return id;
+        } catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        }
+    }
+    /**Looks up the Department in the database based off of university ID and acronym**/
+    public static ResultSet lookupDepartment(Connection connection, int id)
+            throws ServiceException {
+        CodeContract.assertNotNull(connection, "connection");
+        CodeContract.assertNotNull(id, "");
+
+        try {
+            PreparedStatement lookupStatement =
+                    connection.prepareStatement(LOOKUP_DEPARTMENT_QUERY);
+            lookupStatement.setInt(1, id);
+
+            return lookupStatement.executeQuery();
         } catch (SQLException ex) {
             throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
         }

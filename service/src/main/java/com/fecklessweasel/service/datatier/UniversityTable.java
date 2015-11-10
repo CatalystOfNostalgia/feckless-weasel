@@ -24,6 +24,8 @@ public class UniversityTable {
     /** Lookup user query. */
     public static String LOOKUP_UNIVERSITY_QUERY =
             "SELECT * FROM University WHERE University.longName=?";
+    public static String LOOKUP_UNIVERSITY_ID_QUERY =
+            "SELECT * FROM University WHERE University.id=?";
 
     /**
      * Insert a university into the table.
@@ -80,4 +82,22 @@ public class UniversityTable {
             throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
         }
     }
+
+    /**Looks up the University in the database bassed off of the id**/
+    public static ResultSet lookupUniversityID(Connection connection, int univid)
+            throws ServiceException{
+
+        CodeContract.assertNotNull(univid, "univid");
+        try{
+            PreparedStatement lookupStatement =
+                    connection.prepareStatement(LOOKUP_UNIVERSITY_ID_QUERY);
+            lookupStatement.setInt(1, univid);
+
+            return lookupStatement.executeQuery();
+
+        }catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        }
+    }
+
 }

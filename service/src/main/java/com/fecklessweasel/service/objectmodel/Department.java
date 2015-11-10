@@ -1,17 +1,29 @@
 package com.fecklessweasel.service.objectmodel;
 
 import java.sql.Connection;
-
+import com.fecklessweasel.service.datatier.UniversityTable;
+import java.sql.Connection;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import com.fecklessweasel.service.UniversityUtil;
 import com.fecklessweasel.service.datatier.DepartmentTable;
 
 /**
  * Stores all information about a school's department.
  * @author Elliot Essman
- */
+ **/
 public class Department {
 
     /** ID in the database table. */
-    private int id;
+    private static int id;
     /** The university this department is in. */
     private University university;
     /** Acronym or short name of this department. */
@@ -23,7 +35,8 @@ public class Department {
     private static int DEPTNAME_MAX = 50;
     /** Min character length of the official name. */
     private static int DEPTNAME_MIN = 4;
-
+    /**University ID**/
+    private static int univid;
     /**
      * Private constructor. Should be created from the database or create
      * method.
@@ -71,7 +84,7 @@ public class Department {
      * Gets the database ID of the department.
      * @return The database ID of the department.
      */
-    protected int getID() {
+    public int getID() {
         return this.id;
     }
 
@@ -97,5 +110,34 @@ public class Department {
      */
     public String getAcronym() {
         return this.acronym;
+    }
+
+
+    public static Department lookup(Connection connection, int did)
+            throws ServiceException {
+
+        // Null check everything:
+        OMUtil.sqlCheck(connection);
+        OMUtil.nullCheck(did);
+        //look up department with name
+        ResultSet result = DepartmentTable.lookupDepartment(connection, did);
+
+        // Build Department object.
+        try {
+            if (!result.next()) {
+                throw new ServiceException(ServiceStatus.APP_USER_NOT_EXIST);
+            }
+            univid = university.getID();
+            University university = UniversityUtil.getUniversityID(univid);
+            Department department = new Department(result.getInt("id"),
+                    university,
+                    result.getString("deptName"),
+                    result.getString("acronym"));
+            result.close();
+            return department;
+        }
+        catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        }
     }
 }
