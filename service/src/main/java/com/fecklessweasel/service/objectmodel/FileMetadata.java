@@ -211,4 +211,25 @@ public class FileMetadata {
     public Date getCreationDate() {
         return this.creationDate;
     }
+    
+    /**
+     * Gets specified comments on this file.
+     * @param conn A connection to the database.
+     * @param first The first comment to get. Starts at 0.
+     * @param amount The amount of comments to get.
+     */
+    public List<Comment> getComments(Connection conn, int first, int amount){
+        ResultSet results = CommentTable.getFileComments(sql, this.fid, first, amount);
+        ArrayList<Comment> comments = new ArrayList<Comment>();
+        try {
+            while( results.next() ){
+                Comment c = Comment.fromResultSet(results); 
+                comments.add(c);
+            }
+            results.close();
+            return comments;
+        } catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        }
+    }
 }

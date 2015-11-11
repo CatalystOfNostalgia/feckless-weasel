@@ -35,19 +35,38 @@ public class Rating {
         this.rating = rating;
     }
     
+    /**
+     * Create a new rating in the database.
+     * @param conn A connection to the database.
+     * @param user The user giving the rating.
+     * @param file The file the ratingis for.
+     * @param rating The rating the file was given.
+     */
     public static Rating Create(Connection conn, User user, FileMetadata file, int rating) throws ServiceException{
         RatingTable.addRating(conn, user.getUid(), file.getFid(), rating);
         return new Rating(user, file, rating);
     }
     
+    /**
+     * Get the user who made the rating.
+     * @return The user who made the rating.
+     */
     public User getUser(){
         return this.user;
     }
     
+    /**
+     * Get the file the rating is for.
+     * @return The file the rating is for.
+     */
     public FileMetadata getFile(){
         return this.file;
     }
     
+    /**
+     * Get the rating the file was given.
+     * @return The rating the file was given.
+     */
     public int getRating(){
         return this.rating;
     }

@@ -113,6 +113,19 @@ public class User {
 
         return new User(uid, username, password, joinDate, emailStr);
     }
+    
+    /**
+     * Create a user with data from the database.
+     * @param result The ResultSet from the database.
+     * @return A user object.
+     */
+    protected static User fromResultSet(ResultSet result){
+        return new User(result.getInt("uid"),
+                result.getString("user"),
+                result.getString("pass"),
+                result.getDate("join_date"),
+                result.getString("email"));
+    }
 
     /**
      * Looks up a user in the datatier and returns it as a User object.
