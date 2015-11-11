@@ -29,6 +29,11 @@ public class Rating {
     /** The rating the user has given the file.*/
     private int rating;
     
+    /**
+     * Max rating value for a file.
+     */
+    private static int MAX_RATING = 5; 
+    
     private Rating(User user, FileMetadata file, int rating){
         this.user = user;
         this.file = file;
@@ -43,6 +48,12 @@ public class Rating {
      * @param rating The rating the file was given.
      */
     public static Rating Create(Connection conn, User user, FileMetadata file, int rating) throws ServiceException{
+        OMUtil.sqlCheck(conn);
+        OMUtil.nullCheck(user);
+        OMUtil.nullCheck(file);
+        if(rating > MAX_RATING || rating < 0){
+            throw new ServiceException(ServiceStatus.APP_INVALID_RATING);
+        }
         RatingTable.addRating(conn, user.getUid(), file.getFid(), rating);
         return new Rating(user, file, rating);
     }

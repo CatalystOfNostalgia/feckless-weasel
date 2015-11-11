@@ -75,7 +75,9 @@ public enum ServiceStatus {
     APP_FILE_NOT_EXIST(731, 400, "The requested file does not exist"),
     
     APP_COMMENT_TAKEN(732, 400, "Comment has already been taken for this file."),
-    APP_RATING_TAKEN(733, 400, "Rating has already been taken for this file.");
+    APP_RATING_TAKEN(733, 400, "Rating has already been taken for this file."),
+    APP_INVALID_RATING(734, 400, "Rating is too high or too low."),
+    APP_INVALID_COMMENT_TEXT(735, 400, "Comment text is too long or too short.");
 
 
     /** The String name of the state (OK, MALFORMED_REQUEST, ...) */

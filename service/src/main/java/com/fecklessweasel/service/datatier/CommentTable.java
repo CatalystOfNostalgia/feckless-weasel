@@ -20,7 +20,7 @@ import com.fecklessweasel.service.objectmodel.ServiceStatus;
  */
 public abstract class CommentTable{
     
-    private static String ADD_COMMENT = "INSERT INTO Comment (uid, fid, datetime) VALUES (?,?,?)";
+    private static String ADD_COMMENT = "INSERT INTO Comment (uid, fid, datetime, text) VALUES (?,?,?,?)";
     
     private static String GET_FILE_COMMENTS = "SELECT * FROM Comment c, User u WHERE c.uid=u.uid AND c.fid=? ORDER BY datetime LIMIT ? OFFSET ?";
     
@@ -29,18 +29,21 @@ public abstract class CommentTable{
      * @param conn A connection to the database.
      * @param uid The user ID who wrote the comment.
      * @param fid The file ID the comment is for.
+     * @param text The comment.
      * @return The timestamp given to the comment.
      */
-    public static Timestamp addComment(Connection conn, int uid, int fid) throws ServiceException {
+    public static Timestamp addComment(Connection conn, int uid, int fid, String text) throws ServiceException {
         CodeContract.assertNotNull(conn, "conn");
         CodeContract.assertNotNull(uid, "uid");
         CodeContract.assertNotNull(fid, "fid");
+        CodeContract.assertNotNullOrEmptyOrWhitespace(text, "text");
         Timestamp time = Timestamp.from(java.time.Instant.now());
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(ADD_COMMENT);
             preparedStatement.setInt(1, uid);
             preparedStatement.setInt(2, fid);
             preparedStatement.setTimestamp(3, time);
+            preparedStatement.setString(4, text);
             preparedStatement.executeUpdate();
             preparedStatement.close();
             return time;
