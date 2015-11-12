@@ -14,37 +14,48 @@ import com.fecklessweasel.service.datatier.SQLInteractionInterface;
 import com.fecklessweasel.service.objectmodel.*;
 import com.fecklessweasel.service.*;
 
+/**
+ * Servlet that handles HTTP requests to create a department
+ *
+ * @author Anjana Rao
+ */
 @WebServlet("/servlet/department")
 public final class DepartmentServlet extends HttpServlet {
 
     /**
-     * Handles post requests to this end point. Performs the creation
-     * of departments given a set of parameters.
-     * **/
-    protected int uniID;
-    protected String deptName;
-    protected String acronym;
-    protected int ID;
+     * Handles post requests
+     *
+     * @param request  the HTTP request that contains data for department
+     * @param response the HTTP response that redirects to the department/indez page
+     * @throws ServletException throws if service encounters an error
+     * @throws IOException      throws if unable to read request
+     */
+    int ID;
+
     @Override
     protected void doPost(final HttpServletRequest request,
                           final HttpServletResponse response)
             throws ServletException, IOException {
-
         SQLSource.interact(new SQLInteractionInterface<Integer>() {
                                @Override
                                public Integer run(Connection connection)
                                        throws ServiceException, SQLException {
-                                   uniID = Integer.parseInt(request.getParameter("university"));
+
+                                   int uniID = Integer.parseInt(request.getParameter("university"));
                                    University university = UniversityUtil.getUniversityID(uniID);
-                                   deptName = request.getParameter("deptName");
-                                   acronym = request.getParameter("acronym");
+                                   String deptName = request.getParameter("deptName");
+                                   String acronym = request.getParameter("acronym");
+                                   if (university == null || deptName == null || acronym == null) {
+                                       throw new ServiceException(ServiceStatus.MALFORMED_REQUEST);
+                                   }
                                    // Create university
                                    Department department = Department.create(connection, university, deptName, acronym);
+
                                    //get dept ID from database
                                    ID = department.getID();
+
                                    // return int value
                                    return 0;
-
                                }
                            }
         );

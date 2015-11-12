@@ -21,13 +21,13 @@ import com.fecklessweasel.service.datatier.DepartmentTable;
 /**
  * Stores all information about a school's department.
  * @author Elliot Essman
-<<<<<<< HEAD
+
 */
 public final class Department {
     /**
      * ID in the database table.
      */
-    public static int id;
+    public int id;
     /**
      * The university this department is in.
      */
@@ -52,7 +52,7 @@ public final class Department {
     /**
      * University ID
      **/
-    private static int univid;
+    private int univid;
 
     /**
      * Private constructor. Should be created from the database or create

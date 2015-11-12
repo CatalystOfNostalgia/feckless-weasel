@@ -1,6 +1,7 @@
 package com.fecklessweasel.service;
 
 import java.io.IOException;
+import java.lang.NumberFormatException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import javax.servlet.http.HttpServletRequest;
@@ -16,26 +17,50 @@ import com.fecklessweasel.service.objectmodel.Department;
 
 /**
  * Utility class for looking up universities from servlet request
+ *
  * @author Anjana Rao
  */
-public final class DepartmentUtil{
+public final class DepartmentUtil {
+
+    private DepartmentUtil() {
+    }
+
     /**
-     * Private constructor to prevent instantiation.
+     * gets request and returns department
+     *
+     * @param request
+     * @return
+     * @throws ServiceException
      */
-    private static int did;
-    private DepartmentUtil() {}
     public static Department findDepartment(HttpServletRequest request)
-            throws ServiceException{
-        //create department by looking up request
-        did = Integer.parseInt(request.getParameter("did"));
+            throws ServiceException {
+
+        String deptID = request.getParameter("did");
+        if (deptID == null) {
+            throw new ServiceException(ServiceStatus.MALFORMED_REQUEST);
+        }
+        final int did = Integer.parseInt(deptID);
+        /**try {
+         did = Integer.parseInt(request.getParameter("did"));
+         } catch (NumberFormatException e) {
+         }**/
 
         // Open a SQL connection, find department in database
         return SQLSource.interact(new SQLInteractionInterface<Department>() {
+            /**
+             * connects to databsae and looks up department in table
+             *
+             * @param connection
+             * @return
+             * @throws ServiceException
+             * @throws SQLException
+             */
             @Override
             public Department run(Connection connection)
-                    throws ServiceException, SQLException{
+                    throws ServiceException, SQLException {
                 return Department.lookup(connection, did);
             }
         });
     }
 }
+
