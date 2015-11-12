@@ -44,13 +44,6 @@ public final class UniversityUtil {
         }
         final int univid = Integer.parseInt(idStr);
 
-       /** //check if univid is an int
-        try {
-            univid = Integer.parseInt(request.getParameter("uid"));
-        } catch (NumberFormatException e) {
-            throw new ServiceException(ServiceStatus.MALFORMED_REQUEST);
-        }**/
-
         // Open a SQL connection, find University in database
         return SQLSource.interact(new SQLInteractionInterface<University>() {
             @Override

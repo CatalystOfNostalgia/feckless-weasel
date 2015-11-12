@@ -27,7 +27,7 @@ public final class Department {
     /**
      * ID in the database table.
      */
-    public int id;
+    private int id;
     /**
      * The university this department is in.
      */

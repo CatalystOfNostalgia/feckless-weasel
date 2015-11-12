@@ -40,10 +40,6 @@ public final class DepartmentUtil {
             throw new ServiceException(ServiceStatus.MALFORMED_REQUEST);
         }
         final int did = Integer.parseInt(deptID);
-        /**try {
-         did = Integer.parseInt(request.getParameter("did"));
-         } catch (NumberFormatException e) {
-         }**/
 
         // Open a SQL connection, find department in database
         return SQLSource.interact(new SQLInteractionInterface<Department>() {
