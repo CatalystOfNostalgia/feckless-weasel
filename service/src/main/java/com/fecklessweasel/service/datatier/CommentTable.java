@@ -62,7 +62,7 @@ public abstract class CommentTable{
      * @param amount The number of comments to get stating at first.
      * @return The resultSet of comments.
      */
-    public static ResultSet getFileComments(Connection conn, int fid, first, amount){
+    public static ResultSet getFileComments(Connection conn, int fid, int first, int amount) throws ServiceException{
         CodeContract.assertNotNull(conn, "conn");
         CodeContract.assertNotNull(fid, "fid");
         try {

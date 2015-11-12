@@ -25,7 +25,7 @@ public class test_CommentTable {
 
     @Test(expected = IllegalArgumentException.class)
     public void test_insert_nullConnection() throws Exception {
-        CommentTable.addComment(null, 9, 9);
+        CommentTable.addComment(null, 9, 9, "hello");
     }
 
 }

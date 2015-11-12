@@ -119,12 +119,16 @@ public class User {
      * @param result The ResultSet from the database.
      * @return A user object.
      */
-    protected static User fromResultSet(ResultSet result){
-        return new User(result.getInt("uid"),
+    protected static User fromResultSet(ResultSet result) throws ServiceException{
+        try{
+            return new User(result.getInt("uid"),
                 result.getString("user"),
                 result.getString("pass"),
                 result.getDate("join_date"),
                 result.getString("email"));
+        } catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        }
     }
 
     /**

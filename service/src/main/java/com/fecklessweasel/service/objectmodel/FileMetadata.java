@@ -10,6 +10,7 @@ import java.util.List;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.fecklessweasel.service.datatier.CommentTable;
 import com.fecklessweasel.service.datatier.FileMetadataTable;
 
 /**
@@ -218,12 +219,12 @@ public class FileMetadata {
      * @param first The first comment to get. Starts at 0.
      * @param amount The amount of comments to get.
      */
-    public List<Comment> getComments(Connection conn, int first, int amount){
-        ResultSet results = CommentTable.getFileComments(sql, this.fid, first, amount);
+    public List<Comment> getComments(Connection conn, int first, int amount) throws ServiceException{
+        ResultSet results = CommentTable.getFileComments(conn, this.fid, first, amount);
         ArrayList<Comment> comments = new ArrayList<Comment>();
         try {
             while( results.next() ){
-                Comment c = Comment.fromResultSet(results); 
+                Comment c = Comment.fromResultSet(this, results); 
                 comments.add(c);
             }
             results.close();

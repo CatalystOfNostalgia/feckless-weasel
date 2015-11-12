@@ -3,14 +3,6 @@ package com.fecklessweasel.service.objectmodel;
 import java.sql.Connection;
 import com.fecklessweasel.service.datatier.RatingTable;
 import java.sql.Connection;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 

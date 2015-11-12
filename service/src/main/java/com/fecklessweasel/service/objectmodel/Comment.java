@@ -3,14 +3,6 @@ package com.fecklessweasel.service.objectmodel;
 import java.sql.Connection;
 import com.fecklessweasel.service.datatier.CommentTable;
 import java.sql.Connection;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -44,7 +36,7 @@ public class Comment {
     /**
      * Max char length for comment text.
      */
-    private int MAX_TEXT_CHARS = 5000;
+    private static int MAX_TEXT_CHARS = 5000;
     
     private Comment(User user, FileMetadata file, Timestamp time, String text){
         this.user = user;
@@ -70,8 +62,8 @@ public class Comment {
             throw new ServiceException(ServiceStatus.APP_INVALID_COMMENT_TEXT);
         }
         
-        Timestamp t = CommentTable.addComment(conn, user.getUid(), file.getFid(), text);
-        return new Comment(user, file, t);
+        Timestamp time = CommentTable.addComment(conn, user.getUid(), file.getFid(), text);
+        return new Comment(user, file, time, text);
     }
     
     /**
@@ -80,8 +72,12 @@ public class Comment {
      * @param result The ResultSet from the database.
      * @return A comment object.
      */
-    protected static Comment fromResultSet(FileMetaData file, ResultSet result){
-        return new Comment(User.fromResultSet(result), file, result.get("datetime"), result.get("text"));
+    protected static Comment fromResultSet(FileMetadata file, ResultSet result) throws ServiceException {
+        try{
+            return new Comment(User.fromResultSet(result), file, result.getTimestamp("datetime"), result.getString("text"));
+        } catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        }
     }
     
     /**
