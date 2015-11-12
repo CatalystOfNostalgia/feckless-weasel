@@ -22,6 +22,8 @@ public class DepartmentTable {
     private static String LOOKUP_ROW
         = "SELECT * FROM Department D WHERE D.id=?";
 
+    private static String SELECT_PAGINATED
+        = "SELECT * FROM Department WHERE univid=? ORDER BY deptName LIMIT ?,?";
     /**
      * Insert a department into the table.
      * @param conn A connection to the database.
@@ -70,6 +72,32 @@ public class DepartmentTable {
             lookupDeptQuery.setInt(1, cid);
 
             return lookupDeptQuery.executeQuery();
+        } catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        }
+    }
+
+    /**
+     * Lookup all Departments in a univeristy from offset to offset + amt
+     * @param connection MySQL database connection.\
+     * @param univid Unique ID of University the depts belong to
+     * @param offset skip the first x amount of rows, where x = offset
+     * @param amt the amount of rows to return
+     * @throws ServiceException Thrown upon error
+     * @return A result set containing amt number of rows starting after the first offset rows
+     */
+    public static ResultSet lookUpPaginated(Connection connection, int univid, int offset, int amt)
+            throws ServiceException {
+
+        CodeContract.assertNotNull(connection, "connection");
+
+        try {
+            PreparedStatement lookupStatement = connection.prepareStatement(SELECT_PAGINATED);
+            lookupStatement.setInt(1, univid);
+            lookupStatement.setInt(2, offset);
+            lookupStatement.setInt(3, amt);
+
+            return lookupStatement.executeQuery();
         } catch (SQLException ex) {
             throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
         }

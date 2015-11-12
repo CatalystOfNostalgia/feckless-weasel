@@ -26,7 +26,7 @@ public class UniversityTable {
             "SELECT * FROM University WHERE University.id=?";
 
     /** Select from the database*/
-    public static String SELECT_PAGINATED = "SELECT * FROM University LIMIT ?,? ORDER BY longName";
+    public static String SELECT_PAGINATED = "SELECT * FROM University ORDER BY longName LIMIT ?,?";
 
     /**
      * Insert a university into the table.

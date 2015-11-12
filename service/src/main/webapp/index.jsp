@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" 
-    import="java.util.*, com.fecklessweasel.service.*, com.fecklessweasel.service.objectmodel.*, com.fecklessweasel.service.datatier.*"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
+    import="java.util.*, com.fecklessweasel.service.*, com.fecklessweasel.service.objectmodel.*, com.fecklessweasel.service.datatier.*, java.sql.Connection"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
     <head>
@@ -15,17 +15,24 @@
             </div>
         </div>
         <div class="container">
-            <%
-            ArrayList<University> univs = SQLSource.interact(new SQLInteractionInterface<Integer>() {
-                 @Override
-                public Integer run(Connection connection)
-                    throws ServiceException, SQLException {
-                        
-                }
-            });
-            %>
-            <c:forEach var="element" items="${univ}">
-            </c:forEach>
+            <div class="container">
+                <%
+                ArrayList<University> univs =
+                SQLSource.interact(new SQLInteractionInterface<ArrayList<University>>() {
+                    @Override
+                    public ArrayList<University> run(Connection connection) throws ServiceException {
+                        return (ArrayList<University>) University.lookUpAll(connection);
+                    }
+                });
+                request.setAttribute("univs", univs);
+                %>
+                <c:forEach var="university" items="${univs}">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h2><a href="/university.jsp?name=${university.getLongName()}">${university.getLongName()}</a></h2>
+                        </div>
+                    </div>
+                </c:forEach>
             <div class="row">
                 <div class="col-md-4">
                     <h2>Can't find your university?</h2>

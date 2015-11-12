@@ -259,9 +259,9 @@ public class University {
      * @param offset The first x Results to skip
      * @param amt The max amount of University objects returned
      * @throws ServiceException Thrown upon error.
-     * @return List of University Objects 
+     * @return List of University Objects
      */
-    public static List<University> lookUpPaginated(Connection connection, int offset, int amt) 
+    public static List<University> lookUpPaginated(Connection connection, int offset, int amt)
             throws ServiceException {
 
         OMUtil.sqlCheck(connection);
@@ -291,6 +291,29 @@ public class University {
      * @return List<University> contains ALL universities in the list
      */
     public static List<University> lookUpAll(Connection connection) throws ServiceException {
+        // This gets all records from the 0 to the # of records in the table, or 2147483647, whichever is smaller...
         return lookUpPaginated(connection, 0, 2147483647 );
+    }
+
+    /**
+     * Get all Departments between offset and offset + amt that belong to this University
+     * @param connection MySQL database Collection
+     * @param offset The first n rows to skip in the table select statement
+     * @param amt the amount of Department objects to return (or less if  < amt records exist)
+     * @return A List of Departments belonging to this university within the bounds of offset and amt
+     * @throws A Service Exception if there is a database error
+     */
+    public List<Department> getAllDeptsPaginated(Connection connection, int offset, int amt)
+        throws ServiceException {
+            return Department.lookUpPaginated(connection, 1, offset, amt);
+    }
+
+    /**
+     * Get all Departments belonging to this university
+     * @param connection MySQL database connection
+     * @return a List of All Department Objects associated with this university
+     */
+    public List<Department> getAllDepts(Connection connection) throws ServiceException {
+        return this.getAllDeptsPaginated(connection, 0, 2147483647);
     }
 }
