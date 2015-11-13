@@ -1005,7 +1005,7 @@ public class test_User {
         try {
             User.Role.delete(this.mockConnection, null);
         } catch (ServiceException ex) {
-            assertEquals(ex.status, ServiceStatus.NO_SQL);
+            assertEquals(ex.status, ServiceStatus.MALFORMED_REQUEST);
             return;
         }
 
