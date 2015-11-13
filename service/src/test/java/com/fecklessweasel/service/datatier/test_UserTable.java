@@ -451,28 +451,6 @@ public class test_UserTable {
         verify(mockPreparedStatement, times(1)).setInt(2, uid);
         verify(mockPreparedStatement, times(1)).close();
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     
     @Test(expected=IllegalArgumentException.class)
     public void test_LookupUserWithRolesById_NullConnection() throws Exception {
