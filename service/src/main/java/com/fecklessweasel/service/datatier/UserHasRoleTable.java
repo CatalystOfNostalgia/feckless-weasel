@@ -19,7 +19,7 @@ import javax.mail.internet.InternetAddress;
  * Implements SQL queries for the checking if a User has a specific role.
  * @author Christian Gunderman
  */
-public abstract class UserHasRoleTable {
+public final class UserHasRoleTable {
 
     /** Mark user as having a Role. */
     public static final String INSERT_USER_HAS_ROLE_QUERY
@@ -32,6 +32,11 @@ public abstract class UserHasRoleTable {
         " AND rid=(SELECT rid FROM UserRole R WHERE R.role=?)";
 
     /**
+     * Private constructor to prevent instances.
+     */
+    private UserHasRoleTable() { }
+
+    /**
      * Give User requested Role.
      * @throws ServiceException If database error or user already has Role, or
      * requested Role doesn't exist.
@@ -40,7 +45,7 @@ public abstract class UserHasRoleTable {
      * @param roleName The String id of the Role.
      */
     public static void insertUserHasRole(Connection connection,
-                                         long uid,
+                                         int uid,
                                          String roleName) throws ServiceException {
         CodeContract.assertNotNull(connection, "connection");
         CodeContract.assertNotNullOrEmptyOrWhitespace(roleName, "roleName");
@@ -70,7 +75,7 @@ public abstract class UserHasRoleTable {
      * @return The ResultSet containing the Role information.
      */
     public static void deleteUserHasRole(Connection connection,
-                                         long uid,
+                                         int uid,
                                          String roleName) throws ServiceException {
         CodeContract.assertNotNull(connection, "connection");
         CodeContract.assertNotNullOrEmptyOrWhitespace(roleName, "roleName");

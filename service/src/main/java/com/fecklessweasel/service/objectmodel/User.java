@@ -22,7 +22,7 @@ import com.fecklessweasel.service.datatier.UserHasRoleTable;
  * relations.
  * @author Christian Gunderman
  */
-public class User {
+public final class User {
     /** Minimum user account length. */
     public static final int USER_MIN = 6;
     /**
@@ -48,7 +48,7 @@ public class User {
     /** User's email address. */
     private String email;
     /** User's security roles. */
-    private final Set<Role> roles;
+    final Set<Role> roles;
 
     /**
      * Creates a new user and stores in the database.
@@ -98,8 +98,12 @@ public class User {
         UserHasRoleTable.insertUserHasRole(sql,
                                            uid,
                                            UserRoleTable.ROLE_USER_ID);
+        User user = new User(uid, username, password, joinDate, emailStr);
 
-        return new User(uid, username, password, joinDate, emailStr);
+        user.roles.add(new Role(UserRoleTable.ROLE_USER_ID,
+                                UserRoleTable.ROLE_USER_DESCRIPTION));
+
+        return user;
     }
 
     /**
@@ -215,6 +219,8 @@ public class User {
      * @param connection The SQL connection.
      */
     public void delete(Connection connection) throws ServiceException {
+        OMUtil.sqlCheck(connection);
+        
         User.delete(connection, this.getUsername());
     }
 
@@ -232,6 +238,7 @@ public class User {
                                String newPassword) throws ServiceException {
         OMUtil.sqlCheck(connection);
         OMUtil.nullCheck(newPassword);
+        OMUtil.nullCheck(oldPassword);
 
         String oldPasswordHash = OMUtil.sha256(oldPassword);
 
@@ -415,7 +422,7 @@ public class User {
      * @param joinDate The date that the user joined.
      * @param email The user's email address.
      */
-    private User(int uid, String username, String passwordHash,
+    User(int uid, String username, String passwordHash,
                  Date joinDate, String email) {
         this.uid = uid;
         this.username = username;
@@ -480,11 +487,14 @@ public class User {
      */
     public static class Role {
         /** Minimum length for a Role id. */
-        private static int  ROLE_MIN = 7;
+        private static final int  ROLE_MIN = 7;
         /** Maximum length for a Role id. */
-        private static int ROLE_MAX = 25;
+        private static final int ROLE_MAX = 25;
+        /** Max length for a description. */
+        private static final int DESCRIPTION_MAX = 255;
         /** Beginning of all ROLE ids. */
-        private static String ROLE_PREFIX = "ROLE_";
+        private static final String ROLE_PREFIX = "ROLE_";
+
         /** The unique role id. */
         public final String id;
         /** The role description message. */
@@ -512,6 +522,10 @@ public class User {
             // Check Role string length.
             if (role.length() < ROLE_MIN || role.length() > ROLE_MAX) {
                 throw new ServiceException(ServiceStatus.APP_INVALID_ROLE_LENGTH);
+            }
+
+            if (description.length() > DESCRIPTION_MAX) {
+                throw new ServiceException(ServiceStatus.APP_INVALID_ROLE_DESC_LENGTH);
             }
 
             // Check Role prefix.
@@ -565,7 +579,7 @@ public class User {
          * @param id The unique role id.
          * @param description The role description string.
          */
-        private Role(String id, String description) {
+        Role(String id, String description) {
             this.id = id;
             this.description = description;
         }
