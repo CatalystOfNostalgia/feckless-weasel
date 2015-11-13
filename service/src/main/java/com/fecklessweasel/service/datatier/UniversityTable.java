@@ -21,11 +21,11 @@ import com.fecklessweasel.service.objectmodel.ServiceStatus;
  */
 public class UniversityTable {
 
-    private static String INSERT_ROW = "insert into University (longName, acronym, city, state, country) values (?,?,?,?,?)";
+    public static final String INSERT_ROW = "insert into University (longName, acronym, city, state, country) values (?,?,?,?,?)";
     /**
      * Lookup user query.
      */
-    public static String LOOKUP_UNIVERSITY_ID_QUERY =
+    public static final String LOOKUP_UNIVERSITY_ID_QUERY =
             "SELECT * FROM University WHERE University.id=?";
 
     /** Select from the database*/
