@@ -218,13 +218,6 @@ public class test_UserTable {
         verify(mockPreparedStatement, times(1)).executeQuery();
     }
 
-
-
-
-
-
-
-
     @Test(expected=IllegalArgumentException.class)
     public void test_DeleteUser_NullConnection() throws Exception {
         UserTable.deleteUser(null,
@@ -302,5 +295,224 @@ public class test_UserTable {
 
         verify(mockPreparedStatement, times(1)).setString(1, user);
         verify(mockPreparedStatement, times(1)).executeUpdate();
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void test_UpdatePassword_NullConnection() throws ServiceException {
+        UserTable.updatePassword(null,
+                                 0,
+                                 "newPass");
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void test_UpdatePassword_NullNewPass() throws ServiceException {
+        UserTable.updatePassword(this.mockConnection,
+                                 0,
+                                 null);
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void test_UpdatePassword_EmptyNewPass() throws ServiceException {
+        UserTable.updatePassword(this.mockConnection,
+                                 0,
+                                 "");
+    }
+
+    @Test
+    public void test_UpdatePassword_SQLException() throws Exception {
+        PreparedStatement mockPreparedStatement = mock(PreparedStatement.class);
+
+        when(mockPreparedStatement.executeUpdate()).thenThrow(new SQLException());
+        when(this.mockConnection.prepareStatement(UserTable.UPDATE_USER_PASSWORD_QUERY))
+            .thenReturn(mockPreparedStatement);
+
+        try {
+            UserTable.updatePassword(this.mockConnection, 12, "newpass");
+        } catch (ServiceException ex) {
+            assertEquals(ServiceStatus.DATABASE_ERROR, ex.status);
+            return;
+        }
+
+        verify(mockPreparedStatement, times(1)).close();
+
+        fail("no exception thrown");
+    }
+
+    @Test
+    public void test_UpdatePassword_ExecuteUpdateReturns0() throws Exception {
+        PreparedStatement mockPreparedStatement = mock(PreparedStatement.class);
+
+        when(mockPreparedStatement.executeUpdate()).thenReturn(0);
+        when(this.mockConnection.prepareStatement(UserTable.UPDATE_USER_PASSWORD_QUERY))
+            .thenReturn(mockPreparedStatement);
+
+        try {
+            UserTable.updatePassword(this.mockConnection, 12, "newpass");
+        } catch (ServiceException ex) {
+            assertEquals(ServiceStatus.APP_USER_NOT_EXIST, ex.status);
+            return;
+        }
+
+        verify(mockPreparedStatement, times(1)).close();
+
+        fail("no exception thrown");
+    }
+
+    @Test
+    public void test_UpdatePassword_Success() throws Exception {
+        final String newpass = "newpass";
+        final int uid = 12;
+        PreparedStatement mockPreparedStatement = mock(PreparedStatement.class);
+
+        when(mockPreparedStatement.executeUpdate()).thenReturn(1);
+        when(this.mockConnection.prepareStatement(UserTable.UPDATE_USER_PASSWORD_QUERY))
+            .thenReturn(mockPreparedStatement);
+
+        UserTable.updatePassword(this.mockConnection, uid, newpass);
+
+        verify(mockPreparedStatement, times(1)).setString(1, newpass);
+        verify(mockPreparedStatement, times(1)).setInt(2, uid);
+        verify(mockPreparedStatement, times(1)).close();
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void test_UpdateEmail_NullConnection() throws Exception {
+        UserTable.updateEmail(null,
+                              1,
+                              new InternetAddress("gundermanc@gmail.com"));
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void test_UpdateEmail_NullInternetAddress() throws Exception {
+        UserTable.updateEmail(this.mockConnection,
+                              1,
+                              null);
+    }
+
+    @Test
+    public void test_UpdateEmail_SQLException() throws Exception {
+        PreparedStatement mockPreparedStatement = mock(PreparedStatement.class);
+
+        when(mockPreparedStatement.executeUpdate()).thenThrow(new SQLException());
+        when(this.mockConnection.prepareStatement(UserTable.UPDATE_USER_EMAIL_QUERY))
+            .thenReturn(mockPreparedStatement);
+
+        try {
+            UserTable.updateEmail(this.mockConnection,
+                                  12,
+                                  new InternetAddress("gundermanc@gmail.com"));
+        } catch (ServiceException ex) {
+            assertEquals(ServiceStatus.DATABASE_ERROR, ex.status);
+            return;
+        }
+
+        verify(mockPreparedStatement, times(1)).close();
+
+        fail("no exception thrown");
+    }
+
+    @Test
+    public void test_UpdateEmail_ExecuteUpdateReturns0() throws Exception {
+        PreparedStatement mockPreparedStatement = mock(PreparedStatement.class);
+
+        when(mockPreparedStatement.executeUpdate()).thenReturn(0);
+        when(this.mockConnection.prepareStatement(UserTable.UPDATE_USER_EMAIL_QUERY))
+            .thenReturn(mockPreparedStatement);
+
+        try {
+            UserTable.updateEmail(this.mockConnection,
+                                  12,
+                                  new InternetAddress("gundermanc@gmail.com"));
+        } catch (ServiceException ex) {
+            assertEquals(ServiceStatus.APP_USER_NOT_EXIST, ex.status);
+            return;
+        }
+
+        verify(mockPreparedStatement, times(1)).close();
+
+        fail("no exception thrown");
+    }
+
+    @Test
+    public void test_UpdateEmail_Success() throws Exception {
+        final String newEmail = "gundermanc@gmail.com";
+        final int uid = 12;
+        PreparedStatement mockPreparedStatement = mock(PreparedStatement.class);
+
+        when(mockPreparedStatement.executeUpdate()).thenReturn(1);
+        when(this.mockConnection.prepareStatement(UserTable.UPDATE_USER_EMAIL_QUERY))
+            .thenReturn(mockPreparedStatement);
+
+        UserTable.updateEmail(this.mockConnection,
+                              uid,
+                              new InternetAddress(newEmail));
+
+        verify(mockPreparedStatement, times(1)).setString(1, newEmail);
+        verify(mockPreparedStatement, times(1)).setInt(2, uid);
+        verify(mockPreparedStatement, times(1)).close();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    @Test(expected=IllegalArgumentException.class)
+    public void test_LookupUserWithRolesById_NullConnection() throws Exception {
+        UserTable.lookupUserWithRolesById(null,
+                                          12);
+    }
+
+    @Test
+    public void test_LookupUserWithRolesById_SQLException() throws Exception {
+        PreparedStatement mockPreparedStatement = mock(PreparedStatement.class);
+
+        when(mockPreparedStatement.executeQuery()).thenThrow(new SQLException());
+        when(this.mockConnection.prepareStatement(UserTable.LOOKUP_USERID_QUERY))
+            .thenReturn(mockPreparedStatement);
+
+        try {
+            UserTable.lookupUserWithRolesById(this.mockConnection, 12);
+        } catch (ServiceException ex) {
+            assertEquals(ServiceStatus.DATABASE_ERROR, ex.status);
+            return;
+        }
+
+        verify(mockPreparedStatement, times(1)).close();
+
+        fail("no exception thrown");
+    }
+
+    @Test
+    public void test_LookupUserWithRolesById_Success() throws Exception {
+        final String newEmail = "gundermanc@gmail.com";
+        final int uid = 12;
+        PreparedStatement mockPreparedStatement = mock(PreparedStatement.class);
+
+        //when(mockPreparedStatement.executeQuery()).thenReturn(1);
+        when(this.mockConnection.prepareStatement(UserTable.LOOKUP_USERID_QUERY))
+             .thenReturn(mockPreparedStatement);
+
+        UserTable.lookupUserWithRolesById(this.mockConnection,
+                                          uid);
+
+        verify(mockPreparedStatement, times(1)).setInt(1, uid);
     }
 }
