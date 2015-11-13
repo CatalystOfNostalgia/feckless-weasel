@@ -6,7 +6,7 @@
         <title>${longName}</title>
         <link href="${pageContext.request.contextPath}/assets/bootstrap-3.3.5-dist/css/bootstrap.min.css" rel="stylesheet">
     </head>
-    <body class>
+    <body>
         <jsp:include page="/header.jsp"/>
         <%
            final University university = UniversityUtil.findUniversity(request);
@@ -38,8 +38,8 @@
             </div>
             <div class="row">
                 <div class=""col-md-6"">
-                    <h3>Create a Department</h3>
-                    <form class="form-inlines" action="/servlet/department" method="post" enctype="application/x-www-form-urlencoded">
+                    <h2>Create a Department</h2>
+                    <form class="form-inline" action="/servlet/department" method="post" enctype="application/x-www-form-urlencoded">
                          <input type="hidden" class="form-control" id="university" name="university" placeholder="university" value="${university.getID()}">
                          <input type="text" class="form-control input-lg" id="deptName" name="deptName" placeholder="Department Name (i.e. Biology)">
                          <input type="text" class="form-control input-lg" id="acronym" name="acronym" placeholder="acronym (i.e. BIOL)">
