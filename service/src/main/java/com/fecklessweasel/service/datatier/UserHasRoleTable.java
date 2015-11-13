@@ -19,7 +19,7 @@ import javax.mail.internet.InternetAddress;
  * Implements SQL queries for the checking if a User has a specific role.
  * @author Christian Gunderman
  */
-public abstract class UserHasRoleTable {
+public final class UserHasRoleTable {
 
     /** Mark user as having a Role. */
     public static final String INSERT_USER_HAS_ROLE_QUERY
@@ -30,6 +30,11 @@ public abstract class UserHasRoleTable {
     public static final String DELETE_USER_HAS_ROLE_NAME_QUERY
         = "DELETE FROM UserHasRole WHERE uid=?" +
         " AND rid=(SELECT rid FROM UserRole R WHERE R.role=?)";
+
+    /**
+     * Private constructor to prevent instances.
+     */
+    private UserHasRoleTable() { }
 
     /**
      * Give User requested Role.

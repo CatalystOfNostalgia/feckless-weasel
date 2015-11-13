@@ -17,7 +17,7 @@ import javax.mail.internet.InternetAddress;
  * Wrapper class for SQL UserRole Table. Defines UserRoles.
  * @author Christian Gunderman
  */
-public abstract class UserRoleTable {
+public final class UserRoleTable {
 
     /** Create role query. */
     public static final String INSERT_ROLE_QUERY
@@ -35,15 +35,20 @@ public abstract class UserRoleTable {
     public static final String ROLE_ADMIN_ID = "ROLE_ADMIN";
 
     /** Admin Role Description. */
-    private static final String ROLE_ADMIN_DESCRIPTION
+    public static final String ROLE_ADMIN_DESCRIPTION
         = "Administrator with unrestricted access.";
 
     /** User Role ID. */
     public static final String ROLE_USER_ID = "ROLE_USER";
 
     /** User Role Description. */
-    private static final String ROLE_USER_DESCRIPTION
+    public static final String ROLE_USER_DESCRIPTION
         = "Standard user account.";
+
+    /**
+     * Private constructor to prevent instances.
+     */
+    private UserRoleTable() { }
 
     /**
      * Adds a new UserRole to the table with the specified Role ID

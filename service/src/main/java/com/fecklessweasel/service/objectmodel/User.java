@@ -22,7 +22,7 @@ import com.fecklessweasel.service.datatier.UserHasRoleTable;
  * relations.
  * @author Christian Gunderman
  */
-public class User {
+public final class User {
     /** Minimum user account length. */
     public static final int USER_MIN = 6;
     /**
@@ -98,8 +98,12 @@ public class User {
         UserHasRoleTable.insertUserHasRole(sql,
                                            uid,
                                            UserRoleTable.ROLE_USER_ID);
+        User user = new User(uid, username, password, joinDate, emailStr);
 
-        return new User(uid, username, password, joinDate, emailStr);
+        user.roles.add(new Role(UserRoleTable.ROLE_USER_ID,
+                                UserRoleTable.ROLE_USER_DESCRIPTION));
+
+        return user;
     }
 
     /**
@@ -215,6 +219,8 @@ public class User {
      * @param connection The SQL connection.
      */
     public void delete(Connection connection) throws ServiceException {
+        OMUtil.sqlCheck(connection);
+        
         User.delete(connection, this.getUsername());
     }
 
@@ -232,6 +238,7 @@ public class User {
                                String newPassword) throws ServiceException {
         OMUtil.sqlCheck(connection);
         OMUtil.nullCheck(newPassword);
+        OMUtil.nullCheck(oldPassword);
 
         String oldPasswordHash = OMUtil.sha256(oldPassword);
 
@@ -415,7 +422,7 @@ public class User {
      * @param joinDate The date that the user joined.
      * @param email The user's email address.
      */
-    private User(int uid, String username, String passwordHash,
+    User(int uid, String username, String passwordHash,
                  Date joinDate, String email) {
         this.uid = uid;
         this.username = username;
