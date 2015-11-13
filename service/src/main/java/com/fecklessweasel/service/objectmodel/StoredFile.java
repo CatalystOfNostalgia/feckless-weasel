@@ -1,10 +1,6 @@
 package com.fecklessweasel.service.objectmodel;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.sql.Connection;
 import java.util.Collection;
 import java.util.Collections;
@@ -40,7 +36,7 @@ public class StoredFile {
      * will be written to arbitrary directory based upon where the service is
      * started from.
      */
-    private static final String FILEPATH_PREFIX = "files";
+    private static final String FILEPATH_PREFIX = "files/";
     
     /** A file's unique identifier. */
     private int fid;
@@ -89,31 +85,11 @@ public class StoredFile {
                                     String title,
                                     String description,
                                     InputStream fileData) throws ServiceException {
-        OMUtil.sqlCheck(sql);
-        OMUtil.nullCheck(user);
-        OMUtil.nullCheck(course);
-        OMUtil.nullCheck(title);
-        OMUtil.nullCheck(description);
         OMUtil.nullCheck(fileData);
-
-        // Check title length.
-        if (title.length() < MIN_TITLE || title.length() > MAX_TITLE) {
-            throw new ServiceException(ServiceStatus.APP_INVALID_TITLE_LENGTH);
-        }
-
-        // Check description length.
-        if (description.length() < MIN_DESCRIPTION || description.length() > MAX_DESCRIPTION) {
-            throw new ServiceException(ServiceStatus.APP_INVALID_DESCRIPTION_LENGTH);
-        }
 
         // Write metadata to the database.
         Date creationDate = new Date();
-        int fid = FileMetadataTable.insertFileData(sql,
-                                                   user.getID(),
-                                                   course.getID(),
-                                                   title,
-                                                   description,
-                                                   creationDate);
+        int fid = addToDatabase(sql, user, course, title, description, creationDate);
 
         // Attempt to write the uploaded data to a file mapped to the ID.
         // TODO: check file extensions are not necessary.
@@ -135,6 +111,86 @@ public class StoredFile {
                               creationDate,
                               title,
                               description);
+    }
+
+    /**
+     * Inserts the filemetadata as a new entry into the filemetadata table, returns the object
+     * wrapper that represents the filemetadata.
+     * @param user The uploading user.
+     * @param course The course that the file is for.
+     * @param title The title for the file.
+     * @param description The description for the file.
+     * @param markdownText The text for the markdown file.
+     */
+    public static StoredFile create(Connection sql,
+                                    User user,
+                                    Course course,
+                                    String title,
+                                    String description,
+                                    String markdownText) throws ServiceException {
+        OMUtil.nullCheck(markdownText);
+
+        // Write metadata to the database.
+        Date creationDate = new Date();
+        int fid = addToDatabase(sql, user, course, title, description, creationDate);
+
+        // Attempt to write the uploaded data to a file mapped to the ID.
+        // TODO: check file extensions are not necessary.
+        // TODO: potential concurrency issue here, FileMetadata can be written
+        // before file is fully uploaded, leading to metadata records for files
+        // that are not yet uploaded.
+        String fileName = createFilename(fid);
+        if (!saveFile(markdownText, fileName)) {
+            // Upload failed, there is no file, delete the metadata.
+            FileMetadataTable.deleteFile(sql, fid);
+            throw new ServiceException(ServiceStatus.SERVER_UPLOAD_ERROR);
+        }
+
+        return new StoredFile(fid,
+                user.getID(),
+                course.getID(),
+                creationDate,
+                title,
+                description);
+    }
+
+    /**
+     * Inserts the filemetadata as a new entry into the filemetadata table, returns the fid
+     * @param user The uploading user.
+     * @param course The course that the file is for.
+     * @param title The title for the file.
+     * @param description The description for the file.
+     * @param creationDate The date this file was created.
+     */
+    private static int addToDatabase(Connection sql,
+                                      User user,
+                                      Course course,
+                                      String title,
+                                      String description,
+                                      Date creationDate) throws ServiceException {
+        OMUtil.sqlCheck(sql);
+        OMUtil.nullCheck(user);
+        OMUtil.nullCheck(course);
+        OMUtil.nullCheck(title);
+        OMUtil.nullCheck(description);
+
+        // Check title length.
+        if (title.length() < MIN_TITLE || title.length() > MAX_TITLE) {
+            throw new ServiceException(ServiceStatus.APP_INVALID_TITLE_LENGTH);
+        }
+
+        // Check description length.
+        if (description.length() < MIN_DESCRIPTION || description.length() > MAX_DESCRIPTION) {
+            throw new ServiceException(ServiceStatus.APP_INVALID_DESCRIPTION_LENGTH);
+        }
+
+        // Write metadata to the database.
+        return FileMetadataTable.insertFileData(sql,
+                user.getID(),
+                course.getID(),
+                title,
+                description,
+                creationDate);
     }
 
     /**
@@ -344,6 +400,35 @@ public class StoredFile {
         } catch (IOException e) {
 
             // Print error to logs.
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Saves the markdown file to the server.
+     * @param text The text of the markdown file.
+     * @param fileName The file path the file will be saved to.
+     * @return Returns true if file is successfully saved, false otherwise.
+     */
+    private static boolean saveFile(String text, String fileName) {
+        try {
+            File directory = new File(FILEPATH_PREFIX);
+            if (!directory.exists()) {
+                directory.mkdirs();
+            }
+
+            File markdownFile = new File(fileName);
+            markdownFile.createNewFile();
+
+            // TODO: ensure that file access is exclusive. Don't want to allow reads
+            // Write the markdown text to the file
+            PrintWriter writer = new PrintWriter(markdownFile);
+            writer.print(text);
+            writer.close();
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
