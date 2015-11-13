@@ -106,7 +106,13 @@ public final class Course {
      * Gets the database ID of the Course.
      * @return The database ID of the Course.
      */
-    int getID() {
+    public int getID() {
         return this.id;
     }
+
+    /**
+     * Gets the department ID of the Course
+     * @return The database ID of the Course
+     */
+    public int getDeptID(){return this.did;}
 }

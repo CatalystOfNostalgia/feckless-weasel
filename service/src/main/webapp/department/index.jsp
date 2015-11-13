@@ -13,7 +13,7 @@
                 <h2><%= department.getAcronym()%></h2>
                 <h3>Create a Course</h3>
                 <form class="form-default" action="/servlet/course" method="post" enctype="application/x-www-form-urlencoded">
-                     <input type="hidden" class="text-large" id="" name="department" placeholder="get input">
+                     <input type="hidden" class="text-large" id="department" name="department" value='<%=department.getID()%>'>
                      <input type="text" class="text-large" id="course" name="course" placeholder="Course Number">
                      <div>
                         <button type="submit" class="button-large" id="submit" name="submit">Create</button>
