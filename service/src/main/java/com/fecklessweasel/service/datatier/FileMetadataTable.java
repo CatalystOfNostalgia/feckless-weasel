@@ -33,7 +33,7 @@ public abstract class FileMetadataTable{
         "SELECT * FROM Filemetadata F WHERE F.cid=?";
 
     public static final String DELETE_FILE_QUERY =
-        "DELETE FROM FileMetadata WHERE fid=";
+        "DELETE FROM FileMetadata WHERE fid=?";
 
     /**
      * Inserts a file into the corresponding MySQL table. returns the generated fid
@@ -153,6 +153,9 @@ public abstract class FileMetadataTable{
      */
     public static void deleteFile(Connection connection, int fid)
         throws ServiceException {
+
+        CodeContract.assertNotNull(connection, "connection");
+
         try {
             PreparedStatement deleteStatement
                 = connection.prepareStatement(DELETE_FILE_QUERY);
