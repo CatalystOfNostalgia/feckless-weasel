@@ -73,7 +73,10 @@ public enum ServiceStatus {
     APP_FILE_NOT_EXIST(729, 400, "The requested file does not exist"),
     APP_DEPARTMENT_NOT_EXIST(730, 400, "Department does not exist."),
     APP_INVALID_TITLE_LENGTH(731, 400, "Title is either too long or too short."),
-    APP_INVALID_DESCRIPTION_LENGTH(732, 400, "Title is either too long or too short.");
+    APP_INVALID_DESCRIPTION_LENGTH(732, 400, "Title is either too long or too short."),
+    APP_COURSE_TAKEN(733, 400, "Course already exists."),
+    APP_DEPT_TAKEN(734, 400, "Department already exists."),
+    APP_UNIV_TAKEN(735, 400, "University already exists.");
 
 
     /** The String name of the state (OK, MALFORMED_REQUEST, ...) */

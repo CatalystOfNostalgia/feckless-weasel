@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 
 import com.fecklessweasel.service.objectmodel.CodeContract;
@@ -16,12 +17,12 @@ import com.fecklessweasel.service.objectmodel.ServiceStatus;
  */
 public class DepartmentTable {
 
-    private static String INSERT_ROW = "insert into Department (univid, deptName, acronym) values (?,?,?)";
+    public final static String INSERT_ROW = "insert into Department (univid, deptName, acronym) values (?,?,?)";
 
-    private static String LOOKUP_ROW
+    public final static String LOOKUP_ROW
         = "SELECT * FROM Department D WHERE D.id=?";
 
-    private static String SELECT_PAGINATED
+    public final static String SELECT_PAGINATED
         = "SELECT * FROM Department WHERE univid=? ORDER BY deptName LIMIT ?,?";
     /**
      * Insert a department into the table.
@@ -49,6 +50,8 @@ public class DepartmentTable {
             int id = result.getInt(1);
             preparedStatement.close();
             return id;
+        } catch (SQLIntegrityConstraintViolationException ex) {
+            throw new ServiceException(ServiceStatus.APP_DEPT_TAKEN, ex);
         } catch (SQLException ex) {
             throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
         }
