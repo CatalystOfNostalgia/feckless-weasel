@@ -17,7 +17,7 @@ import com.fecklessweasel.service.objectmodel.ServiceStatus;
  */
 public class CourseTable {
 
-    private static String INSERT_ROW = "insert into Course (univid, deptid, courseNumber) values (?,?,?)";
+    public final static String INSERT_ROW = "insert into Course (univid, deptid, courseNumber) values (?,?,?)";
 
     /**
      * Inserts a Course into the table.

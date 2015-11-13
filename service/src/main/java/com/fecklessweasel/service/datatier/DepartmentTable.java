@@ -17,7 +17,7 @@ import com.fecklessweasel.service.objectmodel.ServiceStatus;
  */
 public class DepartmentTable {
 
-    private static String INSERT_ROW = "insert into Department (univid, deptName, acronym) values (?,?,?)";
+    public final static String INSERT_ROW = "insert into Department (univid, deptName, acronym) values (?,?,?)";
 
     /**
      * Insert a department into the table.
