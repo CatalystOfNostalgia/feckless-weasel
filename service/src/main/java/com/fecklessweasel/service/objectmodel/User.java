@@ -48,7 +48,7 @@ public final class User {
     /** User's email address. */
     private String email;
     /** User's security roles. */
-    private final Set<Role> roles;
+    final Set<Role> roles;
 
     /**
      * Creates a new user and stores in the database.
@@ -487,11 +487,14 @@ public final class User {
      */
     public static class Role {
         /** Minimum length for a Role id. */
-        private static int  ROLE_MIN = 7;
+        private static final int  ROLE_MIN = 7;
         /** Maximum length for a Role id. */
-        private static int ROLE_MAX = 25;
+        private static final int ROLE_MAX = 25;
+        /** Max length for a description. */
+        private static final int DESCRIPTION_MAX = 255;
         /** Beginning of all ROLE ids. */
-        private static String ROLE_PREFIX = "ROLE_";
+        private static final String ROLE_PREFIX = "ROLE_";
+
         /** The unique role id. */
         public final String id;
         /** The role description message. */
@@ -519,6 +522,10 @@ public final class User {
             // Check Role string length.
             if (role.length() < ROLE_MIN || role.length() > ROLE_MAX) {
                 throw new ServiceException(ServiceStatus.APP_INVALID_ROLE_LENGTH);
+            }
+
+            if (description.length() > DESCRIPTION_MAX) {
+                throw new ServiceException(ServiceStatus.APP_INVALID_ROLE_DESC_LENGTH);
             }
 
             // Check Role prefix.
@@ -572,7 +579,7 @@ public final class User {
          * @param id The unique role id.
          * @param description The role description string.
          */
-        private Role(String id, String description) {
+        Role(String id, String description) {
             this.id = id;
             this.description = description;
         }

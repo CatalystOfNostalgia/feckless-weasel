@@ -624,25 +624,6 @@ public class test_User {
         assertEquals(user.getPasswordHash(), OMUtil.sha256("new_password"));
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     @Test
     public void test_updateEmail_NullConnection() throws Exception {
         try {
@@ -720,5 +701,323 @@ public class test_User {
                                  OMUtil.sha256("old_pass"),
                                  new Date(),
                                  "email@gc.com"));
+    }
+
+    @Test
+    public void test_addRole_NullConnection() {
+        try {
+            new User(3,
+                     "gundermanc",
+                     OMUtil.sha256("old_pass"),
+                     new Date(),
+                     "email@gc.com").addRole(null, "ROLE_USER");
+        } catch (ServiceException ex) {
+            assertEquals(ex.status, ServiceStatus.NO_SQL);
+            return;
+        }
+
+        fail("no exception thrown");
+    }
+
+    @Test
+    public void test_addRole_NullRole() {
+        try {
+            new User(3,
+                     "gundermanc",
+                     OMUtil.sha256("old_pass"),
+                     new Date(),
+                     "email@gc.com").addRole(this.mockConnection, null);
+        } catch (ServiceException ex) {
+            assertEquals(ex.status, ServiceStatus.MALFORMED_REQUEST);
+            return;
+        }
+
+        fail("no exception thrown");
+    }
+
+    @Test
+    public void test_addRole_DuplicateInUserHasRoleTable() throws Exception {
+        PowerMockito.doThrow(new ServiceException(ServiceStatus.APP_USER_HAS_ROLE_DUPLICATE))
+            .when(UserHasRoleTable.class, "insertUserHasRole", this.mockConnection, 3, "ROLE_USER");
+
+        try {
+            new User(3,
+                     "gundermanc",
+                     OMUtil.sha256("old_pass"),
+                     new Date(),
+                     "email@gc.com").addRole(this.mockConnection, "ROLE_USER");
+        } catch (ServiceException ex) {
+            assertEquals(ex.status, ServiceStatus.APP_USER_HAS_ROLE_DUPLICATE);
+            return;
+        }
+
+        fail("no exception thrown");
+    }
+
+    @Test
+    public void test_addRole_RoleNotExistInRolesTable() throws Exception {
+        ResultSet mockResultSet = mock(ResultSet.class);
+
+        when(mockResultSet.next()).thenReturn(false);
+
+        PowerMockito.doNothing()
+            .when(UserHasRoleTable.class, "insertUserHasRole", this.mockConnection, 3, "ROLE_USER");
+        PowerMockito.when(UserRoleTable.lookupUserRole(this.mockConnection, "ROLE_USER"))
+            .thenReturn(mockResultSet);
+
+        try {
+            new User(3,
+                     "gundermanc",
+                     OMUtil.sha256("old_pass"),
+                     new Date(),
+                     "email@gc.com").addRole(this.mockConnection, "ROLE_USER");
+        } catch (ServiceException ex) {
+            assertEquals(ex.status, ServiceStatus.APP_USER_HAS_ROLE_DUPLICATE);
+            return;
+        }
+
+        fail("no exception thrown");
+    }
+
+    @Test
+    public void test_addRole_SQLException() throws Exception {
+        ResultSet mockResultSet = mock(ResultSet.class);
+
+        when(mockResultSet.next()).thenThrow(new SQLException());
+
+        PowerMockito.doNothing()
+            .when(UserHasRoleTable.class, "insertUserHasRole", this.mockConnection, 3, "ROLE_USER");
+        PowerMockito.when(UserRoleTable.lookupUserRole(this.mockConnection, "ROLE_USER"))
+            .thenReturn(mockResultSet);
+
+        try {
+            new User(3,
+                     "gundermanc",
+                     "old_pass",
+                     new Date(),
+                     "email@gc.com").addRole(this.mockConnection, "ROLE_USER");
+        } catch (ServiceException ex) {
+            assertEquals(ex.status, ServiceStatus.DATABASE_ERROR);
+            return;
+        }
+
+        fail("no exception thrown");
+    }
+
+    @Test
+    public void test_addRole_Success() throws Exception {
+        ResultSet mockResultSet = mock(ResultSet.class);
+
+        when(mockResultSet.getString("role")).thenReturn("ROLE_USER");
+        when(mockResultSet.getString("description")).thenReturn("A standard user.");
+        when(mockResultSet.next()).thenReturn(true).thenReturn(false);
+
+        PowerMockito.doNothing()
+            .when(UserHasRoleTable.class, "insertUserHasRole", this.mockConnection, 3, "ROLE_USER");
+        PowerMockito.when(UserRoleTable.lookupUserRole(this.mockConnection, "ROLE_USER"))
+            .thenReturn(mockResultSet);
+
+        User.Role role = new User(3,
+                                  "gundermanc",
+                                  "old_pass",
+                                  new Date(),
+                                  "email@gc.com").addRole(this.mockConnection, "ROLE_USER");
+
+        assertEquals(role.id, "ROLE_USER");
+        assertEquals(role.description, "A standard user.");
+    }
+
+    @Test
+    public void test_removeRole_NullConnection() {
+        try {
+            new User(3,
+                     "gundermanc",
+                     OMUtil.sha256("old_pass"),
+                     new Date(),
+                     "email@gc.com").removeRole(null, "ROLE_USER");
+        } catch (ServiceException ex) {
+            assertEquals(ex.status, ServiceStatus.NO_SQL);
+            return;
+        }
+
+        fail("no exception thrown");
+    }
+
+    @Test
+    public void test_removeRole_NullRole() {
+        try {
+            new User(3,
+                     "gundermanc",
+                     OMUtil.sha256("old_pass"),
+                     new Date(),
+                     "email@gc.com").removeRole(this.mockConnection, null);
+        } catch (ServiceException ex) {
+            assertEquals(ex.status, ServiceStatus.MALFORMED_REQUEST);
+            return;
+        }
+
+        fail("no exception thrown");
+    }
+
+    @Test
+    public void test_removeRole_UserDoesNotHaveRole() throws Exception {
+        try {
+            new User(3,
+                     "gundermanc",
+                     OMUtil.sha256("old_pass"),
+                     new Date(),
+                     "email@gc.com").removeRole(this.mockConnection, "ROLE_USER");
+        } catch (ServiceException ex) {
+            assertEquals(ex.status, ServiceStatus.APP_USER_NOT_HAVE_ROLE);
+            return;
+        }
+
+        fail("no exception thrown");
+    }
+
+    @Test
+    public void test_removeRole_Success() throws Exception {
+
+        PowerMockito.doNothing().when(UserHasRoleTable.class,
+                                      "deleteUserHasRole",
+                                      this.mockConnection,
+                                      3,
+                                      "ROLE_USER");
+
+        User user = new User(3,
+                             "gundermanc",
+                             "old_pass",
+                             new Date(),
+                             "email@gc.com");
+
+        user.roles.add(new User.Role("ROLE_USER", "desc"));
+        user.removeRole(this.mockConnection, "ROLE_USER");
+    }
+
+    @Test
+    public void test_role_create_NullConnection() throws Exception {
+        try {
+            User.Role.create(null, "ROLE_USER", "description");
+        } catch (ServiceException ex) {
+            assertEquals(ex.status, ServiceStatus.NO_SQL);
+            return;
+        }
+
+        fail("no exception thrown");
+    }
+
+    @Test
+    public void test_role_create_NullRole() throws Exception {
+        try {
+            User.Role.create(this.mockConnection, null, "description");
+        } catch (ServiceException ex) {
+            assertEquals(ex.status, ServiceStatus.MALFORMED_REQUEST);
+            return;
+        }
+
+        fail("no exception thrown");
+    }
+
+    @Test
+    public void test_role_create_NullDescription() throws Exception {
+        try {
+            User.Role.create(this.mockConnection, "ROLE_USER", null);
+        } catch (ServiceException ex) {
+            assertEquals(ex.status, ServiceStatus.MALFORMED_REQUEST);
+            return;
+        }
+
+        fail("no exception thrown");
+    }
+
+    @Test
+    public void test_role_create_RoleTooShort() throws Exception {
+        try {
+            User.Role.create(this.mockConnection, "ROLE_A", "description");
+        } catch (ServiceException ex) {
+            assertEquals(ex.status, ServiceStatus.APP_INVALID_ROLE_LENGTH);
+            return;
+        }
+
+        fail("no exception thrown");
+    }
+
+    @Test
+    public void test_role_create_RoleTooLong() throws Exception {
+        try {
+            User.Role.create(this.mockConnection, "ROLE_ABCDEFGHIJKLMNOPQRSTUVWXYZ", "description");
+        } catch (ServiceException ex) {
+            assertEquals(ex.status, ServiceStatus.APP_INVALID_ROLE_LENGTH);
+            return;
+        }
+
+        fail("no exception thrown");
+    }
+
+    @Test
+    public void test_role_create_RoleInvalid() throws Exception {
+        try {
+            User.Role.create(this.mockConnection, "INVALIDPREFIX_ABC", "description");
+        } catch (ServiceException ex) {
+            assertEquals(ex.status, ServiceStatus.APP_INVALID_ROLE);
+            return;
+        }
+
+        fail("no exception thrown");
+    }
+
+    @Test
+    public void test_role_create_DescriptionTooLong() throws Exception {
+        try {
+            User.Role.create(this.mockConnection, "ROLE_ABCD",
+                             "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
+                             "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
+                             "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
+                             "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
+                             "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
+                             "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
+                             "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
+                             "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
+                             "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
+                             "ABCDEFGHIJKLMNOPQRSTUV");
+        } catch (ServiceException ex) {
+            assertEquals(ex.status, ServiceStatus.APP_INVALID_ROLE_DESC_LENGTH);
+            return;
+        }
+
+        fail("no exception thrown");
+    }
+
+    @Test
+    public void test_role_delete_NullConnection() throws Exception {
+        try {
+            User.Role.delete(null, "ROLE_FOO");
+        } catch (ServiceException ex) {
+            assertEquals(ex.status, ServiceStatus.NO_SQL);
+            return;
+        }
+
+        fail("no exception thrown");
+    }
+
+    @Test
+    public void test_role_delete_NullRole() throws Exception {
+        try {
+            User.Role.delete(this.mockConnection, null);
+        } catch (ServiceException ex) {
+            assertEquals(ex.status, ServiceStatus.NO_SQL);
+            return;
+        }
+
+        fail("no exception thrown");
+    }
+
+    @Test
+    public void test_role_delete_Success() throws Exception {
+        PowerMockito.doNothing().when(UserRoleTable.class,
+                                      "deleteUserRole",
+                                      this.mockConnection,
+                                      "ROLE_FOO");
+        User.Role.delete(this.mockConnection, "ROLE_FOO");
     }
 }

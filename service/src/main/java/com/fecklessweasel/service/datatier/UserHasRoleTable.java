@@ -45,7 +45,7 @@ public final class UserHasRoleTable {
      * @param roleName The String id of the Role.
      */
     public static void insertUserHasRole(Connection connection,
-                                         long uid,
+                                         int uid,
                                          String roleName) throws ServiceException {
         CodeContract.assertNotNull(connection, "connection");
         CodeContract.assertNotNullOrEmptyOrWhitespace(roleName, "roleName");
@@ -75,7 +75,7 @@ public final class UserHasRoleTable {
      * @return The ResultSet containing the Role information.
      */
     public static void deleteUserHasRole(Connection connection,
-                                         long uid,
+                                         int uid,
                                          String roleName) throws ServiceException {
         CodeContract.assertNotNull(connection, "connection");
         CodeContract.assertNotNullOrEmptyOrWhitespace(roleName, "roleName");
