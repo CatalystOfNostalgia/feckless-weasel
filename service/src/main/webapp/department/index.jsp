@@ -40,7 +40,7 @@
                 <div class="col-md-6">
                         <h2>Create a Course</h2>
                         <form class="form-inline" action="/servlet/course" method="post" enctype="application/x-www-form-urlencoded">
-                             <input type="hidden" class="text-large" id="" name="department" placeholder="get input">
+                             <input type="hidden" class="text-large" id="department" name="department" placeholder= "department" value='${department.getID()}'>
                              <input type="text" class="form-control input-lg" id="course" name="course" placeholder="Course Number">
                              <div>
                                 <button type="submit" class="btn btn-default" id="submit" name="submit">Create</button>
@@ -48,7 +48,6 @@
                         </form>
                 </div>
             </div>
->>>>>>> origin/master
         </div>
     </body>
 </html>
