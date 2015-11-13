@@ -30,7 +30,7 @@ public class test_CourseTable {
 
     @Test(expected = IllegalArgumentException.class)
     public void test_insert_nullConnection() throws Exception {
-        CourseTable.insertCourse(null, 9, 9, 9);
+        CourseTable.insertCourse(null, 9, 9);
     }
     
     @Test
@@ -48,10 +48,7 @@ public class test_CourseTable {
                                              Statement.RETURN_GENERATED_KEYS))
             .thenReturn(mockPreparedStatement);
         //check return int
-        assert(CourseTable.insertCourse(this.mockConnection,
-                                    9,
-                                    9,
-                                    9) == id);
+        assert(CourseTable.insertCourse(this.mockConnection,9,9) == id);
         // Check results are looked at
         verify(mockResultSet, times(1)).next();
         // Check statement is closed
@@ -64,7 +61,7 @@ public class test_CourseTable {
                 Statement.RETURN_GENERATED_KEYS))
                 .thenThrow(new SQLIntegrityConstraintViolationException());
         try{
-            CourseTable.insertCourse(this.mockConnection,9,9,9);
+            CourseTable.insertCourse(this.mockConnection,9,9);
         } catch (ServiceException ex) {
             assert(ex.status == ServiceStatus.APP_COURSE_TAKEN);
         }
@@ -76,7 +73,7 @@ public class test_CourseTable {
                 Statement.RETURN_GENERATED_KEYS))
                 .thenThrow(new SQLException());
         try{
-            CourseTable.insertCourse(this.mockConnection,9,9,9);
+            CourseTable.insertCourse(this.mockConnection,9,9);
         } catch (ServiceException ex) {
             assert(ex.status == ServiceStatus.DATABASE_ERROR);
         }

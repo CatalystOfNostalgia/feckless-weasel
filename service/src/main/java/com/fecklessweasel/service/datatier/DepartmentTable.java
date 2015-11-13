@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 
 import com.fecklessweasel.service.objectmodel.CodeContract;
@@ -49,6 +50,8 @@ public class DepartmentTable {
             int id = result.getInt(1);
             preparedStatement.close();
             return id;
+        } catch (SQLIntegrityConstraintViolationException ex) {
+            throw new ServiceException(ServiceStatus.APP_DEPT_TAKEN, ex);
         } catch (SQLException ex) {
             throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
         }
