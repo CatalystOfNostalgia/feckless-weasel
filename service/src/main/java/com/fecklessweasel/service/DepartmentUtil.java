@@ -58,5 +58,30 @@ public final class DepartmentUtil {
             }
         });
     }
+
+    /**
+     * takes in the deptID and returns corresponding department
+     * @param deptID
+     * @return
+     */
+    public static Department findDepartmentID(int deptID)
+            throws ServiceException {
+
+        final int did = deptID;
+        return SQLSource.interact(new SQLInteractionInterface<Department>() {
+            /**
+             * connects to database and looks up department in table
+             * @param connection
+             * @return
+             * @throws ServiceException
+             * @throws SQLException
+             */
+            @Override
+            public Department run(Connection connection)
+                    throws ServiceException, SQLException {
+                return Department.lookup(connection, did);
+            }
+        });
+    }
 }
 
