@@ -21,6 +21,9 @@ public class CourseTable {
 
     public final static String LOOKUP_ROW = "SELECT * FROM Course WHERE id=?";
 
+    public final static String SELECT_PAGINATED
+        = "SELECT * FROM Course WHERE deptid=? ORDER BY courseNumber LIMIT ?,?";
+
     /**
      * Inserts a Course into the table.
      * @param conn A connection to the database.
@@ -67,6 +70,32 @@ public class CourseTable {
             lookupCourseQuery.setInt(1, cid);
 
             return lookupCourseQuery.executeQuery();
+        } catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        }
+    }
+
+    /**
+     * Lookup all Courses in a Department from offset to offset + amt
+     * @param connection MySQL database connection.\
+     * @param deptid Unique ID of Department the courses belong to
+     * @param offset skip the first x amount of rows, where x = offset
+     * @param amt the amount of rows to return
+     * @throws ServiceException Thrown upon error
+     * @return A result set containing amt number of rows starting after the first offset rows
+     */
+    public static ResultSet lookUpPaginated(Connection connection, int deptid, int offset, int amt)
+            throws ServiceException {
+
+        CodeContract.assertNotNull(connection, "connection");
+
+        try {
+            PreparedStatement lookupStatement = connection.prepareStatement(SELECT_PAGINATED);
+            lookupStatement.setInt(1, deptid);
+            lookupStatement.setInt(2, offset);
+            lookupStatement.setInt(3, amt);
+
+            return lookupStatement.executeQuery();
         } catch (SQLException ex) {
             throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
         }
