@@ -3,6 +3,8 @@ package com.fecklessweasel.service.objectmodel;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.ArrayList;
 
 import com.fecklessweasel.service.datatier.CourseTable;
 
@@ -80,7 +82,37 @@ public final class Course {
             return course;
         } catch (SQLException ex) {
             throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
-        }                              
+        }
+    }
+
+    /**
+     * Return list of all Courses in specified dept
+     * except for any row up to offset and after offset + amt
+     * @param connection MySQL connection
+     * @param deptid ID of Department
+     * @param offset The first x Results to skip
+     * @param amt The max amount of Department objects returned
+     * @throws ServiceException Thrown upon error.
+     * @return List of Course Objects with deptid = deptid in table between offset & offset + amt
+     */
+    public static List<Course> lookUpPaginated (Connection sql, int deptid, int offset, int amt)
+        throws ServiceException {
+
+        OMUtil.sqlCheck(sql);
+        ResultSet results = CourseTable.lookUpPaginated(sql, deptid, offset, amt);
+        List<Course> courses = new ArrayList<Course>();
+
+        try {
+            while(results.next()) {
+                Course course = new Course(results.getInt("id"),
+                                           results.getInt("deptid"),
+                                           results.getInt("courseNumber"));
+                courses.add(course);
+            }
+        } catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        }
+        return courses;
     }
 
     /**

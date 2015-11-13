@@ -19,7 +19,7 @@ import com.fecklessweasel.service.objectmodel.ServiceStatus;
  * Exhaustive validation is performed by the object model.
  * @author Christian Gunderman
  */
-public abstract class UserTable {
+public class UserTable {
     /** Create user query. */
     public static final String INSERT_USER_QUERY =
         "INSERT INTO User (user, pass, join_date, email)" +
@@ -46,6 +46,11 @@ public abstract class UserTable {
     public static final String LOOKUP_USERID_QUERY =
         "SELECT * FROM User U, UserRole R, UserHasRole H WHERE U.uid=?" +
         " AND U.uid=H.uid AND H.rid=R.rid";
+
+    /**
+     * Private constructor to prevent instantiation.
+     */
+    private UserTable() { }
 
     /**
      * Inserts a user into the MySQL table with some minimal validation.
@@ -243,7 +248,7 @@ public abstract class UserTable {
 
             // Execute and check that insertion was successful
             return insertStatement.executeQuery();
-        } catch (SQLException ex) {
+        } catch (SQLException ex) {                
             throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
         }
     }

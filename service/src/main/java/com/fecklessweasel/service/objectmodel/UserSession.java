@@ -144,6 +144,9 @@ public class UserSession {
      * @param username The username of the user.
      */
     public static void endAll(Connection connection, String username) throws ServiceException {
+        OMUtil.sqlCheck(connection);
+        OMUtil.nullCheck(username);
+
         UserSessionTable.deleteAllSessions(connection, username);
     }
 
@@ -154,6 +157,8 @@ public class UserSession {
      * @param username The username of the user.
      */
     public void endAll(Connection connection) throws ServiceException {
+        OMUtil.sqlCheck(connection);
+
         UserSessionTable.deleteAllSessions(connection, this.sessionUser.getID());
     }
 
@@ -162,6 +167,8 @@ public class UserSession {
      * @param connection The SQLConnection.
      */
     public void end(Connection connection) throws ServiceException {
+        OMUtil.sqlCheck(connection);
+
         UserSessionTable.deleteSession(connection,
                                        this.sessionUser.getID(),
                                        this.sessionId);
@@ -196,7 +203,7 @@ public class UserSession {
      * @param sessionId the unique session id.
      * @param sessionUser The User object of the session owner.
      */
-    private UserSession(UUID sessionId, User sessionUser) {
+    UserSession(UUID sessionId, User sessionUser) {
         this.sessionId = sessionId;
         this.sessionUser = sessionUser;
     }

@@ -92,7 +92,7 @@ public class test_UserSessionTable {
 
     @Test
     public void test_InsertSession_SuccessCase() throws Exception {
-        final long uid = 456;
+        final int uid = 456;
         final UUID uuid = UUID.randomUUID();
         
         when(this.mockConnection.prepareStatement(UserSessionTable
@@ -226,7 +226,7 @@ public class test_UserSessionTable {
 
     @Test
     public void test_DeleteAllSessions_SuccessCase() throws Exception {
-        final long uid = 456;
+        final int uid = 456;
         final UUID uuid = UUID.randomUUID();
         
         when(this.mockConnection.prepareStatement(UserSessionTable
@@ -384,7 +384,7 @@ public class test_UserSessionTable {
 
     @Test
     public void test_SessionExists_SuccessCase_1() throws Exception {
-        final long uid = 456;
+        final int uid = 456;
         final UUID uuid = UUID.randomUUID();
 
         ResultSet mockResultSet = mock(ResultSet.class);
@@ -412,7 +412,7 @@ public class test_UserSessionTable {
 
     @Test
     public void test_SessionExists_SuccessCase_2() throws Exception {
-        final long uid = 456;
+        final int uid = 456;
         final UUID uuid = UUID.randomUUID();
 
         ResultSet mockResultSet = mock(ResultSet.class);
