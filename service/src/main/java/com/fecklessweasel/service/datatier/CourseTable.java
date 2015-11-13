@@ -16,9 +16,9 @@ import com.fecklessweasel.service.objectmodel.ServiceStatus;
  */
 public class CourseTable {
 
-    private static String INSERT_ROW = "insert into Course (deptid, courseNumber) values (?,?)";
+    public final static String INSERT_ROW = "insert into Course (deptid, courseNumber) values (?,?)";
 
-    private static String LOOKUP_ROW = "SELECT * FROM Course WHERE id=?";
+    public final static String LOOKUP_ROW = "SELECT * FROM Course WHERE id=?";
 
     /**
      * Inserts a Course into the table.

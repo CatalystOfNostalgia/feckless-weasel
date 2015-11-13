@@ -16,12 +16,12 @@ import com.fecklessweasel.service.objectmodel.ServiceStatus;
  */
 public class DepartmentTable {
 
-    private static String INSERT_ROW = "insert into Department (univid, deptName, acronym) values (?,?,?)";
+    public final static String INSERT_ROW = "insert into Department (univid, deptName, acronym) values (?,?,?)";
 
-    private static String LOOKUP_ROW
+    public final static String LOOKUP_ROW
         = "SELECT * FROM Department D WHERE D.id=?";
 
-    private static String SELECT_PAGINATED
+    public final static String SELECT_PAGINATED
         = "SELECT * FROM Department WHERE univid=? ORDER BY deptName LIMIT ?,?";
     /**
      * Insert a department into the table.
