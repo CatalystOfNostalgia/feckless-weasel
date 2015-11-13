@@ -28,6 +28,9 @@ public class UniversityTable {
     public static String LOOKUP_UNIVERSITY_ID_QUERY =
             "SELECT * FROM University WHERE University.id=?";
 
+    /** Select from the database*/
+    public static String SELECT_PAGINATED = "SELECT * FROM University ORDER BY longName LIMIT ?,?";
+
     /**
      * Insert a university into the table.
      *
@@ -91,4 +94,27 @@ public class UniversityTable {
         }
     }
 
+    /**
+     * Lookup all universities from offset to offset + amt
+     * @param connection MySQL database connection.
+     * @param offset skip the first x amount of rows, where x = offset
+     * @param amt the amount of rows to return
+     * @throws ServiceException Thrown upon error
+     * @return A result set containing amt number of rows starting after the first offset rows
+     */
+    public static ResultSet lookUpPaginated(Connection connection, int offset, int amt)
+            throws ServiceException {
+
+        CodeContract.assertNotNull(connection, "connection");
+
+        try {
+            PreparedStatement lookupStatement = connection.prepareStatement(SELECT_PAGINATED);
+            lookupStatement.setInt(1, offset);
+            lookupStatement.setInt(2, amt);
+
+            return lookupStatement.executeQuery();
+        } catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        }
+    }
 }
