@@ -3,9 +3,9 @@
 <html>
     <head>
         <title>Feckless Weasel User Profile</title>
-        <link href="${pageContext.request.contextPath}/assets/css/base.css" rel="stylesheet" type="text/css">
+        <link href="${pageContext.request.contextPath}/assets/bootstrap-3.3.5-dist/css/bootstrap.min.css" rel="stylesheet">
     </head>
-    <body class="four-column">
+    <body>
         <%@ include file="/header.jsp" %>
 
         <%--
@@ -32,8 +32,12 @@
             boolean isCurrentUsersProfile
                 = authSession != null && (user.equals(authSession.getUser()));
          %>
-        <div class="column-beta">
-            <h1><%= user.getUsername() %>'s Profile</h1>
+         <div class="jumbotron">
+            <div class="container">
+                <h1><%= user.getUsername() %>'s Profile</h1>
+            </div>
+        </div>
+        <div class="container">
             <ul>
                 <li>Joined on: <%= user.getJoinDate() %></li>
                 <li>

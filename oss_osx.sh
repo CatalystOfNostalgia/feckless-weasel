@@ -40,23 +40,23 @@ function CheckPrereqs {
     brew tap gbeine/homebrew-java
     brew install mysql-connector-java
     echo "Checking JDBC is in Tomcat libs..."
-    if [ -e "/usr/local/Cellar/tomcat/8.0.21/libexec/lib/mysql-connector-java.jar" ]; then
+    if [ -e "/usr/local/Cellar/tomcat/8.0.23/libexec/lib/mysql-connector-java.jar" ]; then
         echo "JDBC is already in Tomcat libs."
     else
         echo "Copying JDBC to Tomcat libs."
-        cp /usr/local/Cellar/mysql-connector-java/5.1.32/libexec/*.jar /usr/local/Cellar/tomcat/8.0.21/libexec/lib/mysql-connector-java.jar
+        cp /usr/local/Cellar/mysql-connector-java/5.1.32/libexec/*.jar /usr/local/Cellar/tomcat/8.0.23/libexec/lib/mysql-connector-java.jar
     fi
 }
 
 function StartServer {
     echo "Starting server..."
-    /usr/local/Cellar/tomcat/8.0.21/bin/catalina start
+    /usr/local/Cellar/tomcat/8.0.23/bin/catalina start
     mysql.server start
 }
 
 function StopServer {
     echo "Stopping Server..."
-    /usr/local/Cellar/tomcat/8.0.21/bin/catalina stop
+    /usr/local/Cellar/tomcat/8.0.23/bin/catalina stop
     mysql.server stop
 }
 
@@ -70,9 +70,9 @@ function BuildAndDeploy {
     Build
     StopServer
     echo "Deploying..."
-    rm /usr/local/Cellar/tomcat/8.0.21/libexec/webapps/ROOT.war
-    rm -r /usr/local/Cellar/tomcat/8.0.21/libexec/webapps/ROOT
-    cp service/build/libs/service.war /usr/local/Cellar/tomcat/8.0.21/libexec/webapps/ROOT.war
+    rm /usr/local/Cellar/tomcat/8.0.23/libexec/webapps/ROOT.war
+    rm -r /usr/local/Cellar/tomcat/8.0.23/libexec/webapps/ROOT
+    cp service/build/libs/service.war /usr/local/Cellar/tomcat/8.0.23/libexec/webapps/ROOT.war
     StartServer
 }
 
