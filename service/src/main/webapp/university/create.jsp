@@ -4,24 +4,21 @@
     <head>
         <title>Feckless Weasel University Create Page</title>
         <link href="${pageContext.request.contextPath}/assets/bootstrap-3.3.5-dist/css/bootstrap.min.css" rel="stylesheet">
-        <link href="${pageContext.request.contextPath}/assets/css/base.css" rel="stylesheet" type="text/css">
+        <link href="${pageContext.request.contextPath}/assets/css/login.css" rel="stylesheet">
     </head>
-    <body>
-        <jsp:include page="/header.jsp"/>
-        <div class="jumbotron">
-            <div class="container">
-                <h1>Create a University</h1>
-            </div>
-        </div>
+    <body class="four-column">
+        <jsp:include page="header.jsp"/>
         <div class="container">
-            <form action="/servlet/university" method="post" enctype="application/x-www-form-urlencoded">
-                <input type="text" class="form-control input-lg" id="longName" name="longName" placeholder="name">
-                <input type="text" class="form-control input-lg" id="acronym" name="acronym" placeholder="acronym">
-                <input type="text" class="form-control input-lg" id="city" name="city" placeholder="city">
-                <input type="text" class="form-control input-lg" id="state" name="state" placeholder="state">
-                <input type="text" class="form-control input-lg" id="country" name="country" placeholder="country">
+            <form class="form-signin" action="/servlet/university" method="post" enctype="application/x-www-form-urlencoded">
+                <h2 class="form-signin-heading">Don't see your university?</h2>
+                <p>Add it today! Don't let your dreams be dreams.</p>
+                <input type="text" class="form-control" id="longName" name="longName" placeholder="name">
+                <input type="text" class="form-control" id="acronym" name="acronym" placeholder="acronym">
+                <input type="text" class="form-control" id="city" name="city" placeholder="city">
+                <input type="text" class="form-control" id="state" name="state" placeholder="state">
+                <input type="text" class="form-control" id="country" name="country" placeholder="country">
                 <div>
-                    <button type="submit" class="btn btn-default" id="submit" name="submit" onclick = "listUni()">Create</button>
+                    <button type="submit" class="btn btn-lg btn-warning btn-blocke" id="submit" name="submit" onclick = "listUni()">Create</button>
                 </div>
             </form>
         </div>
