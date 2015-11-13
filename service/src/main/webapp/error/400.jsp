@@ -3,16 +3,18 @@
 <html>
     <head>
         <title>Feckless Weasel - Bad Request</title>
-        <link href="${pageContext.request.contextPath}/assets/css/base.css" rel="stylesheet" type="text/css">
+        <link href="${pageContext.request.contextPath}/assets/bootstrap-3.3.5-dist/css/bootstrap.min.css" rel="stylesheet">
     </head>
     <body>
         <jsp:include page="/header.jsp"/>
-        <div class="column-beta">
-            <h1>Bad Request</h1>
-            <p>
-                <%= exception != null ?
+        <div class="jumbotron">
+            <div class="container">
+                <h1>Bad Request</h1>
+                <p>
+                    <%= exception != null ?
                     exception.getMessage() : "Browser sent bad request." %>
-            </p>
+                </p>
+            </div>
         </div>
     </body>
 </html>

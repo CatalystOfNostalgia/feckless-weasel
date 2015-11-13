@@ -29,7 +29,7 @@
                 <c:forEach var="university" items="${univs}">
                     <div class="row">
                         <div class="col-md-6">
-                            <h2><a href="/university.jsp?name=${university.getLongName()}">${university.getLongName()}</a></h2>
+                            <h2><a href="/university/index.jsp?uid=${university.getID()}">${university.getLongName()}</a></h2>
                         </div>
                     </div>
                 </c:forEach>
@@ -38,7 +38,7 @@
                     <h2>Can't find your university?</h2>
                     <p>That's okay! Get your university started and add your university on Feckless Weasel today.</p>
                     <p>
-                        <a class="btn btn-warning" href="/create.jsp" role="button">Create</a>
+                        <a class="btn btn-warning" href="/university/create.jsp" role="button">Create</a>
                     </p>
                 </div>
             </div>
