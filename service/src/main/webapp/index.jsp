@@ -38,7 +38,7 @@
                     <h2>Can't find your university?</h2>
                     <p>That's okay! Get your university started and add your university on Feckless Weasel today.</p>
                     <p>
-                        <a class="btn btn-warning" href="/create.jsp" role="button">Create</a>
+                        <a class="btn btn-warning" href="/university/create.jsp" role="button">Create</a>
                     </p>
                 </div>
             </div>

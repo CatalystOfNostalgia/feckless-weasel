@@ -16,13 +16,16 @@ import com.fecklessweasel.service.objectmodel.ServiceStatus;
 
 /**
  * Class to represent the university table in the database.
+ *
  * @author Elliot Essman
  */
 public class UniversityTable {
 
     private static String INSERT_ROW = "insert into University (longName, acronym, city, state, country) values (?,?,?,?,?)";
-    /** Lookup user query. */
-    public static String LOOKUP_UNIVERSITY_QUERY =
+    /**
+     * Lookup user query.
+     */
+    public static String LOOKUP_UNIVERSITY_ID_QUERY =
             "SELECT * FROM University WHERE University.id=?";
 
     /** Select from the database*/
@@ -30,16 +33,17 @@ public class UniversityTable {
 
     /**
      * Insert a university into the table.
-     * @param conn The connection tot he database.
+     *
+     * @param conn     The connection tot he database.
      * @param longName The official name of the university.
-     * @param acronym The acronym of the university.
-     * @param city The city the university is in.
-     * @param state The state the university is ine.
-     * @param country The country the university is in.
+     * @param acronym  The acronym of the university.
+     * @param city     The city the university is in.
+     * @param state    The state the university is ine.
+     * @param country  The country the university is in.
      * @return The id of the new university.
      */
     public static int insertUniversity(Connection conn, String longName, String acronym, String city, String state,
-            String country) throws ServiceException {
+                                       String country) throws ServiceException {
         CodeContract.assertNotNull(conn, "conn");
         CodeContract.assertNotNullOrEmptyOrWhitespace(longName, "longName");
         CodeContract.assertNotNullOrEmptyOrWhitespace(acronym, "acronym");
@@ -67,23 +71,24 @@ public class UniversityTable {
     }
 
     /**
-     * Looks up a university by it's ID.
-     * @param connection MySQL database connection.
-     * @param uid The university ID.
-     * @throws ServiceException Thrown upon error (except not exist error).
-     * @return A result set containing the university tuple or no results if not exist.
+     * Looks up university given ID
+     *
+     * @param connection
+     * @param univid
+     * @return
+     * @throws ServiceException
      */
-    public static ResultSet lookupUniversity(Connection connection, int uid)
+    public static ResultSet lookupUniversityID(Connection connection, int univid)
             throws ServiceException {
 
         CodeContract.assertNotNull(connection, "connection");
-
         try {
             PreparedStatement lookupStatement =
-                    connection.prepareStatement(LOOKUP_UNIVERSITY_QUERY);
-            lookupStatement.setInt(1, uid);
+                    connection.prepareStatement(LOOKUP_UNIVERSITY_ID_QUERY);
+            lookupStatement.setInt(1, univid);
 
             return lookupStatement.executeQuery();
+
         } catch (SQLException ex) {
             throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
         }

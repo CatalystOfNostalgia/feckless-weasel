@@ -1,6 +1,19 @@
 package com.fecklessweasel.service.objectmodel;
 
 import java.sql.Connection;
+import com.fecklessweasel.service.datatier.UniversityTable;
+import java.sql.Connection;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import com.fecklessweasel.service.UniversityUtil;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -11,22 +24,38 @@ import com.fecklessweasel.service.datatier.DepartmentTable;
 /**
  * Stores all information about a school's department.
  * @author Elliot Essman
- */
-public final class Department {
 
-    /** ID in the database table. */
+*/
+public final class Department {
+    /**
+     * ID in the database table.
+     */
     private int id;
-    /** The university this department is in. */
+    /**
+     * The university this department is in.
+     */
     private int uid;
-    /** Acronym or short name of this department. */
+    /**
+     * Acronym or short name of this department.
+     */
     private String acronym;
-    /** Official name of the department. */
+    /**
+     * Official name of the department.
+     */
     private String deptName;
 
-    /** Max character length of the official name. */
+    /**
+     * Max character length of the official name.
+     */
     private static int DEPTNAME_MAX = 50;
-    /** Min character length of the official name. */
+    /**
+     * Min character length of the official name.
+     */
     private static int DEPTNAME_MIN = 4;
+    /**
+     * University ID
+     **/
+    private int univid;
 
     /**
      * Private constructor. Should be created from the database or create
@@ -41,10 +70,11 @@ public final class Department {
 
     /**
      * Creates a department in the database.
-     * @param conn A connection to the database.
+     *
+     * @param conn       A connection to the database.
      * @param university The university this department is in.
-     * @param deptname The official name of the department.
-     * @param acronym The acronym of the department.
+     * @param deptname   The official name of the department.
+     * @param acronym    The acronym of the department.
      * @return A department object.
      */
     public static Department create(Connection conn, University university, String deptName, String acronym)
@@ -73,12 +103,14 @@ public final class Department {
 
     /**
      * Look up a specific department and return it in object form.
+     *
      * @param sql The Sql connection to the FecklessWeaselDB.
      * @param did The department's unique identifier.
      * @return The Department's object representation.
      */
+
     public static Department lookup(Connection sql, int did)
-        throws ServiceException {
+            throws ServiceException {
 
         OMUtil.sqlCheck(sql);
         ResultSet result = DepartmentTable.lookupDepartment(sql, did);
@@ -90,9 +122,9 @@ public final class Department {
             }
 
             Department dept = new Department(result.getInt("id"),
-                                             result.getInt("univid"),
-                                             result.getString("deptName"),
-                                             result.getString("acronym"));
+                    result.getInt("univid"),
+                    result.getString("deptName"),
+                    result.getString("acronym"));
             result.close();
             return dept;
         } catch (SQLException ex) {
@@ -132,10 +164,11 @@ public final class Department {
 
     /**
      * Gets The university this department is in.
+     *
      * @return The university this department is in.
      */
     public University lookupUniversity(Connection conn)
-        throws ServiceException {
+            throws ServiceException {
 
         OMUtil.sqlCheck(conn);
         return University.lookup(conn, this.uid);
@@ -143,6 +176,7 @@ public final class Department {
 
     /**
      * Gets the official department name.
+     *
      * @return The official department name.
      */
     public String getDeptName() {
@@ -159,9 +193,11 @@ public final class Department {
 
     /**
      * Gets the database ID of the department.
+     *
      * @return The database ID of the department.
      */
-    int getID() {
+    public int getID() {
         return this.id;
     }
 }
+

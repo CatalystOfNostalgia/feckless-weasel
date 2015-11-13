@@ -158,7 +158,6 @@ public class University {
 
         int id = UniversityTable.insertUniversity(conn, longName, acronym, city, state, country);
         return new University(id, longName, acronym, city, state, country);
-
     }
 
     /**
@@ -166,7 +165,7 @@ public class University {
      *
      * @return The database ID of the university.
      */
-    protected int getID() {
+    public int getID() {
         return this.id;
     }
 
@@ -230,11 +229,12 @@ public class University {
         OMUtil.sqlCheck(connection);
 
         //look up university with name
-        ResultSet result = UniversityTable.lookupUniversity(connection, uid);
+        ResultSet result = UniversityTable.lookupUniversityID(connection, uid);
 
         // Build University object.
         try {
             if (!result.next()) {
+                //unable to find university
                 throw new ServiceException(ServiceStatus.APP_USER_NOT_EXIST);
             }
 
@@ -244,7 +244,6 @@ public class University {
                                                    result.getString("city"),
                                                    result.getString("state"),
                                                    result.getString("country"));
-
             result.close();
             return university;
         }
@@ -317,3 +316,5 @@ public class University {
         return this.getAllDeptsPaginated(connection, 0, 2147483647);
     }
 }
+
+

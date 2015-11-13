@@ -18,14 +18,15 @@
             });
             request.setAttribute("university", university);
             request.setAttribute("depts", depts);
-        %> 
+        %>
+        <jsp:include page="/header.jsp"/>
         <div class="column-beta">
                 <%University university = UniversityUtil.findUniversity(request);%>
                 <h1>${university.getLongName()}</h1>
                 <h2>${university.getState()}</h2>
                 <h3>Create a Department</h3>
                 <form class="form-default" action="/servlet/department" method="post" enctype="application/x-www-form-urlencoded">
-                     <input type="text" class="text-large" id="university" name="university" placeholder="University">
+                     <input type="hidden" class="text-large" id="university" name="university" placeholder="university" value='<%=university.getID()%>'>
                      <input type="text" class="text-large" id="deptName" name="deptName" placeholder="Department Name (i.e. Biology)">
                      <input type="text" class="text-large" id="acronym" name="acronym" placeholder="acronym (i.e. BIOL)">
                      <div>
