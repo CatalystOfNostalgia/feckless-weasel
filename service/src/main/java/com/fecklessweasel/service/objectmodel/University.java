@@ -304,7 +304,7 @@ public class University {
      */
     public List<Department> getAllDeptsPaginated(Connection connection, int offset, int amt)
         throws ServiceException {
-            return Department.lookUpPaginated(connection, 1, offset, amt);
+            return Department.lookUpPaginated(connection, this.getID(), offset, amt);
     }
 
     /**
