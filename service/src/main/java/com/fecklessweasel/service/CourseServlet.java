@@ -12,7 +12,6 @@ import java.sql.SQLException;
 import com.fecklessweasel.service.datatier.SQLSource;
 import com.fecklessweasel.service.datatier.SQLInteractionInterface;
 import com.fecklessweasel.service.objectmodel.*;
-import com.fecklessweasel.service.DepartmentUtil;
 
 /**
  * The course servlet for creating courses.
