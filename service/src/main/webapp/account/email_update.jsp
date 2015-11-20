@@ -37,7 +37,7 @@
                 <input type="hidden" name="action" value="update_email" />
                 <input type="hidden" class="text-large" id="username" name="username" placeholder="username" value="<%= authSession.getUser().getUsername() %>" />
                 <input type="text" class="form-control" id="email" name="email" placeholder="email" />
-                <input type="submit" class="btn btn-lg btn-warning btn-block id="submit" name="submit" value="Update Email" \>
+                <input type="submit" class="btn btn-lg btn-warning btn-block" id="submit" name="submit" value="Update Email" \>
             </form>
         </div>
     </body>
