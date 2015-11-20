@@ -40,23 +40,11 @@ public final class CourseServlet extends HttpServlet {
                     String deptIDStr = request.getParameter("department");
                     String courseNumStr = request.getParameter("course");
                     
-                    // Check for missing form values.
-                    if (deptIDStr == null || courseNumStr == null) {
-                        throw new ServiceException(ServiceStatus.MALFORMED_REQUEST);
-                    }
+                    OMUtil.nullCheck(courseNumStr);
+                    OMUtil.nullCheck(deptIDStr);
 
-                    int deptID;
-                    int courseNum;
-
-                    // Check to make sure form values are integers so we don't crash
-                    // the server.
-                    // "WHY OH WHY IS NUMBERFORMATEXCEPTION AN UNCHECKED EXCEPTION ORACLE??"
-                    try {
-                        deptID = Integer.parseInt(deptIDStr);
-                        courseNum = Integer.parseInt(courseNumStr);
-                    } catch (NumberFormatException ex) {
-                        throw new ServiceException(ServiceStatus.MALFORMED_REQUEST);
-                    }
+                    int deptID = OMUtil.parseInt(deptIDStr);
+                    int courseNum = OMUtil.parseInt(courseNumStr);
 
                     // Lookup Dept. that will receive the new course.
                     Department department = Department.lookup(connection, deptID);

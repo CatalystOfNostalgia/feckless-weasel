@@ -3,6 +3,7 @@ package com.fecklessweasel.service;
 import com.fecklessweasel.service.datatier.SQLInteractionInterface;
 import com.fecklessweasel.service.datatier.SQLSource;
 import com.fecklessweasel.service.objectmodel.Course;
+import com.fecklessweasel.service.objectmodel.OMUtil;
 import com.fecklessweasel.service.objectmodel.StoredFile;
 import com.fecklessweasel.service.objectmodel.ServiceException;
 import com.fecklessweasel.service.objectmodel.ServiceStatus;
@@ -48,13 +49,11 @@ public class FileUploadServlet extends HttpServlet {
 
         final String title = request.getParameter("title");
         final String description = request.getParameter("description");
-        final String course = request.getParameter("class");
         final Part filePart = request.getPart("file[0]");
 
-        // Check for missing form values.
-        if (title == null || description == null || filePart == null) {
-            throw new ServiceException(ServiceStatus.MALFORMED_REQUEST);
-        }
+        // filePart is dereferenced in this file so we can't depend on the
+        // objectmodel to null check it.
+        OMUtil.nullCheck(filePart);
 
         // Open a SQL connection and create the file meta data.
         StoredFile fileMetadata = SQLSource.interact(new SQLInteractionInterface<StoredFile>() {
@@ -62,10 +61,11 @@ public class FileUploadServlet extends HttpServlet {
             public StoredFile run(Connection connection)
                 throws ServiceException, SQLException {
 
-                // Write and store file.
+                // Parse course ID.
                 try {
-                    int courseID = Integer.parseInt(course);
+                    int courseID = OMUtil.parseInt(request.getParameter("class"));
 
+                    // Create and store file.
                     return StoredFile.create(connection,
                                              session.getUser(),
                                              Course.lookupById(connection, courseID),
@@ -74,8 +74,6 @@ public class FileUploadServlet extends HttpServlet {
                                              filePart.getInputStream());
                 } catch (IOException ex) {
                     throw new ServiceException(ServiceStatus.SERVER_UPLOAD_ERROR);
-                } catch (NumberFormatException ex) {
-                    throw new ServiceException(ServiceStatus.MALFORMED_REQUEST);
                 }
             }
         });

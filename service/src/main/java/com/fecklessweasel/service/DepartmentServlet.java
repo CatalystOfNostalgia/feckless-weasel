@@ -40,15 +40,11 @@ public final class DepartmentServlet extends HttpServlet {
                     throws ServiceException, SQLException {
 
                     // Find university where the new department will be added.
-                    int univID = Integer.parseInt(request.getParameter("university"));
+                    int univID = OMUtil.parseInt(request.getParameter("university"));
                     University university = University.lookup(connection, univID);
 
                     String deptName = request.getParameter("deptName");
                     String acronym = request.getParameter("acronym");
-
-                    if (deptName == null || acronym == null) {
-                        throw new ServiceException(ServiceStatus.MALFORMED_REQUEST);
-                    }
 
                     // Create university
                     Department department = Department.create(connection, university,

@@ -43,15 +43,6 @@ public final class UniversityServlet extends HttpServlet {
                     String state = request.getParameter("state");
                     String country = request.getParameter("country");
 
-                    // Checks for missing values
-                    if (longName == null ||
-                        acronym == null ||
-                        city == null ||
-                        state == null ||
-                        country == null) {
-                        throw new ServiceException(ServiceStatus.MALFORMED_REQUEST);
-                    }
-
                     // Create university
                     University university = University.create(connection, longName,
                                                               acronym, city, state, country);
