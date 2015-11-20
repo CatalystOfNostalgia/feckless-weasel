@@ -53,7 +53,8 @@ public final class UniversityServlet extends HttpServlet {
                     }
 
                     // Create university
-                    University university = University.create(connection, longName, acronym, city, state, country);
+                    University university = University.create(connection, longName,
+                                                              acronym, city, state, country);
 
                     // Get the ID of the new university.
                     return university.getID();
