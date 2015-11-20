@@ -4,8 +4,8 @@
 ##### Introduction
 
 Feckless Weasel is a collaborative project for Case Western Reserve university's
-Software Engineering class. At the moment, only user account database and object
-model are complete.
+Software Engineering class. 75% of core functionality is in place but project
+still requires much front end tweaking.
 
 ##### One Stop Shop for Build and Deployment
 
