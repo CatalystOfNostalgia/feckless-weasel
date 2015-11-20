@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.fecklessweasel.service.datatier.SQLSource;
 import com.fecklessweasel.service.datatier.SQLInteractionInterface;
 import com.fecklessweasel.service.objectmodel.CodeContract;
+import com.fecklessweasel.service.objectmodel.OMUtil;
 import com.fecklessweasel.service.objectmodel.ServiceException;
 import com.fecklessweasel.service.objectmodel.ServiceStatus;
 import com.fecklessweasel.service.objectmodel.University;
@@ -35,11 +36,7 @@ public final class DepartmentUtil {
     public static Department findDepartment(HttpServletRequest request)
             throws ServiceException {
 
-        String deptID = request.getParameter("did");
-        if (deptID == null) {
-            throw new ServiceException(ServiceStatus.MALFORMED_REQUEST);
-        }
-        final int did = Integer.parseInt(deptID);
+        final int did = OMUtil.parseInt(request.getParameter("did"));
 
         // Open a SQL connection, find department in database
         return SQLSource.interact(new SQLInteractionInterface<Department>() {
@@ -64,10 +61,9 @@ public final class DepartmentUtil {
      * @param deptID
      * @return
      */
-    public static Department findDepartmentID(int deptID)
+    public static Department findDepartmentID(final int deptID)
             throws ServiceException {
 
-        final int did = deptID;
         return SQLSource.interact(new SQLInteractionInterface<Department>() {
             /**
              * connects to database and looks up department in table
@@ -79,7 +75,7 @@ public final class DepartmentUtil {
             @Override
             public Department run(Connection connection)
                     throws ServiceException, SQLException {
-                return Department.lookup(connection, did);
+                return Department.lookup(connection, deptID);
             }
         });
     }

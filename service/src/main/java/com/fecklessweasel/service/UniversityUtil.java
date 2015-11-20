@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.fecklessweasel.service.datatier.SQLSource;
 import com.fecklessweasel.service.datatier.SQLInteractionInterface;
 import com.fecklessweasel.service.objectmodel.CodeContract;
+import com.fecklessweasel.service.objectmodel.OMUtil;
 import com.fecklessweasel.service.objectmodel.ServiceException;
 import com.fecklessweasel.service.objectmodel.ServiceStatus;
 import com.fecklessweasel.service.objectmodel.University;
@@ -26,6 +27,7 @@ public final class UniversityUtil {
      */
     private UniversityUtil() {
     }
+
     /**
      * receives request and gets corresponding university
      *
@@ -33,16 +35,11 @@ public final class UniversityUtil {
      * @return
      * @throws ServiceException
      */
-
     public static University findUniversity(HttpServletRequest request)
             throws ServiceException {
 
-        //create university by looking up request
-        String idStr = request.getParameter("uid");
-        if (idStr == null) {
-            throw new ServiceException(ServiceStatus.MALFORMED_REQUEST);
-        }
-        final int univid = Integer.parseInt(idStr);
+        // Create university by looking up request.
+        final int univid = OMUtil.parseInt(request.getParameter("uid"));
 
         // Open a SQL connection, find University in database
         return SQLSource.interact(new SQLInteractionInterface<University>() {
@@ -55,7 +52,7 @@ public final class UniversityUtil {
     }
 
     /**
-     * returns University given id
+     * Returns University given id
      *
      * @param univid
      * @return

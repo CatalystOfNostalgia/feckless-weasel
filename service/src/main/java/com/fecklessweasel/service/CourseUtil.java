@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.fecklessweasel.service.datatier.SQLSource;
 import com.fecklessweasel.service.datatier.SQLInteractionInterface;
 import com.fecklessweasel.service.objectmodel.CodeContract;
+import com.fecklessweasel.service.objectmodel.OMUtil;
 import com.fecklessweasel.service.objectmodel.ServiceException;
 import com.fecklessweasel.service.objectmodel.ServiceStatus;
 import com.fecklessweasel.service.objectmodel.Course;
@@ -35,15 +36,7 @@ public final class CourseUtil {
     public static Course findCourse(HttpServletRequest request)
             throws ServiceException {
 
-        String courseID = request.getParameter("cid");
-        if (courseID == null) {
-            throw new ServiceException(ServiceStatus.MALFORMED_REQUEST);
-        }
-        final int cid = Integer.parseInt(courseID);
-        //try {
-        //cid = Integer.parseInt(request.getParameter("did"));
-        //} catch (NumberFormatException e) {
-        //}
+        final int cid = OMUtil.parseInt(request.getParameter("cid"));
 
         // Open a SQL connection, find course in tables
         return SQLSource.interact(new SQLInteractionInterface<Course>() {
