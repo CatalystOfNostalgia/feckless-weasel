@@ -13,7 +13,6 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import com.fecklessweasel.service.UniversityUtil;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
