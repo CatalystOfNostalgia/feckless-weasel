@@ -7,7 +7,7 @@
         <link href="${pageContext.request.contextPath}/assets/css/login.css" rel="stylesheet">
     </head>
     <body class="four-column">
-        <jsp:include page="header.jsp"/>
+        <jsp:include page="/header.jsp"/>
         <div class="container">
             <form class="form-signin" action="/servlet/university" method="post" enctype="application/x-www-form-urlencoded">
                 <h2 class="form-signin-heading">Don't see your university?</h2>
