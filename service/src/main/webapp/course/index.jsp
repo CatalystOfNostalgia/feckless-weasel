@@ -44,7 +44,7 @@
             <div class="container">
               <h2>Course Files:</h2>
               <% if (authSession != null) { %>
-                  <h3>Drag and drop anywhere to upload a new PDF or image</h3>
+                  <h3>Drag and drop or click anywhere to upload a new PDF or image</h3>
               <% } %>
               <c:forEach var="file" items="${files}">
                   <div class="row">
@@ -69,7 +69,7 @@
             <%if (request.getParameter("uploadSuccess") == null) {} else if (request.getParameter("uploadSuccess").equals("True")) {%>
                 <p style="color: #00FF00;">Upload Successful</p>
             <% }else {%>
-                </p style="color: #00FF00;">Unknown error occured in upload </p>
+                <p style="color: #FF0000;">Unknown error occured in upload </p>
             <% } %>
             </div>
         </body>
