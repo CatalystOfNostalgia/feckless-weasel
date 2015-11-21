@@ -4,6 +4,7 @@ package com.fecklessweasel.service;
  * 3-Tuple class for returning multiple values from function.
  * @param <TValue1> The first value's type.
  * @param <TValue2> The second value's type.
+ * @param <TValue3> The third value's type.
  * @author Christian Gunderman
  */
 public final class Tuple3<TValue1, TValue2, TValue3> extends Tuple {
