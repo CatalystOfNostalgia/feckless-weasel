@@ -6,7 +6,7 @@ package com.fecklessweasel.service;
  * @param <TValue2> The second value's type.
  * @author Christian Gunderman
  */
-public final class Tuple<TValue1, TValue2> {
+public class Tuple<TValue1, TValue2> {
     /** The first value. */
     public final TValue1 value1;
     /** The second value. */
