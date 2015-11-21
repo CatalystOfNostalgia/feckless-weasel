@@ -11,7 +11,12 @@ import com.fecklessweasel.service.objectmodel.ServiceStatus;
  * Object Model Utility functions.
  * @author Christian Gunderman
  */
-public class OMUtil {
+public final class OMUtil {
+
+    /**
+     * Private constructor to prevent instantiation.
+     */
+    private OMUtil() { }
 
     /**
      * Checks to make sure SQLConnection is non-null.
@@ -45,6 +50,23 @@ public class OMUtil {
         }
 
         return false;
+    }
+
+    /**
+     * Parses the String to an integer value.
+     * @param value
+     * @throws ServiceException Thrown with MALFORMED_REQUEST
+     * if value is not an integer or is null.
+     * @return Value as an integer.
+     */
+    public static int parseInt(String value) throws ServiceException {
+        OMUtil.nullCheck(value);
+
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException ex) {
+            throw new ServiceException(ServiceStatus.MALFORMED_REQUEST);
+        }
     }
 
     /**

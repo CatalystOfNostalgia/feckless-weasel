@@ -15,8 +15,7 @@ import com.fecklessweasel.service.objectmodel.*;
 import com.fecklessweasel.service.*;
 
 /**
- * Servlet that handles HTTP requests to create a department
- *
+ * Servlet that handles HTTP POST requests to create a department.
  * @author Anjana Rao
  */
 @WebServlet("/servlet/department")
@@ -30,36 +29,33 @@ public final class DepartmentServlet extends HttpServlet {
      * @throws ServletException throws if service encounters an error
      * @throws IOException      throws if unable to read request
      */
-    int ID;
-
     @Override
     protected void doPost(final HttpServletRequest request,
                           final HttpServletResponse response)
             throws ServletException, IOException {
-        SQLSource.interact(new SQLInteractionInterface<Integer>() {
-                               @Override
-                               public Integer run(Connection connection)
-                                       throws ServiceException, SQLException {
 
-                                   int uniID = Integer.parseInt(request.getParameter("university"));
-                                   University university = UniversityUtil.getUniversityID(uniID);
-                                   String deptName = request.getParameter("deptName");
-                                   String acronym = request.getParameter("acronym");
-                                   if (university == null || deptName == null || acronym == null) {
-                                       throw new ServiceException(ServiceStatus.MALFORMED_REQUEST);
-                                   }
-                                   // Create university
-                                   Department department = Department.create(connection, university, deptName, acronym);
+        int univID = SQLSource.interact(new SQLInteractionInterface<Integer>() {
+                @Override
+                public Integer run(Connection connection)
+                    throws ServiceException, SQLException {
 
-                                   //get dept ID from database
-                                   ID = department.getID();
+                    // Find university where the new department will be added.
+                    int univID = OMUtil.parseInt(request.getParameter("university"));
+                    University university = University.lookup(connection, univID);
 
-                                   // return int value
-                                   return 0;
-                               }
-                           }
-        );
-        // Redirect to homepage.
-        response.sendRedirect("/department/index.jsp?did=" + ID);
+                    String deptName = request.getParameter("deptName");
+                    String acronym = request.getParameter("acronym");
+
+                    // Create university
+                    Department department = Department.create(connection, university,
+                                                              deptName, acronym);
+
+                    // Return dept. ID to calling function.
+                    return department.getID();
+                }
+            });
+
+        // Redirect to department page.
+        response.sendRedirect("/department/index.jsp?did=" + univID);
     }
 }

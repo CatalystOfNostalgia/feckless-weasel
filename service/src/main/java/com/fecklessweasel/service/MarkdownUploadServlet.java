@@ -30,16 +30,17 @@ public class MarkdownUploadServlet extends HttpServlet {
                           final HttpServletResponse response)
             throws ServletException, IOException {
 
+        final UserSession session = UserSessionUtil.resumeSession(request);
+
+        // If user is not authenticated then throw.
+        if (session == null) {
+            throw new ServiceException(ServiceStatus.NOT_AUTHENTICATED);
+        }
+
         // Get title, description, and file contents from form
         final String title = request.getParameter("title");
         final String description = request.getParameter("description");
         final String markdownText = request.getParameter("markdown");
-
-        final UserSession session = UserSessionUtil.resumeSession(request);
-        // If user is not authenticated
-        if (session == null) {
-            throw new ServiceException(ServiceStatus.NOT_AUTHENTICATED);
-        }
 
         // Open a SQL connection and create the file meta data.
         StoredFile fileMetadata = SQLSource.interact(new SQLInteractionInterface<StoredFile>() {
@@ -47,12 +48,12 @@ public class MarkdownUploadServlet extends HttpServlet {
             public StoredFile run(Connection connection)
                     throws ServiceException, SQLException {
 
-                int courseId = Integer.parseInt(request.getParameter("class"));
+                int courseID = OMUtil.parseInt(request.getParameter("class"));
 
                 // Write and store file.
                 return StoredFile.create(connection,
                         session.getUser(),
-                        Course.lookupById(connection, courseId),
+                        Course.lookupById(connection, courseID),
                         title,
                         description,
                         markdownText);

@@ -9,16 +9,17 @@
     <body>
         <jsp:include page="/header.jsp"/>
         <%
-           final University university = UniversityUtil.findUniversity(request);
-           ArrayList<Department> depts =
-           SQLSource.interact(new SQLInteractionInterface<ArrayList<Department>>() {
+           final Tuple<University, List<Department>> tuple =
+           SQLSource.interact(new SQLInteractionInterface<Tuple<University, List<Department>>>() {
                @Override
-               public ArrayList<Department> run(Connection connection) throws ServiceException {
-                   return (ArrayList<Department>) university.getAllDepts(connection);
+               public Tuple<University, List<Department>> run(Connection connection) throws ServiceException {
+                   final University university = University.lookup(connection, OMUtil.parseInt(request.getParameter("uid")));
+                   return new Tuple(university, university.getAllDepts(connection));
                }
            });
-           request.setAttribute("university", university);
-           request.setAttribute("depts", depts);
+
+           request.setAttribute("university", tuple.value1);
+           request.setAttribute("depts", tuple.value2);
         %>
         <div class="jumbotron">
             <div class="container">
