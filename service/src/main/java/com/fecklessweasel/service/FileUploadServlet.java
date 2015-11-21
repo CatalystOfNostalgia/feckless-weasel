@@ -78,6 +78,6 @@ public class FileUploadServlet extends HttpServlet {
             }
         });
 
-        // TODO: redirect to uploaded file page.
+       response.sendRedirect("/course/index.jsp?cid=" + request.getParameter("class"));
     }
 }

@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8" import="java.util.*, com.fecklessweasel.service.objectmodel.University, com.fecklessweasel.service.UniversityUtil"%>
+    pageEncoding="UTF-8" import="java.util.*, com.fecklessweasel.service.objectmodel.University"%>
 <html>
     <head>
         <title>Feckless Weasel University Create Page</title>
