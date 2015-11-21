@@ -16,7 +16,7 @@ var drop = new Dropzone(document.body, {
     previewTemplate: previewTemplate,
     previewContainer: "#previews",
     uploadMultiple: true,
-    acceptedFiles: "image/*, application/pdf application/doc applicatoin/docx",
+    acceptedFiles: "image/*, application/pdf, application/doc, applicatoin/docx",
 });
 
 drop.on("init", function(){
