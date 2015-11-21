@@ -16,7 +16,7 @@ var drop = new Dropzone(document.body, {
     previewTemplate: previewTemplate,
     previewContainer: "#previews",
     uploadMultiple: true,
-    acceptedFiles: "image/*, application/pdf, application/doc, applicatoin/docx",
+    acceptedFiles: "image/*, application/pdf, application/doc, application/docx"
 });
 
 drop.on("init", function(){
@@ -48,5 +48,11 @@ drop.on("sending", function(file, xhr, formData){
 });
 
 drop.on("success", function(file, response){
-    window.location.href = "/course/index.jsp?cid=" + classID;
+    window.location.href = "/course/index.jsp?cid=" + classID + "&uploadSuccess=True";
 });
+
+drop.on("error", function(){
+    window.location.href = "/course/index.jsp?cid=" + classID + "&uploadSuccess=False";
+});
+
+drop.on("error")

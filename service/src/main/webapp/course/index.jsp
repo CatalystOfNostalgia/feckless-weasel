@@ -37,6 +37,11 @@
             <% } else { %>
                 <p>Login or create an account to contribute!</p>  
             <% } %>
+            <%if (request.getParameter("uploadSuccess") == null) {} else if (request.getParameter("uploadSuccess").equals("True")) {%>
+                <p>Upload Successful</p>
+            <% }else {%>
+                </p>Unknown error occured in upload </p>
+            <% } %>
             </div>
         </body>
     </body>
