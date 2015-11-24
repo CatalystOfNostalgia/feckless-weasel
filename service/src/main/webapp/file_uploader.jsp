@@ -9,6 +9,25 @@
         <script src="${pageContext.request.contextPath}/assets/js/dropzone/dropzone.js"></script>
     </head>
     <body>
+        <div class="container">
+            <center><h1>Want to contribute and help others?</h1></center>
+            <center><h2>Upload documents or make them right here on the site!</h2></center>
+            <div class="col-md-4">
+                <center><button type="button" class="btn btn-warning btn-lg fileinput-button" id="upload">
+                    <i class="glyphicon glyphicon-plus"></i>
+                    <span>Upload!</span>
+                </button></center>       
+            </div>
+            <div class="col-md-4">
+                <h1><center>OR</center></h1>
+            </div>
+            <div class="col-md-4">
+                <center><button type="button" class="btn btn-warning btn-lg">
+                    <i class="glyphicon glyphicon-edit"></i>
+                    <span>Take notes!</span>
+                </button></center>
+            </div>
+        </div>
         <form action="/servlet/file/upload" method="post" enctype="multipart/form-data">
         <div class="table table-striped files" id="previews">
             <div id="template" class="file-row">
@@ -29,13 +48,13 @@
                         <input type="hidden" id="classID" value="${param.classID}" />
                     </div>
                     <div class="btn-group" role="group" aria-label="Tag yo doc">
-                        <button type="button" class="btn btn-warning" id="notes">Notes</button>
-                        <button type="button" class="btn btn-warning" id="assignmentAnswers">Assignment Answers</button>
-                        <button type="button" class="btn btn-warning" id="assignment">Assignment</button>
-                        <button type="button" class="btn btn-warning" id="quiz">Quiz</button>
-                        <button type="button" class="btn btn-warning" id="quizAnswers">Quiz Answers</button>
-                        <button type="button" class="btn btn-warning" id="test">Test</button>
-                        <button type="button" class="btn btn-warning" id="testAnswers">Test Answers</button>
+                        <button type="button" id="tag" class="btn btn-warning" value="notes">Notes</button>
+                        <button type="button" id="tag" class="btn btn-warning" value="assignmentAnswers">Assignment Answers</button>
+                        <button type="button" id="tag" class="btn btn-warning" value="assignment">Assignment</button>
+                        <button type="button" id="tag" class="btn btn-warning" value="quiz">Quiz</button>
+                        <button type="button" id="tag" class="btn btn-warning" value="quizAnswers">Quiz Answers</button>
+                        <button type="button" id="tag" class="btn btn-warning" value="test">Test</button>
+                        <button type="button" id="tag" class="btn btn-warning" value="testAnswers">Test Answers</button>
                     </div>
                 </div>
                 <div class="col-md-3">

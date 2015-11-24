@@ -50,7 +50,8 @@ public class StoredFile {
     private String title;
     /** The file description. */
     private String description;
-
+    
+    private String tag; 
     /**
      * Private constructor to the StoredFile object. Is only called in create();
      * @param fid The Files Unique Identifier in the table
@@ -61,13 +62,14 @@ public class StoredFile {
      * @param description The description for the file.
      */
     private StoredFile(int fid, int uid, int cid, Date creationDate,
-                       String title, String description) {
+                       String title, String description, String tag) {
         this.fid = fid;
         this.uid = uid;
         this.cid = cid;
         this.creationDate = creationDate;
         this.title = title;
         this.description = description;
+        this.tag = tag;
     }
 
     /**
@@ -84,12 +86,13 @@ public class StoredFile {
                                     Course course,
                                     String title,
                                     String description,
+                                    String tag,
                                     InputStream fileData) throws ServiceException {
         OMUtil.nullCheck(fileData);
 
         // Write metadata to the database.
         Date creationDate = new Date();
-        int fid = addToDatabase(sql, user, course, title, description, creationDate);
+        int fid = addToDatabase(sql, user, course, title, description, creationDate, tag);
 
         // Attempt to write the uploaded data to a file mapped to the ID.
         // TODO: check file extensions are not necessary.
@@ -110,7 +113,8 @@ public class StoredFile {
                               course.getID(),
                               creationDate,
                               title,
-                              description);
+                              description,
+                              tag);
     }
 
     /**
@@ -132,7 +136,7 @@ public class StoredFile {
 
         // Write metadata to the database.
         Date creationDate = new Date();
-        int fid = addToDatabase(sql, user, course, title, description, creationDate);
+        int fid = addToDatabase(sql, user, course, title, description, creationDate, "notes");
 
         // Attempt to write the uploaded data to a file mapped to the ID.
         // TODO: check file extensions are not necessary.
@@ -151,7 +155,8 @@ public class StoredFile {
                 course.getID(),
                 creationDate,
                 title,
-                description);
+                description,
+                "notes");
     }
 
     /**
@@ -167,13 +172,13 @@ public class StoredFile {
                                       Course course,
                                       String title,
                                       String description,
-                                      Date creationDate) throws ServiceException {
+                                      Date creationDate,
+                                      String tag) throws ServiceException {
         OMUtil.sqlCheck(sql);
         OMUtil.nullCheck(user);
         OMUtil.nullCheck(course);
         OMUtil.nullCheck(title);
         OMUtil.nullCheck(description);
-
         // Check title length.
         if (title.length() < MIN_TITLE || title.length() > MAX_TITLE) {
             throw new ServiceException(ServiceStatus.APP_INVALID_TITLE_LENGTH);
@@ -190,7 +195,8 @@ public class StoredFile {
                 course.getID(),
                 title,
                 description,
-                creationDate);
+                creationDate,
+                tag);
     }
 
     /**
@@ -214,7 +220,8 @@ public class StoredFile {
                                                  result.getInt("cid"),
                                                  result.getDate("creation_date"),
                                                  result.getString("title"),
-                                                 result.getString("description"));
+                                                 result.getString("description"),
+                                                 result.getString("tag"));
             result.close();
             return fileData;
         } catch (SQLException ex) {
@@ -296,17 +303,20 @@ public class StoredFile {
     /**
      * Look up all files associated with a specific course ID.
      * @param sql The Sql connection to the FecklessWeaselDB
-     * @param cid The ID of the course whose file info we want.
+     * @param course The the course whose file info we want.
      * @return A List of StoredFile objects that represent each files info.
      */
-    static Iterable<StoredFile> lookUpCourseFiles(Connection sql, int cid)
+    public static Iterable<StoredFile> lookupCourseFiles(Connection sql, Course course)
         throws ServiceException{
         OMUtil.sqlCheck(sql);
+        OMUtil.nullCheck(course);
+
+        int cid = course.getID();
 
         ResultSet results = FileMetadataTable.lookUpCourseFiles(sql, cid);
         ArrayList<StoredFile> listOfFiles = new ArrayList<StoredFile>();
 
-        try{
+        try {
             while (results.next()) {
                 User user = User.lookupById(sql, results.getInt("uid"));
                 StoredFile fileData = new StoredFile(results.getInt("fid"),
@@ -314,7 +324,8 @@ public class StoredFile {
                                                      results.getInt("cid"),
                                                      results.getDate("creation_date"),
                                                      results.getString("title"),
-                                                     results.getString("description"));
+                                                     results.getString("description"),
+                                                     results.getString("tag"));
                 listOfFiles.add(fileData);
             }
             results.close();
@@ -330,7 +341,7 @@ public class StoredFile {
      * @param uid The User who's file info we want to retrieve.
      * @return A List of StoredFile objects that represent each files info
      */
-    static Iterable<StoredFile> lookUpUserFiles(Connection sql, int uid)
+    static Iterable<StoredFile> lookupUserFiles(Connection sql, int uid)
         throws ServiceException{
         OMUtil.sqlCheck(sql);
 
@@ -344,7 +355,8 @@ public class StoredFile {
                                                      results.getInt("cid"),
                                                      results.getDate("creation_date"),
                                                      results.getString("title"),
-                                                     results.getString("description"));
+                                                     results.getString("description"),
+                                                     results.getString("tag"));
                 listOfFiles.add(fileData);
             }
 

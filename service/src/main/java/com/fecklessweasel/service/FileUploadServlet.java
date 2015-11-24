@@ -49,6 +49,7 @@ public class FileUploadServlet extends HttpServlet {
 
         final String title = request.getParameter("title");
         final String description = request.getParameter("description");
+        final String tag = request.getParameter("tag");
         final Part filePart = request.getPart("file[0]");
 
         // filePart is dereferenced in this file so we can't depend on the
@@ -71,6 +72,7 @@ public class FileUploadServlet extends HttpServlet {
                                              Course.lookupById(connection, courseID),
                                              title,
                                              description,
+                                             tag,
                                              filePart.getInputStream());
                 } catch (IOException ex) {
                     throw new ServiceException(ServiceStatus.SERVER_UPLOAD_ERROR);

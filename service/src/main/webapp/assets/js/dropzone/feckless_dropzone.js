@@ -3,7 +3,9 @@ var previewNode = document.querySelector("#template");
 previewNode.id = "";
 var previewTemplate = previewNode.parentNode.innerHTML;
 previewNode.parentNode.removeChild(previewNode);
-var classID = ""
+var classID = "";
+var tag = "";
+
 var drop = new Dropzone(document.body, {
     autoProcessQueue: false,
     autoQueue: false,
@@ -16,7 +18,8 @@ var drop = new Dropzone(document.body, {
     previewTemplate: previewTemplate,
     previewContainer: "#previews",
     uploadMultiple: true,
-    acceptedFiles: "image/*, application/pdf, application/doc, applicatoin/docx",
+    acceptedFiles: "image/*, application/pdf, application/doc, application/docx",
+    clickable: ".fileinput-button"
 });
 
 drop.on("init", function(){
@@ -38,6 +41,12 @@ drop.on("addedfile", function(file) {
         e.stopPropagation();
         drop.processQueue();
     });
+    ele = this.element.querySelectorAll("#tag");
+    for(var i=0; i<ele.length; i++){
+        ele[i].addEventListener("click", function(){
+            tag=this.value;
+        });
+    }
 });
 
 drop.on("sending", function(file, xhr, formData){
@@ -45,8 +54,13 @@ drop.on("sending", function(file, xhr, formData){
     formData.append("description", this.element.querySelector("#description").value);
     formData.append("class", this.element.querySelector("#classID").value);
     classID = this.element.querySelector("#classID").value;
+    formData.append("tag", tag);
 });
 
 drop.on("success", function(file, response){
-    window.location.href = "/course/index.jsp?cid=" + classID;
+    window.location.href = "/course/index.jsp?cid=" + classID + "&uploadSuccess=True";
+});
+
+drop.on("error", function(){
+    window.location.href = "/course/index.jsp?cid=" + classID + "&uploadSuccess=False";
 });
