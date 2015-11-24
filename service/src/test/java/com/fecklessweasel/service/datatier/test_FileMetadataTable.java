@@ -38,7 +38,8 @@ public class test_FileMetadataTable {
                              1,
                              "CourseName",
                              "Course Desc",
-                             new Date());
+                             new Date(),
+                             "notes");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -48,7 +49,8 @@ public class test_FileMetadataTable {
                              1,
                              null,
                              "Course Desc",
-                             new Date());
+                             new Date(),
+                             "notes");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -58,7 +60,8 @@ public class test_FileMetadataTable {
                              1,
                              "CourseName",
                              null,
-                             new Date());
+                             new Date(),
+                             "notes");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -68,7 +71,8 @@ public class test_FileMetadataTable {
                              1,
                              "CourseName",
                              "Course Desc",
-                             null);
+                             null,
+                             "notes");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -78,7 +82,8 @@ public class test_FileMetadataTable {
                              1,
                              "",
                              "Course Desc",
-                             new Date());
+                             new Date(),
+                             "notes");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -88,7 +93,8 @@ public class test_FileMetadataTable {
                              1,
                              "CourseName",
                              "",
-                             new Date());
+                             new Date(),
+                             "notes");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -98,7 +104,8 @@ public class test_FileMetadataTable {
                              1,
                              "           ",
                              "Course Desc",
-                             new Date());
+                             new Date(),
+                             "notes");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -108,7 +115,8 @@ public class test_FileMetadataTable {
                              1,
                              "CourseName",
                              "          ",
-                             new Date());
+                             new Date(),
+                             "notes");
     }
 
     @Test
@@ -124,7 +132,8 @@ public class test_FileMetadataTable {
                                  1,
                                  "CourseName",
                                  "Course Description",
-                                 new Date());
+                                 new Date(),
+                                 "notes");
         } catch (ServiceException ex) {
             assert(ex.status == ServiceStatus.DATABASE_ERROR);
         }
@@ -153,7 +162,8 @@ public class test_FileMetadataTable {
                                     1,
                                     "CourseName",
                                     "CourseDesc",
-                                    new Date()) == id);
+                                    new Date(), 
+                                    "notes") == id);
 
         // Verify next was called once to get the generated key.
         verify(mockResultSet, times(1)).next();
