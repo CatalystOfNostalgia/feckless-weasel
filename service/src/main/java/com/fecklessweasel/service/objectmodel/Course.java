@@ -22,6 +22,9 @@ public final class Course {
     /** Course number. */
     private int courseNum;
 
+    /** Name of Course*/
+    private String courseName;
+
     /** Max Course number. */
     private static int NUM_MAX = 999;
     /** Min Course number. */
@@ -30,31 +33,34 @@ public final class Course {
     /**
      * Private constructor. Should be created by the database or create method.
      */
-    private Course(int id, int did, int courseNum) {
+    private Course(int id, int did, int courseNum, String courseName) {
         this.id = id;
         this.did = did;
         this.courseNum = courseNum;
+        this.courseName = courseName;
     }
 
     /**
      * Creates a Course in the database.
      * @param conn A connection to the database.
-     * @param department The department this Course is in.
+     * @param deptid The department id this Course is in.
      * @param Coursenum The number of this Course.
+     * @param courseName the name of this course
      * @return A Course object.
      */
     public static Course create(Connection conn, Department department,
-                                int courseNum) throws ServiceException {
+                                int courseNum, String courseName) throws ServiceException {
         OMUtil.sqlCheck(conn);
         OMUtil.nullCheck(department);
         OMUtil.nullCheck(courseNum);
+        OMUtil.nullCheck(courseName);
 
         if (courseNum > NUM_MAX || courseNum < NUM_MIN) {
             throw new ServiceException(ServiceStatus.APP_INVALID_COURSE_NUMBER);
         }
 
-        int id = CourseTable.insertCourse(conn, department.getID(), courseNum);
-        return new Course(id, department.getID(), courseNum);
+        int id = CourseTable.insertCourse(conn, department.getID(), courseNum, courseName);
+        return new Course(id, department.getID(), courseNum, courseName);
     }
 
     /**
@@ -76,7 +82,8 @@ public final class Course {
 
             Course course = new Course(result.getInt("id"),
                                        result.getInt("deptid"),
-                                       result.getInt("courseNumber"));
+                                       result.getInt("courseNumber"),
+                                       result.getString("courseName"));
 
             result.close();
             return course;
@@ -106,7 +113,8 @@ public final class Course {
             while(results.next()) {
                 Course course = new Course(results.getInt("id"),
                                            results.getInt("deptid"),
-                                           results.getInt("courseNumber"));
+                                           results.getInt("courseNumber"),
+                                           results.getString("courseName"));
                 courses.add(course);
             }
         } catch (SQLException ex) {
@@ -117,7 +125,7 @@ public final class Course {
 
     /**
      * Gets the department of the Course.
-     * @return The deparmtent of the Course.
+     * @return The department of the Course.
      */
     public Department lookupDepartment(Connection conn)
         throws ServiceException {
@@ -126,6 +134,15 @@ public final class Course {
         return Department.lookup(conn, this.did);
     }
 
+    /**
+     * Gets all StoredFiles owned by this Course
+     * @param conn The SQL connection
+     * @return a List of StoredFiles that have cid=this.cid
+     */
+    public Iterable<StoredFile> lookupAllFiles(Connection conn)
+        throws ServiceException {
+        return StoredFile.lookupCourseFiles(conn, this);
+    }
     /**
      * Gets the number of the Course.
      * @return The number of the Course.
@@ -146,5 +163,15 @@ public final class Course {
      * Gets the department ID of the Course
      * @return The database ID of the Course
      */
-    public int getDeptID(){return this.did;}
+    public int getDeptID() {
+        return this.did;
+    }
+
+    /**
+     * Gets the name of this Course
+     * @return the name of this course
+     */
+    public String getCourseName() {
+        return this.courseName;
+    }
 }

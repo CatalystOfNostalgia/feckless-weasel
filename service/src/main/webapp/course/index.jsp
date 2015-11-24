@@ -42,29 +42,29 @@
                 </div>
             </div>
             <div class="container">
-              <h2>Course Files:</h2>
+                <h2>Course Files:</h2>
+                <c:forEach var="file" items="${files}">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h2>
+                                <a href="/course/file.jsp?fid=${file.getID()}" title="${file.getDescription()}">
+                                    ${file.getTitle()} &#09; - &#09; ${file.getCreationDate()}
+                                </a>
+                            </h2>
+                        </div>
+                    </div>
+                </c:forEach>
               <% if (authSession != null) { %>
                   <h3>Drag and drop or click anywhere to upload a new PDF or image</h3>
               <% } %>
-              <c:forEach var="file" items="${files}">
-                  <div class="row">
-                      <div class="col-md-6">
-                          <h2>
-                              <a href="/course/file.jsp?fid=${file.getID()}" title="${file.getDescription()}">
-                                  ${file.getTitle()} &#09; - &#09; ${file.getCreationDate()}
-                              </a>
-                          </h2>
-                      </div>
-                  </div>
-              </c:forEach>
             </div>
             <div class="container">
             <%if (authSession != null) {%>
-                <jsp:include page="/file_uploader.jsp"> 
+                <jsp:include page="/file_uploader.jsp">
                     <jsp:param name="classID" value="${course.getID()}"/>
                 </jsp:include>
             <% } else { %>
-                <p>Login or create an account to contribute!</p>  
+                <p>Login or create an account to contribute!</p>
             <% } %>
             <%if (request.getParameter("uploadSuccess") == null) {} else if (request.getParameter("uploadSuccess").equals("True")) {%>
                 <p style="color: #00FF00;">Upload Successful</p>
