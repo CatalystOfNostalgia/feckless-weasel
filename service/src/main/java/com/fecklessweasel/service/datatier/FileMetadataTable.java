@@ -20,8 +20,8 @@ import com.fecklessweasel.service.objectmodel.ServiceStatus;
 public abstract class FileMetadataTable{
 
     public static final String INSERT_FILE_QUERY =
-        "INSERT INTO FileMetadata (uid, cid, creation_date, title, description)" +
-        " VALUES (?,?,?,?,?)";
+        "INSERT INTO FileMetadata (uid, cid, creation_date, title, description, tag)" +
+        " VALUES (?,?,?,?,?,?)";
 
     public static final String LOOKUP_FILE_QUERY =
         "SELECT * FROM Filemetadata F WHERE F.fid=?";
@@ -50,7 +50,8 @@ public abstract class FileMetadataTable{
                                      int course,
                                      String title,
                                      String description,
-                                     Date creationDate)
+                                     Date creationDate,
+                                     String tag)
         throws ServiceException {
 
         // Ensure parameters are clean.
@@ -67,6 +68,7 @@ public abstract class FileMetadataTable{
             insertStatement.setDate(3, new java.sql.Date(creationDate.getTime()));
             insertStatement.setString(4, title);
             insertStatement.setString(5, description);
+            insertStatement.setString(6, tag);
 
             insertStatement.execute();
 
