@@ -27,10 +27,10 @@ public abstract class FileMetadataTable{
         "SELECT * FROM Filemetadata F WHERE F.fid=?";
 
     public static final String LOOKUP_FILES_FROM_USER_QUERY =
-        "SELECT * FROM Filemetadata F WHERE F.uid=?";
+        "SELECT * FROM Filemetadata F WHERE F.uid=? ORDER BY F.title";
 
     public static final String LOOKUP_FILES_FROM_COURSE_QUERY =
-        "SELECT * FROM Filemetadata F WHERE F.cid=?";
+        "SELECT * FROM Filemetadata F WHERE F.cid=? ORDER BY F.title";
 
     public static final String DELETE_FILE_QUERY =
         "DELETE FROM FileMetadata WHERE fid=?";

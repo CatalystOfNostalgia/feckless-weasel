@@ -303,17 +303,20 @@ public class StoredFile {
     /**
      * Look up all files associated with a specific course ID.
      * @param sql The Sql connection to the FecklessWeaselDB
-     * @param cid The ID of the course whose file info we want.
+     * @param course The the course whose file info we want.
      * @return A List of StoredFile objects that represent each files info.
      */
-    static Iterable<StoredFile> lookUpCourseFiles(Connection sql, int cid)
+    public static Iterable<StoredFile> lookupCourseFiles(Connection sql, Course course)
         throws ServiceException{
         OMUtil.sqlCheck(sql);
+        OMUtil.nullCheck(course);
+
+        int cid = course.getID();
 
         ResultSet results = FileMetadataTable.lookUpCourseFiles(sql, cid);
         ArrayList<StoredFile> listOfFiles = new ArrayList<StoredFile>();
 
-        try{
+        try {
             while (results.next()) {
                 User user = User.lookupById(sql, results.getInt("uid"));
                 StoredFile fileData = new StoredFile(results.getInt("fid"),
@@ -338,7 +341,7 @@ public class StoredFile {
      * @param uid The User who's file info we want to retrieve.
      * @return A List of StoredFile objects that represent each files info
      */
-    static Iterable<StoredFile> lookUpUserFiles(Connection sql, int uid)
+    static Iterable<StoredFile> lookupUserFiles(Connection sql, int uid)
         throws ServiceException{
         OMUtil.sqlCheck(sql);
 
