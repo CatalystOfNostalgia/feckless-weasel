@@ -1,5 +1,11 @@
 package com.fecklessweasel.service;
 
+import com.fecklessweasel.service.datatier.SQLInteractionInterface;
+import com.fecklessweasel.service.datatier.SQLSource;
+import com.fecklessweasel.service.objectmodel.OMUtil;
+import com.fecklessweasel.service.objectmodel.ServiceException;
+import com.fecklessweasel.service.objectmodel.StoredFile;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,6 +16,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
  * Downloads the given file for the user.
@@ -26,17 +34,26 @@ public class FileDownloadServlet extends HttpServlet {
      * @param response The web response.
      */
     @Override
-    protected void doGet(HttpServletRequest request,
+    protected void doGet(final HttpServletRequest request,
                          HttpServletResponse response)
             throws ServletException, IOException {
 
-        String className = request.getParameter("class");
-        int fid = Integer.parseInt(request.getParameter("fid"));
+        final int fid = 1; //Integer.parseInt(request.getParameter("fid"));
 
-        String filePath = FILEPATH_PREFIX + "/" + className + "/" + fid;
+        String filePath = FILEPATH_PREFIX + "/" + fid;
         File file = new File(filePath);
         FileInputStream fileInputStream = new FileInputStream(file);
 
+        StoredFile fileMetadata = SQLSource.interact(new SQLInteractionInterface<StoredFile>() {
+            @Override
+            public StoredFile run(Connection connection)
+                    throws ServiceException, SQLException {
+
+                return StoredFile.lookup(connection, fid);
+            }
+        });
+
+        String fileName = fileMetadata.getTitle();
         ServletContext context = getServletContext();
         // Set mime type
         String mimeType = context.getMimeType(filePath);
@@ -44,11 +61,13 @@ public class FileDownloadServlet extends HttpServlet {
             mimeType = "application/octet-stream";
         }
 
+        // TODO: Get file extension somehow, perhaps put in database?
+
         response.setContentType(mimeType);
         response.setContentLength((int) file.length());
         // Force download
         String headerKey = "Content-Disposition";
-        String headerValue = String.format("attachment; filename=\"%s\"", file.getName());
+        String headerValue = String.format("attachment; filename=\"%s\"", fileName);
         response.setHeader(headerKey, headerValue);
 
         OutputStream outputStream = response.getOutputStream();
