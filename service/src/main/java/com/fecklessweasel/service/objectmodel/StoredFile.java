@@ -37,7 +37,7 @@ public class StoredFile {
      * started from.
      */
     private static final String FILEPATH_PREFIX = "files/";
-    
+
     /** A file's unique identifier. */
     private int fid;
     /** The user id of the user who uploaded the file. */
@@ -50,8 +50,8 @@ public class StoredFile {
     private String title;
     /** The file description. */
     private String description;
-    
-    private String tag; 
+
+    private String tag;
     /**
      * Private constructor to the StoredFile object. Is only called in create();
      * @param fid The Files Unique Identifier in the table
@@ -301,6 +301,14 @@ public class StoredFile {
     }
 
     /**
+     * Gets the tag of this file
+     *
+     */
+    public String getTag() {
+        return this.tag;
+    }
+
+    /**
      * Look up all files associated with a specific course ID.
      * @param sql The Sql connection to the FecklessWeaselDB
      * @param course The the course whose file info we want.
@@ -384,7 +392,7 @@ public class StoredFile {
 
         FileMetadataTable.deleteFile(sql, fid);
     }
-    
+
     /**
      * Saves a file to the server.
      * @param inputStream The file input stream.
