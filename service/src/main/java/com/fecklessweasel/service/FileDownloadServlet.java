@@ -53,15 +53,13 @@ public class FileDownloadServlet extends HttpServlet {
             }
         });
 
-        String fileName = fileMetadata.getTitle();
+        String fileName = fileMetadata.getTitle() + "." + fileMetadata.getExtension();
         ServletContext context = getServletContext();
         // Set mime type
         String mimeType = context.getMimeType(filePath);
         if (mimeType == null) {
             mimeType = "application/octet-stream";
         }
-
-        // TODO: Get file extension somehow, perhaps put in database?
 
         response.setContentType(mimeType);
         response.setContentLength((int) file.length());
