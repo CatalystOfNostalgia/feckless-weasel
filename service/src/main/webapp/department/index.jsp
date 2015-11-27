@@ -5,6 +5,29 @@
     <head>
         <title>Department</title>
         <link href="${pageContext.request.contextPath}/assets/bootstrap-3.3.5-dist/css/bootstrap.min.css" rel="stylesheet">
+        <script language="javascript">
+            function validate(event) {
+                var courseNameInput = document.getElementById('courseName');
+                var courseNumInput  = document.getElementById('course');
+
+                var courseNum = parseInt(courseNumInput.value);
+                //ensure that the input is a number
+                if (isNaN(courseNum)) {
+                    alert("Course number must be a number");
+                    return false;
+                }
+                //ensure that the input is a valid number
+                if (courseNum < <%= Course.NUM_MIN %>|| courseNum > <%= Course.NUM_MAX %>) {
+                    alert("Course number must be between <%= Course.NUM_MIN %> and <%= Course.NUM_MAX %>.");
+                    return false;
+                }
+                if (courseNameInput.value.length <= 0 || courseNameInput.value.length > <%= Course.NAME_MAX %>) {
+                    alert("Course name must be shorter than <%= Course.NAME_MAX %> characters.");
+                    return false;
+                }
+                return true;
+            }
+        </script>
     </head>
         <body>
         <jsp:include page="/header.jsp"/>
@@ -46,7 +69,8 @@
             <div class="row">
                 <div class="col-md-6">
                         <h2>Create a Course</h2>
-                        <form class="form-inline" action="/servlet/course" method="post" enctype="application/x-www-form-urlencoded">
+                        <form class="form-inline" action="/servlet/course" method="post" enctype="application/x-www-form-urlencoded" 
+                             onsubmit="return validate()">
                              <input type="hidden" class="text-large" id="department" name="department" placeholder= "department" value='${department.getID()}'>
                              <input type="text" class="form-control input-lg" id="course" name="course" placeholder="Course Number">
                              <input type="text" class="form-control input-lg" id="courseName" name="courseName" placeholder="Course Name">

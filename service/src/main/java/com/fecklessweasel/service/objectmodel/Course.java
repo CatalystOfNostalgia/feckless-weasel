@@ -12,6 +12,7 @@ import com.fecklessweasel.service.datatier.CourseTable;
  * Stores all information about a Course at a university.
  * @author Elliot Essman
  * @author Christian Gunderman
+ * @author Hayden Schmackpfeffer
  */
 public final class Course {
 
@@ -26,9 +27,11 @@ public final class Course {
     private String courseName;
 
     /** Max Course number. */
-    private static int NUM_MAX = 999;
+    public static int NUM_MAX = 999;
     /** Min Course number. */
-    private static int NUM_MIN = 1;
+    public static int NUM_MIN = 1;
+    /** Max Course Name Length */
+    public static int NAME_MAX = 50;
 
     /**
      * Private constructor. Should be created by the database or create method.
@@ -57,6 +60,10 @@ public final class Course {
 
         if (courseNum > NUM_MAX || courseNum < NUM_MIN) {
             throw new ServiceException(ServiceStatus.APP_INVALID_COURSE_NUMBER);
+        }
+
+        if (courseName.length() > NAME_MAX) {
+            throw new ServiceException(ServiceStatus.APP_COURSE_NAME_INVALID);
         }
 
         int id = CourseTable.insertCourse(conn, department.getID(), courseNum, courseName);

@@ -33,7 +33,10 @@ public class CourseTable {
      */
     public static int insertCourse(Connection conn, int deptid, int courseNumber, String courseName)
         throws ServiceException {
+
         CodeContract.assertNotNull(conn, "conn");
+        CodeContract.assertNotNullOrEmptyOrWhitespace(courseName, "courseName");
+
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(INSERT_ROW, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setInt(1, deptid);
