@@ -29,6 +29,10 @@ public class StoredFile {
     public static final int MIN_DESCRIPTION = 1;
     /** Maximum StoredFile description length. */
     public static final int MAX_DESCRIPTION = 255;
+    /** Minimum StoredFile extensions length. */
+    public static final int MIN_EXTENSION = 1;
+    /** Maximum StoredFile extensions length. */
+    public static final int MAX_EXTENSION = 4;
 
     /**
      * Directory name where files are stored.
@@ -194,6 +198,9 @@ public class StoredFile {
         OMUtil.nullCheck(course);
         OMUtil.nullCheck(title);
         OMUtil.nullCheck(description);
+        OMUtil.nullCheck(tag);
+        OMUtil.nullCheck(extension);
+
         // Check title length.
         if (title.length() < MIN_TITLE || title.length() > MAX_TITLE) {
             throw new ServiceException(ServiceStatus.APP_INVALID_TITLE_LENGTH);
@@ -202,6 +209,11 @@ public class StoredFile {
         // Check description length.
         if (description.length() < MIN_DESCRIPTION || description.length() > MAX_DESCRIPTION) {
             throw new ServiceException(ServiceStatus.APP_INVALID_DESCRIPTION_LENGTH);
+        }
+
+        // Check extension length.
+        if (extension.length() < MIN_EXTENSION || extension.length() > MAX_EXTENSION) {
+            throw new ServiceException(ServiceStatus.APP_INVALID_EXTENSION_LENGTH);
         }
 
         // Write metadata to the database.
