@@ -38,7 +38,7 @@ public class FileDownloadServlet extends HttpServlet {
                          HttpServletResponse response)
             throws ServletException, IOException {
 
-        final int fid = Integer.parseInt(request.getParameter("fid"));
+        final int fid = OMUtil.parseInt(request.getParameter("fid"));
 
         String filePath = FILEPATH_PREFIX + "/" + fid;
         File file = new File(filePath);
