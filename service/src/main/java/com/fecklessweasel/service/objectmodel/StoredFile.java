@@ -62,6 +62,8 @@ public class StoredFile {
      * @param creationDate The date the file was created
      * @param title The title for the file.
      * @param description The description for the file.
+     * @param tag The tag associated with the file.
+     * @param extension The file extension.
      */
     private StoredFile(int fid, int uid, int cid, Date creationDate,
                        String title, String description, String tag, String extension) {
@@ -83,6 +85,8 @@ public class StoredFile {
      * @param title The title for the file.
      * @param description The description for the file.
      * @param fileData The input stream for the file data to write to the file.
+     * @param tag The tag associated with the file.
+     * @param extension The file's extension.
      */
     public static StoredFile create(Connection sql,
                                     User user,
@@ -174,6 +178,8 @@ public class StoredFile {
      * @param title The title for the file.
      * @param description The description for the file.
      * @param creationDate The date this file was created.
+     * @param tag The tag associated with the file.
+     * @param extension The file's extension.
      */
     private static int addToDatabase(Connection sql,
                                       User user,
