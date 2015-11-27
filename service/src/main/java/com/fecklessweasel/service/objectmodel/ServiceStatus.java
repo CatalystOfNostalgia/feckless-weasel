@@ -33,6 +33,7 @@ public enum ServiceStatus {
     INSTALL_ERROR(504, 500, "Incorrect server configuration."),
     NO_SQL(505, 500, "No SQL instance provided."),
     ACCESS_DENIED(506, 403, "Access denied."),
+    FILE_READ_ERROR(507, 500, "Reading file from server failed."),
 
     // App logic errors.
     APP_INVALID_USER_LENGTH(701, 400, "Username is either too short or too long."),

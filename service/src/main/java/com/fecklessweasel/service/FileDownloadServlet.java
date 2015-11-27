@@ -4,6 +4,7 @@ import com.fecklessweasel.service.datatier.SQLInteractionInterface;
 import com.fecklessweasel.service.datatier.SQLSource;
 import com.fecklessweasel.service.objectmodel.OMUtil;
 import com.fecklessweasel.service.objectmodel.ServiceException;
+import com.fecklessweasel.service.objectmodel.ServiceStatus;
 import com.fecklessweasel.service.objectmodel.StoredFile;
 
 import javax.servlet.ServletContext;
@@ -26,8 +27,6 @@ import java.sql.SQLException;
 @WebServlet("/servlet/file/download")
 public class FileDownloadServlet extends HttpServlet {
 
-    private static final String FILEPATH_PREFIX = "files";
-
     /**
      * When this servlet receives a GET request, downloads the given file.
      * @param request The web request.
@@ -40,10 +39,6 @@ public class FileDownloadServlet extends HttpServlet {
 
         final int fid = OMUtil.parseInt(request.getParameter("fid"));
 
-        String filePath = FILEPATH_PREFIX + "/" + fid;
-        File file = new File(filePath);
-        FileInputStream fileInputStream = new FileInputStream(file);
-
         StoredFile fileMetadata = SQLSource.interact(new SQLInteractionInterface<StoredFile>() {
             @Override
             public StoredFile run(Connection connection)
@@ -53,28 +48,38 @@ public class FileDownloadServlet extends HttpServlet {
             }
         });
 
-        String fileName = fileMetadata.getTitle() + "." + fileMetadata.getExtension();
-        ServletContext context = getServletContext();
-        // Set mime type
-        String mimeType = context.getMimeType(filePath);
-        if (mimeType == null) {
-            mimeType = "application/octet-stream";
-        }
+        File file = new File(fileMetadata.getFilePath());
+        FileInputStream fileInputStream = new FileInputStream(file);
 
-        response.setContentType(mimeType);
-        response.setContentLength((int) file.length());
-        // Force download
-        String headerKey = "Content-Disposition";
-        String headerValue = String.format("attachment; filename=\"%s\"", fileName);
-        response.setHeader(headerKey, headerValue);
+        try {
+            String fileName = fileMetadata.getTitle() + "." + fileMetadata.getExtension();
+            ServletContext context = getServletContext();
+            // Set mime type
+            String mimeType = context.getMimeType(fileMetadata.getFilePath());
+            if (mimeType == null) {
+                mimeType = "application/octet-stream";
+            }
 
-        OutputStream outputStream = response.getOutputStream();
+            response.setContentType(mimeType);
+            response.setContentLength((int) file.length());
+            // Force download
+            String headerKey = "Content-Disposition";
+            String headerValue = String.format("attachment; filename=\"%s\"", fileName);
+            response.setHeader(headerKey, headerValue);
 
-        byte[] buffer = new byte[4096];
-        int bytesRead;
+            OutputStream outputStream = response.getOutputStream();
 
-        while ((bytesRead = fileInputStream.read(buffer)) != -1) {
-            outputStream.write(buffer, 0, bytesRead);
+            byte[] buffer = new byte[4096];
+            int bytesRead;
+
+            while ((bytesRead = fileInputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+            outputStream.close();
+        } catch(IOException e) {
+            throw new ServiceException(ServiceStatus.FILE_READ_ERROR);
+        } finally {
+            fileInputStream.close();
         }
     }
 }

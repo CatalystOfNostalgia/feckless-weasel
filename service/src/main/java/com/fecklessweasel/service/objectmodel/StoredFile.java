@@ -337,6 +337,10 @@ public class StoredFile {
         return this.extension;
     }
 
+    public String getFilePath() {
+        return FILEPATH_PREFIX + "/" + this.fid;
+    }
+
     /**
      * Look up all files associated with a specific course ID.
      * @param sql The Sql connection to the FecklessWeaselDB
