@@ -32,6 +32,11 @@ public class test_CourseTable {
     public void test_insert_nullConnection() throws Exception {
         CourseTable.insertCourse(null, 9, 9, "CourseName");
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void test_insert_nullName() throws Exception {
+        CourseTable.insertCourse(mockConnection, 9, 9, null);
+    }
     
     @Test
     public void test_insert_valid() throws Exception {
