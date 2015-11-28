@@ -9,8 +9,6 @@
         <body>
         <jsp:include page="/header.jsp"/>
         <%
-<<<<<<< HEAD
-<<<<<<< HEAD
            Tuple<Department, List<Course>> tuple =
            SQLSource.interact(new SQLInteractionInterface<Tuple<Department, List<Course>>>() {
                @Override
@@ -22,23 +20,6 @@
            });
            request.setAttribute("department", tuple.value1);
            request.setAttribute("courses", tuple.value2);
-=======
-=======
->>>>>>> 75680fe... added lookup and paginated lookup functions dealing with Courses, bootstrap styled department page
-           final Department department = DepartmentUtil.findDepartment(request);
-           ArrayList<Course> courses =
-           SQLSource.interact(new SQLInteractionInterface<ArrayList<Course>>() {
-               @Override
-               public ArrayList<Course> run(Connection connection) throws ServiceException {
-                   return (ArrayList<Course>) department.getAllCourses(connection);
-               }
-           });
-           request.setAttribute("department", department);
-           request.setAttribute("courses", courses);
-<<<<<<< HEAD
->>>>>>> 75680fe... added lookup and paginated lookup functions dealing with Courses, bootstrap styled department page
-=======
->>>>>>> 75680fe... added lookup and paginated lookup functions dealing with Courses, bootstrap styled department page
         %>
         <div class="jumbotron">
             <div class="container">
@@ -60,15 +41,7 @@
                 <div class="col-md-6">
                         <h2>Create a Course</h2>
                         <form class="form-inline" action="/servlet/course" method="post" enctype="application/x-www-form-urlencoded">
-<<<<<<< HEAD
-<<<<<<< HEAD
                              <input type="hidden" class="text-large" id="department" name="department" placeholder= "department" value='${department.getID()}'>
-=======
-                             <input type="hidden" class="text-large" id="" name="department" placeholder="get input">
->>>>>>> 75680fe... added lookup and paginated lookup functions dealing with Courses, bootstrap styled department page
-=======
-                             <input type="hidden" class="text-large" id="" name="department" placeholder="get input">
->>>>>>> 75680fe... added lookup and paginated lookup functions dealing with Courses, bootstrap styled department page
                              <input type="text" class="form-control input-lg" id="course" name="course" placeholder="Course Number">
                              <div>
                                 <button type="submit" class="btn btn-default" id="submit" name="submit">Create</button>

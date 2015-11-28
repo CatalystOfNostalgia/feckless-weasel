@@ -171,15 +171,7 @@ public final class Department {
      */
     public List<Course> getAllCoursesPaginated(Connection connection, int offset, int amt)
         throws ServiceException {
-<<<<<<< HEAD
-<<<<<<< HEAD
             return Course.lookUpPaginated(connection, this.getID(), offset, amt);
-=======
-            return Course.lookUpPaginated(connection, 1, offset, amt);
->>>>>>> 75680fe... added lookup and paginated lookup functions dealing with Courses, bootstrap styled department page
-=======
-            return Course.lookUpPaginated(connection, 1, offset, amt);
->>>>>>> 75680fe... added lookup and paginated lookup functions dealing with Courses, bootstrap styled department page
     }
 
     /**
