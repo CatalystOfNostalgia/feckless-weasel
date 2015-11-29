@@ -22,7 +22,7 @@
                 <h1><center>OR</center></h1>
             </div>
             <div class="col-md-4">
-                <center><button type="button" class="btn btn-warning btn-lg">
+                <center><button type="button" class="btn btn-warning btn-lg" onclick="location.href='/editor.jsp?cid=${course.getID()}'">
                     <i class="glyphicon glyphicon-edit"></i>
                     <span>Take notes!</span>
                 </button></center>

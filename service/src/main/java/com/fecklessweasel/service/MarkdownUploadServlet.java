@@ -48,7 +48,7 @@ public class MarkdownUploadServlet extends HttpServlet {
             public StoredFile run(Connection connection)
                     throws ServiceException, SQLException {
 
-                int courseID = OMUtil.parseInt(request.getParameter("class"));
+                int courseID = OMUtil.parseInt(request.getParameter("cid"));
 
                 // Write and store file.
                 return StoredFile.create(connection,
