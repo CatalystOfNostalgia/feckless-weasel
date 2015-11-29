@@ -459,6 +459,13 @@ public final class User {
         }
     }
 
+    /** 
+     * Determine if this user has already favorited the course
+     * @throw ServiceException on database error
+     * @param sql Database Connection
+     * @param cid ID of Course
+     * @return true if user has favorited course, false if not
+     */
     public boolean checkIfFavCourse(Connection sql, int cid) throws ServiceException {
         return FavoritesTable.favoriteCourseExists(sql, this.uid, cid);
     }
@@ -485,6 +492,36 @@ public final class User {
         } catch (SQLException ex) {
             throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
         }
+    }
+
+    /**
+     * Toggle if this user has favorited the input file or not
+     * @throws ServiceException on database error
+     * @param sql Database connection
+     * @param fid ID of the File being favorited
+     * @return True if file is now favorited, False if not
+     */
+    public boolean toggleFavoriteFile(Connection sql, int fid) throws ServiceException {
+        if (FavoritesTable.favoriteFileExists(sql, this.uid, fid)) {
+            //favorite exists, we want to delete the favorite
+            FavoritesTable.deleteFavoriteFile(sql, this.uid, fid);
+            return false;
+        } else {
+            //favorite doesn't exist, add it
+            FavoritesTable.insertFavoriteFile(sql, this.uid, fid);
+            return true;
+        }
+    }
+
+    /** 
+     * Determine if this user has already favorited the file
+     * @throw ServiceException on database error
+     * @param sql Database Connection
+     * @param fid ID of File
+     * @return true if user has favorited file, false if not
+     */
+    public boolean checkIfFavFile(Connection sql, int fid) throws ServiceException {
+        return FavoritesTable.favoriteFileExists(sql, this.uid, fid);
     }
 
     /**

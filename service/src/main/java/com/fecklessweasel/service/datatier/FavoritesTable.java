@@ -149,7 +149,7 @@ public class FavoritesTable {
 
             return (result.getInt(1) == 1 ? true : false);
         } catch (SQLException ex) {
-            throw new ServiceException(ServiceStatus.INVALID_GENDER, ex);
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
         }
     }
 
@@ -171,7 +171,7 @@ public class FavoritesTable {
             preparedStatement.setInt(2, fid);
 
             ResultSet result = preparedStatement.executeQuery();
-            //result.next();
+            result.next();
 
             return (result.getInt(1) == 1 ? true : false);
         } catch (SQLException ex) {
@@ -196,7 +196,7 @@ public class FavoritesTable {
 
             preparedStatement.executeUpdate();
         } catch (SQLException ex) {
-            throw new ServiceException(ServiceStatus.APP_INVALID_EMAIL, ex);
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
         }
     }
 
@@ -215,7 +215,7 @@ public class FavoritesTable {
             preparedStatement.setInt(1, uid);
             preparedStatement.setInt(2, fid);
 
-            ResultSet result = preparedStatement.executeQuery();
+            preparedStatement.executeUpdate();
         } catch (SQLException ex) {
             throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
         }
