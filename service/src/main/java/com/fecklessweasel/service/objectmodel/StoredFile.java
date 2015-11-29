@@ -198,7 +198,6 @@ public class StoredFile {
         OMUtil.nullCheck(course);
         OMUtil.nullCheck(title);
         OMUtil.nullCheck(description);
-        OMUtil.nullCheck(tag);
         OMUtil.nullCheck(extension);
 
         // Check title length.
