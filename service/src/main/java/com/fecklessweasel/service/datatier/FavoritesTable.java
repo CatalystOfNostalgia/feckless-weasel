@@ -81,7 +81,7 @@ public class FavoritesTable {
 
             preparedStatement.close();
         } catch (SQLException ex) {
-            throw new ServiceException(ServiceStatus.APP_INVALID_PASSWORD, ex);
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
         }   
     }
 

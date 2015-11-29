@@ -40,14 +40,16 @@
                 request.setAttribute("department", tuple.value2);
                 request.setAttribute("university", tuple.value3);
                 request.setAttribute("files", tuple.value4);
-                request.setAttribute("toggled", tuple.value5);
+                
+                //already need scriptlet for if statement, so not setting attribute
+                Boolean toggled = tuple.value5;
             %>
             <jsp:include page="/header.jsp"/>
             <div class="jumbotron">
                 <div class="container">
                     <h1>
                         ${department.getAcronym()} ${course.getCourseNum()}
-                        <%if (authSession != null && tuple.value5) {%>
+                        <%if (authSession != null && toggled) {%>
                             <a href="/servlet/course?username=${user.getUsername()}&cid=${course.getID()}"><i class="glyphicon glyphicon-heart"></i></a>
                         <% } else if (authSession != null) { %>
                             <a href="/servlet/course?username=${user.getUsername()}&cid=${course.getID()}"><i class="glyphicon glyphicon-heart-empty"></i></a>

@@ -9,27 +9,38 @@
             <jsp:include page="/header.jsp"/>
             <%
                 final UserSession authSession = UserSessionUtil.resumeSession(request);
-                Tuple3<StoredFile, Course, User> tuple =
-                SQLSource.interact(new SQLInteractionInterface<Tuple3<StoredFile, Course, User>>() {
+                Tuple4<StoredFile, Course, User, Boolean> tuple =
+                SQLSource.interact(new SQLInteractionInterface<Tuple4<StoredFile, Course, User, Boolean>>() {
                     @Override
-                    public Tuple3<StoredFile, Course, User> run(Connection connection) throws ServiceException {
+                    public Tuple4<StoredFile, Course, User, Boolean> run(Connection connection) throws ServiceException {
                         final StoredFile file = StoredFile.lookup(connection,
                             OMUtil.parseInt(request.getParameter("fid")));
                         final Course course = file.lookupCourse(connection);
                         final User user = file.lookupUser(connection);
+                        Boolean toggled = false;
 
-                        return new Tuple3(file, course, user);
+                        toggled = user.checkIfFavFile(connection, OMUtil.parseInt(request.getParameter("fid")));
+
+                        return new Tuple4(file, course, user, toggled);
                     }
                 });
 
                 request.setAttribute("file", tuple.value1);
                 request.setAttribute("course", tuple.value2);
                 request.setAttribute("user", tuple.value3);
+                Boolean toggled = tuple.value4;
             %>
             <jsp:include page="/header.jsp"/>
             <div class="jumbotron">
                 <div class="container">
-                    <h1>${file.getTitle()}</h1>
+                    <h1>
+                        ${file.getTitle()}
+                        <%if (authSession != null && toggled) {%>
+                            <a href="/servlet/file?username=${user.getUsername()}&fid=${file.getID()}"><i class="glyphicon glyphicon-heart"></i></a>
+                        <% } else if (authSession != null) { %>
+                            <a href="/servlet/file?username=${user.getUsername()}&fid=${file.getID()}"><i class="glyphicon glyphicon-heart-empty"></i></a>
+                        <% } %>
+                    </h1>
                     <h2>
                         Created ${file.getCreationDate()}
                         By <a href="/account?user=${user.getUsername()}">${user.getUsername()}</a>.
