@@ -38,3 +38,9 @@ SOURCE etc/db_schema_course_table.sql;
 
 /* Create FileMetadata Table */
 SOURCE etc/db_schema_filemetadata_table.sql;
+
+/* Create FavoriteFiles Table */
+SOURCE etc/db_schema_favorite_file_table.sql;
+
+/* Create FavoriteCourses Table */
+SOURCE etc/db_schema_favorite_course_table.sql;

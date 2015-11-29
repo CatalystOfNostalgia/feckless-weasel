@@ -3,6 +3,8 @@ package com.fecklessweasel.service.objectmodel;
 import java.sql.Connection;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -16,6 +18,7 @@ import java.sql.SQLException;
 import com.fecklessweasel.service.datatier.UserTable;
 import com.fecklessweasel.service.datatier.UserRoleTable;
 import com.fecklessweasel.service.datatier.UserHasRoleTable;
+import com.fecklessweasel.service.datatier.FavoritesTable;
 
 /**
  * User API, used for all operations pertaining to a user and his or her
@@ -411,6 +414,54 @@ public final class User {
 
         // Remove Role from user in database.
         UserHasRoleTable.deleteUserHasRole(connection, this.uid, role);
+    }
+
+    /**
+     * Return all Courses that the User has favorited
+     * @throws ServiceException if there is a database problem
+     * @param connection The database connection
+     * @return List of All Courses the User has Favorited
+     */
+    public Iterable<Course> getFavoriteCourses(Connection connection) throws ServiceException {
+
+        OMUtil.sqlCheck(connection);
+
+        ResultSet results = FavoritesTable.getFavoriteCourses(connection, this.uid);
+        ArrayList<Course> courses = new ArrayList<Course>();
+        try {
+            while (results.next()) {
+                courses.add(Course.lookupById(connection, results.getInt("cid")));
+            }
+
+            results.close();
+            return courses;
+        } catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        }
+    }
+
+    /**
+     * Return all Files that the User has favorited
+     * @throws ServiceException if there is a database problem
+     * @param connection The database connection
+     * @return List of All Files the User has Favorited
+     */
+    public Iterable<StoredFile> getFavoriteFiles(Connection connection) throws ServiceException {
+
+        OMUtil.sqlCheck(connection);
+
+        ResultSet results = FavoritesTable.getFavoriteFiles(connection, this.uid);
+        ArrayList<StoredFile> files = new ArrayList<StoredFile>();
+        try {
+            while (results.next()) {
+                files.add(StoredFile.lookup(connection, results.getInt("fid")));
+            }
+
+            results.close();
+            return files;
+        } catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        }
     }
 
     /**
