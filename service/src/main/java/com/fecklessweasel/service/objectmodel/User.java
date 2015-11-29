@@ -441,6 +441,29 @@ public final class User {
     }
 
     /**
+     * Toggle if this user has favorited the input course or not
+     * @throws ServiceException on database error
+     * @param sql Database connection
+     * @param cid ID of the course being favorited
+     * @return True if Course is now favorited, False if not
+     */
+    public boolean toggleFavoriteCourse(Connection sql, int cid) throws ServiceException {
+        if (FavoritesTable.favoriteCourseExists(sql, this.uid, cid)) {
+            //favorite exists, we want to delete the favorite
+            FavoritesTable.deleteFavoriteCourse(sql, this.uid, cid);
+            return false;
+        } else {
+            //favorite doesn't exist, add it
+            FavoritesTable.insertFavoriteCourse(sql, this.uid, cid);
+            return true;
+        }
+    }
+
+    public boolean checkIfFavCourse(Connection sql, int cid) throws ServiceException {
+        return FavoritesTable.favoriteCourseExists(sql, this.uid, cid);
+    }
+
+    /**
      * Return all Files that the User has favorited
      * @throws ServiceException if there is a database problem
      * @param connection The database connection

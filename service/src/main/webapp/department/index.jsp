@@ -41,6 +41,7 @@
                 <div class="col-md-6">
                         <h2>Create a Course</h2>
                         <form class="form-inline" action="/servlet/course" method="post" enctype="application/x-www-form-urlencoded">
+                             <input type="hidden" class = "text-large" id="method" name="method" value="handleCourseCreate">
                              <input type="hidden" class="text-large" id="department" name="department" placeholder= "department" value='${department.getID()}'>
                              <input type="text" class="form-control input-lg" id="course" name="course" placeholder="Course Number">
                              <div>

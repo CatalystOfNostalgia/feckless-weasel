@@ -17,159 +17,207 @@ import com.fecklessweasel.service.objectmodel.ServiceStatus;
  */
 public class FavoritesTable {
 
-	public static String INSERT_FAV_FILE = 
-		"INSERT INTO favoritefile (uid, fid) VALUES (?,?)";
+    public static String INSERT_FAV_FILE = 
+        "INSERT INTO favoritefile (uid, fid) VALUES (?,?)";
 
-	public static String INSERT_FAV_COURSE =
-		"INSERT INTO favoritecourse (uid, cid) VALUE (?,?)";
+    public static String INSERT_FAV_COURSE =
+        "INSERT INTO favoritecourse (uid, cid) VALUE (?,?)";
 
-	public static String SELECT_FILES = 
-		"SELECT * FROM favoritefile WHERE uid=?";
+    public static String SELECT_FILES = 
+        "SELECT * FROM favoritefile WHERE uid=?";
 
-	public static String SELECT_COURSES =
-		"SELECT * FROM favoritecourse WHERE uid=?";
+    public static String SELECT_COURSES =
+        "SELECT * FROM favoritecourse WHERE uid=?";
 
-	public static String FILE_FAV_EXISTS = 
-		"SELECT EXISTS(SELECT 1 FROM favoritefile WHERE uid=? AND fid=?)";
+    public static String FILE_FAV_EXISTS = 
+        "SELECT EXISTS(SELECT 1 FROM favoritefile WHERE uid=? AND fid=?)";
 
-	public static String COURSE_FAV_EXISTS =
-		"SELECT EXISTS(SELECT 1 FROM favoritecourse WHERE uid=? AND cid=?)";
+    public static String COURSE_FAV_EXISTS =
+        "SELECT EXISTS(SELECT 1 FROM favoritecourse WHERE uid=? AND cid=?)";
 
-	/**
-	 * Insert a favorite course into the FavoriteCourse table
-	 * @param conn MySQL connection
-	 * @param uid The id of the user who favorited
-	 * @param cid the id of the Course that was favorited
-	 */
-	public static void insertFavoriteCourse (Connection conn, int uid, int cid) 
-		throws ServiceException {
+    public static String FILE_FAV_DELETE =
+        "DELETE FROM favoritefile WHERE uid=? AND fid=?";
 
-		CodeContract.assertNotNull(conn, "conn");
-		try {
-			PreparedStatement preparedStatement = conn.prepareStatement(INSERT_FAV_COURSE);
+    public static String COURSE_FAV_DELETE =
+        "DELETE FROM favoritecourse WHERE uid=? and cid=?";
+
+    /**
+     * Insert a favorite course into the FavoriteCourse table
+     * @param conn MySQL connection
+     * @param uid The id of the user who favorited
+     * @param cid the id of the Course that was favorited
+     */
+    public static void insertFavoriteCourse (Connection conn, int uid, int cid) 
+        throws ServiceException {
+
+        CodeContract.assertNotNull(conn, "conn");
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(INSERT_FAV_COURSE);
             preparedStatement.setInt(1, uid);
             preparedStatement.setInt(2, cid);
             preparedStatement.executeUpdate();
 
             preparedStatement.close();
-		} catch (SQLException ex) {
+        } catch (SQLException ex) {
             throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
         }
-	}
+    }
 
-	/**
-	 * Insert a favorite file into the FavoriteFile table
-	 * @param conn MySQL connection
-	 * @param uid The id of the user who favorited
-	 * @param fid the id of the File that was favorited
-	 */
-	public static void insertFavoriteFile(Connection conn, int uid, int fid)
-		throws ServiceException {
+    /**
+     * Insert a favorite file into the FavoriteFile table
+     * @param conn MySQL connection
+     * @param uid The id of the user who favorited
+     * @param fid the id of the File that was favorited
+     */
+    public static void insertFavoriteFile(Connection conn, int uid, int fid)
+        throws ServiceException {
 
-		CodeContract.assertNotNull(conn, "conn");
-		try {
-			PreparedStatement preparedStatement = conn.prepareStatement(INSERT_FAV_FILE);
-			preparedStatement.setInt(1, uid);
+        CodeContract.assertNotNull(conn, "conn");
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(INSERT_FAV_FILE);
+            preparedStatement.setInt(1, uid);
             preparedStatement.setInt(2, fid);
             preparedStatement.executeUpdate();
 
-			preparedStatement.close();
-		} catch (SQLException ex) {
-			throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
-		}	
-	}
+            preparedStatement.close();
+        } catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.APP_INVALID_PASSWORD, ex);
+        }   
+    }
 
-	/**
-	 * Get all of a users Favorite Courses
-	 * @param conn MySQL connection
-	 * @param uid The ID of the user who favorited the courses
-	 * @return a ResultSet of all (uid, cid) with the passed in uid
-	 */
-	public static ResultSet getFavoriteCourses(Connection conn, int uid)
-		throws ServiceException {
+    /**
+     * Get all of a users Favorite Courses
+     * @param conn MySQL connection
+     * @param uid The ID of the user who favorited the courses
+     * @return a ResultSet of all (uid, cid) with the passed in uid
+     */
+    public static ResultSet getFavoriteCourses(Connection conn, int uid)
+        throws ServiceException {
 
-		CodeContract.assertNotNull(conn, "conn");
+        CodeContract.assertNotNull(conn, "conn");
 
-		try {
-			PreparedStatement preparedStatement = conn.prepareStatement(SELECT_COURSES);
-			preparedStatement.setInt(1, uid);
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(SELECT_COURSES);
+            preparedStatement.setInt(1, uid);
 
-			return preparedStatement.executeQuery();
-		} catch (SQLException ex) {
-			throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
-		}
-	}
+            return preparedStatement.executeQuery();
+        } catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        }
+    }
 
-	/**
-	 * Get all of a users Favorite Files
-	 * @param conn MySQL connection
-	 * @param uid The ID of the user who favorited the files
-	 * @return a ResultSet of all (uid, fid) with the passed in uid
-	 */
-	public static ResultSet getFavoriteFiles(Connection conn, int uid)
-		throws ServiceException {
+    /**
+     * Get all of a users Favorite Files
+     * @param conn MySQL connection
+     * @param uid The ID of the user who favorited the files
+     * @return a ResultSet of all (uid, fid) with the passed in uid
+     */
+    public static ResultSet getFavoriteFiles(Connection conn, int uid)
+        throws ServiceException {
 
-		CodeContract.assertNotNull(conn, "conn");
+        CodeContract.assertNotNull(conn, "conn");
 
-		try {
-			PreparedStatement preparedStatement = conn.prepareStatement(SELECT_FILES);
-			preparedStatement.setInt(1, uid);
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(SELECT_FILES);
+            preparedStatement.setInt(1, uid);
 
-			return preparedStatement.executeQuery();
-		} catch (SQLException ex) {
-			throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
-		}
-	}
+            return preparedStatement.executeQuery();
+        } catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        }
+    }
 
-	/**
-	 * Returns True if the user has already favorited the course
-	 * @param conn MySQL Connection
-	 * @param uid User ID favoriting
-	 * @param cid Course ID being favorited
-	 * @return if row where (uid, cid) exists in table
-	 */
-	public static boolean favoriteCourseExists(Connection conn, int uid, int cid) 
-		throws ServiceException {
+    /**
+     * Returns True if the user has already favorited the course
+     * @param conn MySQL Connection
+     * @param uid User ID favoriting
+     * @param cid Course ID being favorited
+     * @return if row where (uid, cid) exists in table
+     */
+    public static boolean favoriteCourseExists(Connection conn, int uid, int cid) 
+        throws ServiceException {
 
-		CodeContract.assertNotNull(conn, "conn");
+        CodeContract.assertNotNull(conn, "conn");
 
-		try {
-			PreparedStatement preparedStatement = conn.prepareStatement(COURSE_FAV_EXISTS);
-			preparedStatement.setInt(1, uid);
-			preparedStatement.setInt(2, cid);
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(COURSE_FAV_EXISTS);
+            preparedStatement.setInt(1, uid);
+            preparedStatement.setInt(2, cid);
 
-			ResultSet result = preparedStatement.executeQuery();
-			result.next();
+            ResultSet result = preparedStatement.executeQuery();
+            result.next();
 
-			return (result.getInt(1) == 1 ? true : false);
-		} catch (SQLException ex) {
-			throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
-		}
-	}
+            return (result.getInt(1) == 1 ? true : false);
+        } catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.INVALID_GENDER, ex);
+        }
+    }
 
-		/**
-	 * Returns True if the user has already favorited the file
-	 * @param conn MySQL Connection
-	 * @param uid User ID favoriting
-	 * @param fid File ID being favorited
-	 * @return if row where (uid, fid) exists in table
-	 */
-	public static boolean favoriteFileExists(Connection conn, int uid, int fid) 
-		throws ServiceException {
+        /**
+     * Returns True if the user has already favorited the file
+     * @param conn MySQL Connection
+     * @param uid User ID favoriting
+     * @param fid File ID being favorited
+     * @return if row where (uid, fid) exists in table
+     */
+    public static boolean favoriteFileExists(Connection conn, int uid, int fid) 
+        throws ServiceException {
 
-		CodeContract.assertNotNull(conn, "conn");
+        CodeContract.assertNotNull(conn, "conn");
 
-		try {
-			PreparedStatement preparedStatement = conn.prepareStatement(FILE_FAV_EXISTS);
-			preparedStatement.setInt(1, uid);
-			preparedStatement.setInt(2, fid);
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(FILE_FAV_EXISTS);
+            preparedStatement.setInt(1, uid);
+            preparedStatement.setInt(2, fid);
 
-			ResultSet result = preparedStatement.executeQuery();
-			result.next();
+            ResultSet result = preparedStatement.executeQuery();
+            //result.next();
 
-			return (result.getInt(1) == 1 ? true : false);
-		} catch (SQLException ex) {
-			throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
-		}
-	}
+            return (result.getInt(1) == 1 ? true : false);
+        } catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        }
+    }
+
+    /**
+     * Delete the specified user,course row from the favorite course table
+     * @param conn Database conneciton
+     * @param uid User ID
+     * @param cid Course ID
+     */
+    public static void deleteFavoriteCourse(Connection conn, int uid, int cid) 
+        throws ServiceException {
+
+        CodeContract.assertNotNull(conn, "conn");
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(COURSE_FAV_DELETE);
+            preparedStatement.setInt(1, uid);
+            preparedStatement.setInt(2, cid);
+
+            preparedStatement.executeUpdate();
+        } catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.APP_INVALID_EMAIL, ex);
+        }
+    }
+
+    /**
+     * Delete the specified user,file row from the favorite file table
+     * @param conn Database conneciton
+     * @param uid User ID
+     * @param fid File ID
+     */
+    public static void deleteFavoriteFile(Connection conn, int uid, int fid) 
+        throws ServiceException {
+
+        CodeContract.assertNotNull(conn, "conn");
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(FILE_FAV_DELETE);
+            preparedStatement.setInt(1, uid);
+            preparedStatement.setInt(2, fid);
+
+            ResultSet result = preparedStatement.executeQuery();
+        } catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        }
+    }
 }
