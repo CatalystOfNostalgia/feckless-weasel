@@ -260,6 +260,17 @@ public class StoredFile {
     }
 
     /**
+     * Updates the markdown file's text instead of creating a new file in the database.
+     * @param fid The file id of the file being saved to.
+     * @param markdownText The text of the file.
+     */
+    public static void updateMarkdownFile(int fid, String markdownText) throws ServiceException {
+        if (!saveFile(markdownText, createFilename(fid))) {
+            throw new ServiceException(ServiceStatus.SERVER_UPLOAD_ERROR);
+        }
+    }
+
+    /**
      * Looks up the user who uploaded the file
      * @return The user who uploaded the file
      */
@@ -338,8 +349,12 @@ public class StoredFile {
         return this.extension;
     }
 
+    /**
+     * Returns this file's path.
+     * @return The file's path.
+     */
     public String getFilePath() {
-        return FILEPATH_PREFIX + "/" + this.fid;
+        return FILEPATH_PREFIX + this.fid;
     }
 
     /**
