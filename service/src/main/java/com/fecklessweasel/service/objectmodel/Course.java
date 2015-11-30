@@ -1,21 +1,22 @@
 package com.fecklessweasel.service.objectmodel;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import com.fecklessweasel.service.datatier.CourseTable;
 
 /**
  * Stores all information about a Course at a university.
  * @author Elliot Essman
+ * @author Christian Gunderman
  */
-public class Course {
+public final class Course {
 
     /** ID in the database table. */
     private int id;
     /** Department this Course is in. */
-    private Department department;
-    /** University this Course is in. */
-    private University university;
+    private int did;
     /** Course number. */
     private int courseNum;
 
@@ -27,10 +28,9 @@ public class Course {
     /**
      * Private constructor. Should be created by the database or create method.
      */
-    private Course(int id, Department department, int courseNum) {
+    private Course(int id, int did, int courseNum) {
         this.id = id;
-        this.university = department.getUniversity();
-        this.department = department;
+        this.did = did;
         this.courseNum = courseNum;
     }
 
@@ -41,41 +41,57 @@ public class Course {
      * @param Coursenum The number of this Course.
      * @return A Course object.
      */
-    public static Course create(Connection conn, Department department, int courseNum) throws ServiceException {
+    public static Course create(Connection conn, Department department,
+                                int courseNum) throws ServiceException {
         OMUtil.sqlCheck(conn);
         OMUtil.nullCheck(department);
         OMUtil.nullCheck(courseNum);
-        University university = department.getUniversity();
 
         if (courseNum > NUM_MAX || courseNum < NUM_MIN) {
             throw new ServiceException(ServiceStatus.APP_INVALID_COURSE_NUMBER);
         }
-        int id = CourseTable.insertCourse(conn, university.getID(), department.getID(), courseNum);
-        return new Course(id, department, courseNum);
+
+        int id = CourseTable.insertCourse(conn, department.getID(), courseNum);
+        return new Course(id, department.getID(), courseNum);
     }
 
     /**
-     * Gets the database ID of the Course.
-     * @return The database ID of the Course.
+     * Looks up a course by it's unique ID.
+     * @param conn The MySQL database connection.
+     * @param cid The unique course ID.
+     * @throws ServiceException Thrown if error occurs or course does not exist.
+     * @return The Course object.
      */
-    protected int getID() {
-        return this.id;
+    public static Course lookupById(Connection conn, int cid)
+        throws ServiceException {
+
+        ResultSet result = CourseTable.lookupCourse(conn, cid);
+
+        try {
+            if (!result.next()) {
+                throw new ServiceException(ServiceStatus.APP_COURSE_NOT_EXIST);
+            }
+
+            Course course = new Course(result.getInt("id"),
+                                       result.getInt("deptid"),
+                                       result.getInt("courseNumber"));
+
+            result.close();
+            return course;
+        } catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        }                              
     }
 
     /**
      * Gets the department of the Course.
      * @return The deparmtent of the Course.
      */
-    public Department getDepartment() {
-        return this.department;
-    }
+    public Department lookupDepartment(Connection conn)
+        throws ServiceException {
+        OMUtil.sqlCheck(conn);
 
-    /**
-     * Gets the university of the Course.
-     * @return The university of the Course.
-     */
-    public University getUniversity() {
-        return this.university;
+        return Department.lookup(conn, this.did);
     }
 
     /**
@@ -84,5 +100,13 @@ public class Course {
      */
     public int getCourseNum() {
         return this.courseNum;
+    }
+
+    /**
+     * Gets the database ID of the Course.
+     * @return The database ID of the Course.
+     */
+    int getID() {
+        return this.id;
     }
 }

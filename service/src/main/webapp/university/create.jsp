@@ -6,7 +6,7 @@
         <link href="${pageContext.request.contextPath}/assets/css/base.css" rel="stylesheet" type="text/css">
     </head>
     <body class="four-column">
-        <jsp:include page="header.jsp"/>
+        <jsp:include page="/header.jsp"/>
         <div class="column-beta">
             <h1>Create a University</h1>
             <form class="form-default" action="/servlet/university" method="post" enctype="application/x-www-form-urlencoded">

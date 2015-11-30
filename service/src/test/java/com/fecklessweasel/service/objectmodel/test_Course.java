@@ -24,14 +24,4 @@ public class test_Course {
         this.mockConnection = mock(Connection.class);
         this.mockDepartment = mock(Department.class);
     }
-
-    @Test(expected = ServiceException.class)
-    public void test_create_nullConnection() throws Exception {
-        Course.create(null, this.mockDepartment, 101);
-    }
-
-    public void test_create_nullDepartment() throws Exception {
-        Course.create(this.mockConnection, null, 101);
-    }
-
 }

@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 import java.sql.SQLIntegrityConstraintViolationException;
 
@@ -17,8 +18,13 @@ import com.fecklessweasel.service.objectmodel.ServiceStatus;
  */
 public class DepartmentTable {
 
-    private static String INSERT_ROW = "insert into Department (univid, deptName, acronym) values (?,?,?)";
+    public final static String INSERT_ROW = "insert into Department (univid, deptName, acronym) values (?,?,?)";
 
+    public final static String LOOKUP_ROW
+        = "SELECT * FROM Department D WHERE D.id=?";
+
+    public final static String SELECT_PAGINATED
+        = "SELECT * FROM Department WHERE univid=? ORDER BY deptName LIMIT ?,?";
     /**
      * Insert a department into the table.
      * @param conn A connection to the database.
@@ -45,8 +51,55 @@ public class DepartmentTable {
             int id = result.getInt(1);
             preparedStatement.close();
             return id;
-        } catch (SQLIntegrityConstraintViolationException ex){
+        } catch (SQLIntegrityConstraintViolationException ex) {
             throw new ServiceException(ServiceStatus.APP_DEPT_TAKEN, ex);
+        } catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        }
+    }
+    /**
+     * Looks up the department using its unique identifier.
+     * @param connection Connection to the MySQL database.
+     * @param did The department's unique identifier.
+     * @return A ResultSet containing the department tuple.
+     */
+    public static ResultSet lookupDepartment(Connection connection, int did)
+        throws ServiceException {
+
+        CodeContract.assertNotNull(connection, "connection");
+
+        try {
+            PreparedStatement lookupDeptQuery =
+                connection.prepareStatement(LOOKUP_ROW);
+            lookupDeptQuery.setInt(1, did);
+
+            return lookupDeptQuery.executeQuery();
+        } catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        }
+    }
+
+    /**
+     * Lookup all Departments in a univeristy from offset to offset + amt
+     * @param connection MySQL database connection.\
+     * @param univid Unique ID of University the depts belong to
+     * @param offset skip the first x amount of rows, where x = offset
+     * @param amt the amount of rows to return
+     * @throws ServiceException Thrown upon error
+     * @return A result set containing amt number of rows starting after the first offset rows
+     */
+    public static ResultSet lookUpPaginated(Connection connection, int univid, int offset, int amt)
+            throws ServiceException {
+
+        CodeContract.assertNotNull(connection, "connection");
+
+        try {
+            PreparedStatement lookupStatement = connection.prepareStatement(SELECT_PAGINATED);
+            lookupStatement.setInt(1, univid);
+            lookupStatement.setInt(2, offset);
+            lookupStatement.setInt(3, amt);
+
+            return lookupStatement.executeQuery();
         } catch (SQLException ex) {
             throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
         }

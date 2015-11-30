@@ -157,7 +157,7 @@ function Install-MySQL-If-Needed()
     else
     {
         Write-Output "Installing MySQL database system..."
-        choco install --yes --force mysql
+        choco install --yes --force -version 5.6.26 mysql
         Set-Service MySQL -StartupType Manual
         Stop-Service MySQL
         Reload-Path

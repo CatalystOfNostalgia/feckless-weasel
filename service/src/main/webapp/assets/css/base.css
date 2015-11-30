@@ -40,6 +40,10 @@ button.button-extra-large{
     height: 10%;
 }
 
+li{
+    font: 20px Verdana, sans-serif;
+}
+
 a{
     font: 20px Verdana, sans-serif;
 }
@@ -55,6 +59,10 @@ h2{
 .header{
     background-color: #FFAF00;
     padding: 10px;
+}
+
+.logo-default{
+    max-height: 70px;
 }
 
 .column-left{

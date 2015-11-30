@@ -19,11 +19,19 @@ import com.fecklessweasel.service.objectmodel.ServiceStatus;
  * Exhaustive validation is performed by the object model.
  * @author Christian Gunderman
  */
-public abstract class UserTable {
+public final class UserTable {
     /** Create user query. */
     public static final String INSERT_USER_QUERY =
         "INSERT INTO User (user, pass, join_date, email)" +
         " VALUES (?,?,?,?)";
+
+    /** Set user password query. */
+    public static final String UPDATE_USER_PASSWORD_QUERY =
+        "UPDATE User SET pass=? WHERE uid=?";
+
+    /** Set user email query. */
+    public static final String UPDATE_USER_EMAIL_QUERY =
+        "UPDATE User SET email=? WHERE uid=?";
 
     /** Lookup user query. */
     public static final String LOOKUP_USER_QUERY =
@@ -35,8 +43,14 @@ public abstract class UserTable {
         "DELETE FROM User WHERE user=?";
 
     /** Lookup user with uid*/
-    public static final String LOOKUP_USERID_QUERY = 
-        "SELECT * FROM User U WHERE U.uid=?";
+    public static final String LOOKUP_USERID_QUERY =
+        "SELECT * FROM User U, UserRole R, UserHasRole H WHERE U.uid=?" +
+        " AND U.uid=H.uid AND H.rid=R.rid";
+
+    /**
+     * Private constructor to prevent instantiation.
+     */
+    private UserTable() { }
 
     /**
      * Inserts a user into the MySQL table with some minimal validation.
@@ -44,15 +58,15 @@ public abstract class UserTable {
      * occurs in the object model.
      * @param connection Connection to the database from SQLSource.
      * @param user The username.
-     * @param pass The password.
+     * @param pass The password hashes.
      * @param joinDate The date that the user joined.
      * @param email The user's email.
      */
     public static int insertUser(Connection connection,
-                                  String user,
-                                  String pass,
-                                  Date joinDate,
-                                  InternetAddress email)
+                                 String user,
+                                 String pass,
+                                 Date joinDate,
+                                 InternetAddress email)
         throws ServiceException {
 
         // Check basic checks for clean arguments.
@@ -92,6 +106,76 @@ public abstract class UserTable {
     }
 
     /**
+     * Updates the password for the user with the specified ID.
+     * @param connection A connection from SQLSource.
+     * @param uid The user ID.
+     * @param newPass The new password hash for the user.
+     * @throws ServiceException Thrown if unable to update user's password,
+     * such as if user does not exist.
+     */
+    public static void updatePassword(Connection connection,
+                                      int uid,
+                                      String newPass)
+        throws ServiceException {
+
+        // Check basic checks for clean arguments.
+        CodeContract.assertNotNull(connection, "connection");
+        CodeContract.assertNotNullOrEmptyOrWhitespace(newPass, "pass");
+
+        try {
+            PreparedStatement updateStatement
+                = connection.prepareStatement(UPDATE_USER_PASSWORD_QUERY);
+
+            updateStatement.setString(1, newPass);
+            updateStatement.setInt(2, uid);
+
+            if (updateStatement.executeUpdate() != 1) {
+                updateStatement.close();
+                throw new ServiceException(ServiceStatus.APP_USER_NOT_EXIST);
+            }
+
+            updateStatement.close();
+        } catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        }
+    }
+
+    /**
+     * Updates the email for the user with the specified ID.
+     * @param connection A connection from SQLSource.
+     * @param uid The user ID.
+     * @param newEmail The new email for the user.
+     * @throws ServiceException Thrown if unable to update user's password,
+     * such as if user does not exist.
+     */
+    public static void updateEmail(Connection connection,
+                                   int uid,
+                                   InternetAddress newEmail)
+        throws ServiceException {
+
+        // Check basic checks for clean arguments.
+        CodeContract.assertNotNull(connection, "connection");
+        CodeContract.assertNotNull(newEmail, "newEmail");
+
+        try {
+            PreparedStatement updateStatement
+                = connection.prepareStatement(UPDATE_USER_EMAIL_QUERY);
+
+            updateStatement.setString(1, newEmail.getAddress());
+            updateStatement.setInt(2, uid);
+
+            if (updateStatement.executeUpdate() != 1) {
+                updateStatement.close();
+                throw new ServiceException(ServiceStatus.APP_USER_NOT_EXIST);
+            }
+
+            updateStatement.close();
+        } catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        }
+    }
+
+    /**
      * Looks up a user in the database and returns the associated ResultSet with
      * with additional rows for each security UserRole the user has.
      * @throws ServiceException If a SQL error occurs.
@@ -100,7 +184,8 @@ public abstract class UserTable {
      * @return user A ResultSet containing the user. Should contain only a
      * single row.
      */
-    public static ResultSet lookupUserWithRoles(Connection connection, String user)
+    public static ResultSet lookupUserWithRoles(Connection connection,
+                                                String user)
         throws ServiceException {
 
         CodeContract.assertNotNull(connection, "connection");
@@ -146,19 +231,24 @@ public abstract class UserTable {
         }
     }
 
-    public static ResultSet lookupUserWithId(Connection connection, int uid) 
+    /**
+     * Looks up a user with their roles by their unique ID.
+     * @param connection A connection from SQLSource.
+     * @param uid The user's unique ID.
+     */
+    public static ResultSet lookupUserWithRolesById(Connection connection, int uid) 
         throws ServiceException{
 
         CodeContract.assertNotNull(connection, "connection");
 
         try {
-            PreparedStatement insertStatement 
+            PreparedStatement insertStatement
                 = connection.prepareStatement(LOOKUP_USERID_QUERY);
             insertStatement.setInt(1, uid);
 
-            //Execute and check that insertion was successful
+            // Execute and check that insertion was successful
             return insertStatement.executeQuery();
-        } catch (SQLException ex) {
+        } catch (SQLException ex) {                
             throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
         }
     }

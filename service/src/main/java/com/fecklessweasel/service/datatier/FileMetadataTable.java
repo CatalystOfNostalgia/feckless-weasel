@@ -20,8 +20,8 @@ import com.fecklessweasel.service.objectmodel.ServiceStatus;
 public abstract class FileMetadataTable{
 
     public static final String INSERT_FILE_QUERY =
-        "INSERT INTO FileMetadata (uid, cid, creation_date)" +
-        " VALUES (?,?,?)";
+        "INSERT INTO FileMetadata (uid, cid, creation_date, title, description)" +
+        " VALUES (?,?,?,?,?)";
 
     public static final String LOOKUP_FILE_QUERY =
         "SELECT * FROM Filemetadata F WHERE F.fid=?";
@@ -33,7 +33,7 @@ public abstract class FileMetadataTable{
         "SELECT * FROM Filemetadata F WHERE F.cid=?";
 
     public static final String DELETE_FILE_QUERY =
-        "DELETE FROM FileMetadata WHERE fid=";
+        "DELETE FROM FileMetadata WHERE fid=?";
 
     /**
      * Inserts a file into the corresponding MySQL table. returns the generated fid
@@ -41,16 +41,23 @@ public abstract class FileMetadataTable{
      * @param user An ID number that corresponds the user that uploaded the file
      * @param course The ID of the course
      * @param creationDate The user-specified creation date for the file.
+     * @param title The file title.
+     * @param description The file description.
      * @return fid Returns the fid of the inserted file. This is a files unique identifier
      */
     public static int insertFileData(Connection connection,
                                      int user,
                                      int course,
+                                     String title,
+                                     String description,
                                      Date creationDate)
         throws ServiceException {
-        //ensure parameters are clean
+
+        // Ensure parameters are clean.
         CodeContract.assertNotNull(connection, "connection");
         CodeContract.assertNotNull(creationDate, "creationDate");
+        CodeContract.assertNotNullOrEmptyOrWhitespace(title, "title");
+        CodeContract.assertNotNullOrEmptyOrWhitespace(description, "description");
 
         try {
             PreparedStatement insertStatement = connection.prepareStatement(
@@ -58,6 +65,8 @@ public abstract class FileMetadataTable{
             insertStatement.setInt(1, user);
             insertStatement.setInt(2, course);
             insertStatement.setDate(3, new java.sql.Date(creationDate.getTime()));
+            insertStatement.setString(4, title);
+            insertStatement.setString(5, description);
 
             insertStatement.execute();
 
@@ -144,6 +153,9 @@ public abstract class FileMetadataTable{
      */
     public static void deleteFile(Connection connection, int fid)
         throws ServiceException {
+
+        CodeContract.assertNotNull(connection, "connection");
+
         try {
             PreparedStatement deleteStatement
                 = connection.prepareStatement(DELETE_FILE_QUERY);
