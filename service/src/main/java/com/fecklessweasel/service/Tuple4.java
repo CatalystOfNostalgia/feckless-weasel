@@ -7,7 +7,7 @@ package com.fecklessweasel.service;
  * @param <TValue3> The third value's type.
  * @author Christian Gunderman
  */
-public final class Tuple4<TValue1, TValue2, TValue3, TValue4> extends Tuple3 {
+public class Tuple4<TValue1, TValue2, TValue3, TValue4> extends Tuple3 {
     /** The fourth value. */
     public final TValue4 value4;
 

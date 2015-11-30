@@ -10,35 +10,56 @@
             <jsp:include page="/header.jsp"/>
             <%
                 final UserSession authSession = UserSessionUtil.resumeSession(request);
-                Tuple4<Course, Department, University, Iterable<StoredFile>> tuple =
-                SQLSource.interact(new SQLInteractionInterface<Tuple4<Course, Department, University, Iterable<StoredFile>>>() {
+
+                Tuple5<Course, Department, University, Iterable<StoredFile>, Boolean> tuple =
+                SQLSource.interact(new SQLInteractionInterface<Tuple5<Course, Department, University, Iterable<StoredFile>, Boolean>>() {
                     @Override
-                    public Tuple4<Course, Department, University, Iterable<StoredFile>> run(Connection connection)
+                    public Tuple5<Course, Department, University, Iterable<StoredFile>, Boolean> run(Connection connection)
                         throws ServiceException {
                         final Course course = Course.lookupById(connection,
                             OMUtil.parseInt(request.getParameter("cid")));
                         final Department department = course.lookupDepartment(connection);
                         final University university = department.lookupUniversity(connection);
                         final Iterable<StoredFile> files = StoredFile.lookupCourseFiles(connection, course);
+                        Boolean toggled = false;
 
-                        return new Tuple4(course, department, university, files);
+                        if(authSession != null) {
+                            User user = authSession.getUser();
+                            toggled = user.checkIfFavCourse(connection, OMUtil.parseInt(request.getParameter("cid")));
+                        }
+
+                        return new Tuple5(course, department, university, files, toggled);
                     }
                 });
 
+                if (authSession != null) {
+                    User user = authSession.getUser();
+                    request.setAttribute("user", user);
+                }
                 request.setAttribute("course", tuple.value1);
                 request.setAttribute("department", tuple.value2);
                 request.setAttribute("university", tuple.value3);
                 request.setAttribute("files", tuple.value4);
+                
+                //already need scriptlet for if statement, so not setting attribute
+                Boolean toggled = tuple.value5;
             %>
             <jsp:include page="/header.jsp"/>
             <div class="jumbotron">
                 <div class="container">
-                    <h1>${department.getAcronym()} ${course.getCourseNum()}</h1>
-                    <h2>
-                        <a href="/department?did=${department.getID()}">${department.getDeptName()}</a>
-                        at
-                        <a href="/university?uid=${university.getID()}" title="${university.getLongName()}">${university.getAcronym()}</a>
-                    </h2>
+                    <h1>
+                        ${department.getAcronym()} ${course.getCourseNum()}
+                        <%if (authSession != null && toggled) {%>
+                            <a href="/servlet/course?username=${user.getUsername()}&cid=${course.getID()}"><i class="glyphicon glyphicon-heart"></i></a>
+                        <% } else if (authSession != null) { %>
+                            <a href="/servlet/course?username=${user.getUsername()}&cid=${course.getID()}"><i class="glyphicon glyphicon-heart-empty"></i></a>
+                        <% } %>
+                    </h1>
+                <h2>
+                    <a href="/department?did=${department.getID()}">${department.getDeptName()}</a>
+                    at
+                    <a href="/university?uid=${university.getID()}" title="${university.getLongName()}">${university.getAcronym()}</a>
+                </h2>
                 </div>
             </div>
             <%if (request.getParameter("uploadSuccess") == null) {} else if (request.getParameter("uploadSuccess").equals("True")) {%>
