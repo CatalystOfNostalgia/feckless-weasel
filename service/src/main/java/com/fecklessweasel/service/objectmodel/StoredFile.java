@@ -522,10 +522,9 @@ public class StoredFile {
             }
         });
 
-//        if (!file.getExtension().equals("md")) {
-//            // TODO: Change this to better ServiceStatus
-//            throw new ServiceException(ServiceStatus.UNKNOWN_ERROR);
-//        }
+        if (!file.getExtension().equals("md")) {
+            throw new ServiceException(ServiceStatus.UNKNOWN_ERROR);
+        }
 
         try {
             BufferedReader reader = new BufferedReader(new FileReader(createFilename(fid)));
