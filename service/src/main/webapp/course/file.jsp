@@ -47,6 +47,16 @@
                     TODO: Display the actual file here :D Still need the file download servlet first.
                 </p>
             </div>
+            <!-- Writing comments -->
+            <div class="container">
+            <form class="form-comment" action="/servlet/file" method="post" enctype="application/x-www-form-urlencoded">
+                <h2>Add comment</h2>
+                <input for="text" name="text" placeholder="username">
+                <input type="hidden" name="fileid" value='${file.getID()}'>
+                <input type="hidden" name="username" value='${user.getUsername()}'>
+                <button type="submit" id="submit" name="submit">Comment</button>
+            </form>
+        </div>
         </body>
     </body>
 </html>
