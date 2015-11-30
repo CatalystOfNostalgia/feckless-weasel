@@ -12,6 +12,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.fecklessweasel.service.datatier.FileMetadataTable;
+import com.fecklessweasel.service.datatier.SQLInteractionInterface;
+import com.fecklessweasel.service.datatier.SQLSource;
 
 /**
  * StoredFile API that will be used for all operations pertaining to files uploaded
@@ -488,6 +490,44 @@ public class StoredFile {
         }
 
         return true;
+    }
+
+    /**
+     * Gets the text of a markdown file stored on the server.
+     * @param fid The markdown file's id.
+     * @return The text contained in the file.
+     */
+    public static String getMarkdownText(final int fid) throws ServiceException {
+        StoredFile file = SQLSource.interact(new SQLInteractionInterface<StoredFile>() {
+            @Override
+            public StoredFile run(Connection connection)
+                    throws ServiceException, SQLException {
+
+                return StoredFile.lookup(connection, fid);
+            }
+        });
+
+//        if (!file.getExtension().equals("md")) {
+//            // TODO: Change this to better ServiceStatus
+//            throw new ServiceException(ServiceStatus.UNKNOWN_ERROR);
+//        }
+
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(createFilename(fid)));
+            StringBuilder sb = new StringBuilder();
+            String line = reader.readLine();
+
+            while (line != null) {
+                sb.append(line);
+                sb.append(System.lineSeparator());
+                line = reader.readLine();
+            }
+            reader.close();
+            return sb.toString();
+        } catch(Exception e) {
+            // TODO: Change this to better ServiceStatus
+            throw new ServiceException(ServiceStatus.UNKNOWN_ERROR);
+        }
     }
 
     /**

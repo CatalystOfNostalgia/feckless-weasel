@@ -47,6 +47,12 @@
                 <p>
                     TODO: Display the actual file here :D Still need the file download servlet first.
                 </p>
+                <%
+                    StoredFile file = (StoredFile) request.getAttribute("file");
+                    if (file.getExtension().equals("md")) {
+                %>
+                <a href="/editor.jsp?fid=${file.getID()}&cid=${course.getID()}">Edit</a>
+                <%}%>
             </div>
         </body>
     </body>
