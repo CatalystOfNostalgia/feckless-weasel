@@ -6,6 +6,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Stores all information about a Comment.
@@ -16,12 +18,12 @@ public class Comment {
     /**
      * The user who made the comment.
      */
-    private User user;
+    private int uid;
     
     /**
      * File The comment is on.
      */
-    private FileMetadata file;
+    private int fid;
     
     /**
      * Time when the comment was made.
@@ -38,9 +40,9 @@ public class Comment {
      */
     private static int MAX_TEXT_CHARS = 5000;
     
-    private Comment(User user, FileMetadata file, Timestamp time, String text){
-        this.user = user;
-        this.file = file;
+    private Comment(int uid, int fid, Timestamp time, String text){
+        this.uid = uid;
+        this.fid = fid;
         this.time = time;
         this.text = text;
     }
@@ -53,7 +55,7 @@ public class Comment {
      * @param text The comment text.
      * @return The Comment object.
      */
-    public static Comment Create(Connection conn, User user, FileMetadata file, String text) throws ServiceException{
+    public static Comment Create(Connection conn, User user, StoredFile file, String text) throws ServiceException{
         OMUtil.sqlCheck(conn);
         OMUtil.nullCheck(user);
         OMUtil.nullCheck(file);
@@ -62,20 +64,34 @@ public class Comment {
             throw new ServiceException(ServiceStatus.APP_INVALID_COMMENT_TEXT);
         }
         
-        Timestamp time = CommentTable.addComment(conn, user.getUid(), file.getFid(), text);
-        return new Comment(user, file, time, text);
+        Timestamp time = CommentTable.addComment(conn, user.getID(), file.getID(), text);
+        return new Comment(user.getID(), file.getID(), time, text);
     }
     
     /**
-     * Create a comment with data from the database.
-     * @param file The file the comment is on.
-     * @param result The ResultSet from the database.
-     * @return A comment object.
+     * Returns comments on the given file.
+     * @param start The first comment to get.
+     * @param count The amount of comments to get.
+     * @return A list of Comment objects.
      */
-    protected static Comment fromResultSet(FileMetadata file, ResultSet result) throws ServiceException {
+    protected static List<Comment> lookupFileComments(Connection conn, int fid, int start, int count) throws ServiceException{
+        OMUtil.sqlCheck(conn);
+        
+        ResultSet results = CommentTable.getFileComments(conn, fid, start, count);
+        ArrayList<Comment> Comments = new ArrayList<Comment>();
+        
         try{
-            return new Comment(User.fromResultSet(result), file, result.getTimestamp("datetime"), result.getString("text"));
-        } catch (SQLException ex) {
+            while (results.next()) {
+                User user = User.lookupById(conn, results.getInt("uid"));
+                Comment c = new Comment(results.getInt("uid"),
+                                                     results.getInt("fid"),
+                                                     results.getTimestamp("time"),
+                                                     results.getString("text"));
+                Comments.add(c);
+            }
+            results.close();
+            return Comments;
+        } catch (SQLException ex){
             throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
         }
     }
@@ -84,16 +100,18 @@ public class Comment {
      * Returns the user who created the comment.
      * @return The user who created the comment.
      */
-    public User getUser(){
-        return this.user;
+    public User lookupUser(Connection sql) throws ServiceException {
+        OMUtil.sqlCheck(sql);
+        return User.lookupById(sql, this.uid);
     }
     
     /**
      * Returns the file the comment is on.
      * @return The file the comment is on.
      */
-    public FileMetadata getFile(){
-        return this.file;
+    public StoredFile lookupFile(Connection sql) throws ServiceException {
+        OMUtil.sqlCheck(sql);
+        return StoredFile.lookup(sql, this.fid);
     }
     
     /**

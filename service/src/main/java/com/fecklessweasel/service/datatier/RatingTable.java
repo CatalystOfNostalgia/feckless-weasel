@@ -21,7 +21,9 @@ public abstract class RatingTable{
     
     private static String ADD_RATING = "insert into Comment (uid, fid, rating) values (?,?,?)";
     
-    private static String UPDATE_RATING = "update Comment set rating=? where uid=? and fid=?";
+    //private static String UPDATE_RATING = "update Comment set rating=? where uid=? and fid=?";
+    
+    private static String GET_FILE_RATING = "SELECT AVG(rating) as avg FROM Comment WHERE fid=?";
     
     /**
      * Add a rating from a user to a given file.
@@ -44,6 +46,25 @@ public abstract class RatingTable{
             preparedStatement.close();
         } catch (SQLIntegrityConstraintViolationException ex){
             throw new ServiceException(ServiceStatus.APP_RATING_TAKEN, ex);
+        } catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        }
+    }
+    
+    /**
+     * Gets the average rating of a file accross all ratings.
+     * @param conn A connection to the database.
+     * @param fid The file id of the file to check.
+     * @return A resultSet containing the average.
+     */
+    public static ResultSet getFileRating(Connection conn, int fid) throws ServiceException {
+        CodeContract.assertNotNull(conn, "conn");
+        CodeContract.assertNotNull(fid, "fid");
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(GET_FILE_RATING);
+            preparedStatement.setInt(1, fid);
+            preparedStatement.executeUpdate();
+            return preparedStatement.executeQuery();
         } catch (SQLException ex) {
             throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
         }
