@@ -420,6 +420,40 @@ public class StoredFile {
     }
 
     /**
+     * Get all notes belonging to a certain user
+     * @param sql Database connection
+     * @param uid User ID
+     * @return List of all StoredFile notes belonging to user uid
+     */
+    static Iterable<StoredFile> lookupUserNotes(Connection sql, int uid) 
+        throws ServiceException {
+
+        OMUtil.sqlCheck(sql);
+
+        ResultSet results = FileMetadataTable.lookUpUserNotes(sql, uid);
+        ArrayList<StoredFile> listOfNotes = new ArrayList<StoredFile>();
+
+        try {
+            while (results.next()) {
+                StoredFile note = new StoredFile(results.getInt("fid"),
+                                                 results.getInt("uid"),
+                                                 results.getInt("cid"),
+                                                 results.getDate("creation_date"),
+                                                 results.getString("title"),
+                                                 results.getString("description"),
+                                                 results.getString("tag"),
+                                                 results.getString("extension"));
+                listOfNotes.add(note);
+            }
+
+            results.close();
+            return listOfNotes;
+        } catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        }
+    }
+
+    /**
      * Deletes a particular file's metadata from the Table
      * @param sql The SQL conenction to the database
      * @param fid The id of the fileinfo we want to delete
