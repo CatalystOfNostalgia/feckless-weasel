@@ -65,6 +65,7 @@ public class FileUploadServlet extends HttpServlet {
                 // Parse course ID.
                 try {
                     int courseID = OMUtil.parseInt(request.getParameter("class"));
+                    String extension = filePart.getSubmittedFileName().split("\\.")[1];
 
                     // Create and store file.
                     return StoredFile.create(connection,
@@ -73,6 +74,7 @@ public class FileUploadServlet extends HttpServlet {
                                              title,
                                              description,
                                              tag,
+                                             extension,
                                              filePart.getInputStream());
                 } catch (IOException ex) {
                     throw new ServiceException(ServiceStatus.SERVER_UPLOAD_ERROR);

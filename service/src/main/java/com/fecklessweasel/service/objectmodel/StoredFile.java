@@ -29,6 +29,10 @@ public class StoredFile {
     public static final int MIN_DESCRIPTION = 1;
     /** Maximum StoredFile description length. */
     public static final int MAX_DESCRIPTION = 255;
+    /** Minimum StoredFile extensions length. */
+    public static final int MIN_EXTENSION = 1;
+    /** Maximum StoredFile extensions length. */
+    public static final int MAX_EXTENSION = 4;
 
     /**
      * Directory name where files are stored.
@@ -50,8 +54,10 @@ public class StoredFile {
     private String title;
     /** The file description. */
     private String description;
-    
-    private String tag; 
+    /** The file tag. */
+    private String tag;
+    /** The file's extension. */
+    private String extension;
     /**
      * Private constructor to the StoredFile object. Is only called in create();
      * @param fid The Files Unique Identifier in the table
@@ -60,9 +66,11 @@ public class StoredFile {
      * @param creationDate The date the file was created
      * @param title The title for the file.
      * @param description The description for the file.
+     * @param tag The tag associated with the file.
+     * @param extension The file extension.
      */
     private StoredFile(int fid, int uid, int cid, Date creationDate,
-                       String title, String description, String tag) {
+                       String title, String description, String tag, String extension) {
         this.fid = fid;
         this.uid = uid;
         this.cid = cid;
@@ -70,6 +78,7 @@ public class StoredFile {
         this.title = title;
         this.description = description;
         this.tag = tag;
+        this.extension = extension;
     }
 
     /**
@@ -80,6 +89,8 @@ public class StoredFile {
      * @param title The title for the file.
      * @param description The description for the file.
      * @param fileData The input stream for the file data to write to the file.
+     * @param tag The tag associated with the file.
+     * @param extension The file's extension.
      */
     public static StoredFile create(Connection sql,
                                     User user,
@@ -87,12 +98,13 @@ public class StoredFile {
                                     String title,
                                     String description,
                                     String tag,
+                                    String extension,
                                     InputStream fileData) throws ServiceException {
         OMUtil.nullCheck(fileData);
 
         // Write metadata to the database.
         Date creationDate = new Date();
-        int fid = addToDatabase(sql, user, course, title, description, creationDate, tag);
+        int fid = addToDatabase(sql, user, course, title, description, creationDate, tag, extension);
 
         // Attempt to write the uploaded data to a file mapped to the ID.
         // TODO: check file extensions are not necessary.
@@ -114,7 +126,8 @@ public class StoredFile {
                               creationDate,
                               title,
                               description,
-                              tag);
+                              tag,
+                              extension);
     }
 
     /**
@@ -134,9 +147,11 @@ public class StoredFile {
                                     String markdownText) throws ServiceException {
         OMUtil.nullCheck(markdownText);
 
+        String extension = "md";
+
         // Write metadata to the database.
         Date creationDate = new Date();
-        int fid = addToDatabase(sql, user, course, title, description, creationDate, "notes");
+        int fid = addToDatabase(sql, user, course, title, description, creationDate, "notes", extension);
 
         // Attempt to write the uploaded data to a file mapped to the ID.
         // TODO: check file extensions are not necessary.
@@ -156,7 +171,8 @@ public class StoredFile {
                 creationDate,
                 title,
                 description,
-                "notes");
+                "notes",
+                extension);
     }
 
     /**
@@ -166,6 +182,8 @@ public class StoredFile {
      * @param title The title for the file.
      * @param description The description for the file.
      * @param creationDate The date this file was created.
+     * @param tag The tag associated with the file.
+     * @param extension The file's extension.
      */
     private static int addToDatabase(Connection sql,
                                       User user,
@@ -173,12 +191,15 @@ public class StoredFile {
                                       String title,
                                       String description,
                                       Date creationDate,
-                                      String tag) throws ServiceException {
+                                      String tag,
+                                      String extension) throws ServiceException {
         OMUtil.sqlCheck(sql);
         OMUtil.nullCheck(user);
         OMUtil.nullCheck(course);
         OMUtil.nullCheck(title);
         OMUtil.nullCheck(description);
+        OMUtil.nullCheck(extension);
+
         // Check title length.
         if (title.length() < MIN_TITLE || title.length() > MAX_TITLE) {
             throw new ServiceException(ServiceStatus.APP_INVALID_TITLE_LENGTH);
@@ -189,6 +210,11 @@ public class StoredFile {
             throw new ServiceException(ServiceStatus.APP_INVALID_DESCRIPTION_LENGTH);
         }
 
+        // Check extension length.
+        if (extension.length() < MIN_EXTENSION || extension.length() > MAX_EXTENSION) {
+            throw new ServiceException(ServiceStatus.APP_INVALID_EXTENSION_LENGTH);
+        }
+
         // Write metadata to the database.
         return FileMetadataTable.insertFileData(sql,
                 user.getID(),
@@ -196,7 +222,8 @@ public class StoredFile {
                 title,
                 description,
                 creationDate,
-                tag);
+                tag,
+                extension);
     }
 
     /**
@@ -221,7 +248,8 @@ public class StoredFile {
                                                  result.getDate("creation_date"),
                                                  result.getString("title"),
                                                  result.getString("description"),
-                                                 result.getString("tag"));
+                                                 result.getString("tag"),
+                                                 result.getString("extension"));
             result.close();
             return fileData;
         } catch (SQLException ex) {
@@ -301,6 +329,18 @@ public class StoredFile {
     }
 
     /**
+     * Gets the file extensions for this StoredFile.
+     * @return The file's extension.
+     */
+    public String getExtension() {
+        return this.extension;
+    }
+
+    public String getFilePath() {
+        return FILEPATH_PREFIX + "/" + this.fid;
+    }
+
+    /**
      * Look up all files associated with a specific course ID.
      * @param sql The Sql connection to the FecklessWeaselDB
      * @param course The the course whose file info we want.
@@ -325,7 +365,8 @@ public class StoredFile {
                                                      results.getDate("creation_date"),
                                                      results.getString("title"),
                                                      results.getString("description"),
-                                                     results.getString("tag"));
+                                                     results.getString("tag"),
+                                                     results.getString("extension"));
                 listOfFiles.add(fileData);
             }
             results.close();
@@ -356,7 +397,8 @@ public class StoredFile {
                                                      results.getDate("creation_date"),
                                                      results.getString("title"),
                                                      results.getString("description"),
-                                                     results.getString("tag"));
+                                                     results.getString("tag"),
+                                                     results.getString("extension"));
                 listOfFiles.add(fileData);
             }
 
