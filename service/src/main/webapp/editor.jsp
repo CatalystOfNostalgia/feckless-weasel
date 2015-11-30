@@ -17,17 +17,19 @@
 <body>
     <jsp:include page="header.jsp"/>
     <%
-        StoredFile file = SQLSource.interact(new SQLInteractionInterface<StoredFile>() {
-            @Override
-            public StoredFile run(Connection connection) throws ServiceException {
-                return StoredFile.lookup(connection, OMUtil.parseInt(request.getParameter("fid")));
-            }
-        });
-        String title = file.getTitle();
-        String description = file.getDescription();
+        String title = "";
+        String description = "";
         String textareaContents = "";
         if (request.getParameter("fid") != null) {
             int fid = OMUtil.parseInt(request.getParameter("fid"));
+            StoredFile file = SQLSource.interact(new SQLInteractionInterface<StoredFile>() {
+                @Override
+                public StoredFile run(Connection connection) throws ServiceException {
+                    return StoredFile.lookup(connection, OMUtil.parseInt(request.getParameter("fid")));
+                }
+            });
+            title = file.getTitle();
+            description = file.getDescription();
             textareaContents = StoredFile.getMarkdownText(fid);
         }
     %>

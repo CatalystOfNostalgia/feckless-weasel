@@ -41,8 +41,9 @@ public class MarkdownUploadServlet extends HttpServlet {
         final String title = request.getParameter("title");
         final String description = request.getParameter("description");
         final String markdownText = request.getParameter("markdown");
+        final String fid = request.getParameter("fid");
 
-        if (request.getParameter("fid") == null) {
+        if (fid == null || fid.equals("null")) {
             // Open a SQL connection and create the file meta data.
             StoredFile fileMetadata = SQLSource.interact(new SQLInteractionInterface<StoredFile>() {
                 @Override
@@ -60,9 +61,11 @@ public class MarkdownUploadServlet extends HttpServlet {
                             markdownText);
                 }
             });
+            response.sendRedirect("/course/file.jsp?fid=" + fileMetadata.getID());
         } else {
             // Update markdown file's contents
-            StoredFile.updateMarkdownFile(OMUtil.parseInt(request.getParameter("fid")), markdownText);
+            StoredFile.updateMarkdownFile(OMUtil.parseInt(fid), markdownText);
+            response.sendRedirect("/course/file.jsp?fid=" + fid);
         }
     }
 }
