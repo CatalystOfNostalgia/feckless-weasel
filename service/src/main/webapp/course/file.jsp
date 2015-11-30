@@ -60,7 +60,8 @@
                 </p>
                 <%
                     StoredFile file = (StoredFile) request.getAttribute("file");
-                    if (file.getExtension().equals("md")) {
+                    User user = (User) request.getAttribute("user");
+                    if (file.getExtension().equals("md") && file.userCanEdit(user)) {
                 %>
                 <a href="/editor.jsp?fid=${file.getID()}&cid=${course.getID()}">Edit</a>
                 <%}%>

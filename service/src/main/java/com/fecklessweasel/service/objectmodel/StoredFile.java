@@ -291,6 +291,19 @@ public class StoredFile {
     }
 
     /**
+     * Checks if the given user can edit the markdown file.
+     * @param user The user attempting to edit the file.
+     * @return true if the user can edit the file.
+     */
+    public boolean userCanEdit(User user) throws ServiceException {
+        if (this.getExtension().equals("md")) {
+            throw new ServiceException(ServiceStatus.INVALID_FILE_TYPE);
+        }
+
+        return user.getID() == this.uid;
+    }
+
+    /**
      * Checks if two StoredFile objects refer to the same file
      * @param o The Object to compare to.
      * @return true if they share the same fid
@@ -533,7 +546,7 @@ public class StoredFile {
         });
 
         if (!file.getExtension().equals("md")) {
-            throw new ServiceException(ServiceStatus.UNKNOWN_ERROR);
+            throw new ServiceException(ServiceStatus.INVALID_FILE_TYPE);
         }
 
         try {
