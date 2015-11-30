@@ -54,11 +54,11 @@
                     <th>Department Name</th>
                     <th>Acronym</th>
                 </tr>
-                <c:forEach var="element" items="${depts}">
+                <c:forEach var="department" items="${depts}">
                     <tr>
-                        <td>${element.getUniversity().getlongName()}</td>
-                        <td>${element.getDeptName()}</td>
-                        <td>${element.getAcronym()}</td>
+                        <td>${department.lookupUniversity().getlongName()}</td>
+                        <td>${department.getDeptName()}</td>
+                        <td>${department.getAcronym()}</td>
                     </tr>
                 </c:forEach>
             </table>

@@ -2,7 +2,7 @@
     import="java.util.*, com.fecklessweasel.service.*, com.fecklessweasel.service.objectmodel.*, com.fecklessweasel.service.datatier.*, java.sql.Connection"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%
-    final UserSession = authSession = UserSessionUtil.resumeSession(request);
+    final UserSession authSession = UserSessionUtil.resumeSession(request);
 
 %>
 <div class="col-sm-3 col-md-2 sidebar" style="padding-bottom: 100%; background-color: #FFD79F;">

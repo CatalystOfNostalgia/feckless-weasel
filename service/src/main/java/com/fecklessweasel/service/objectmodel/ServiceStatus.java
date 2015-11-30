@@ -33,6 +33,7 @@ public enum ServiceStatus {
     INSTALL_ERROR(504, 500, "Incorrect server configuration."),
     NO_SQL(505, 500, "No SQL instance provided."),
     ACCESS_DENIED(506, 403, "Access denied."),
+    FILE_READ_ERROR(507, 500, "Reading file from server failed."),
 
     // App logic errors.
     APP_INVALID_USER_LENGTH(701, 400, "Username is either too short or too long."),
@@ -77,7 +78,9 @@ public enum ServiceStatus {
     APP_COURSE_TAKEN(733, 400, "Course already exists."),
     APP_DEPT_TAKEN(734, 400, "Department already exists."),
     APP_UNIV_TAKEN(735, 400, "University already exists."),
-    APP_INVALID_ROLE_DESC_LENGTH(736, 400, "Description is too long.");
+    APP_INVALID_ROLE_DESC_LENGTH(736, 400, "Description is too long."),
+    APP_INVALID_EXTENSION_LENGTH(737, 400, "File extension is either too long or too short."),
+    APP_COURSE_NAME_INVALID(738, 400, "Course name is either too long or too short.");
 
 
     /** The String name of the state (OK, MALFORMED_REQUEST, ...) */

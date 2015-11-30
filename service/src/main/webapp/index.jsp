@@ -1,6 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
     import="java.util.*, com.fecklessweasel.service.*, com.fecklessweasel.service.objectmodel.*, com.fecklessweasel.service.datatier.*, java.sql.Connection"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%
+    ArrayList<University> univs =
+    SQLSource.interact(new SQLInteractionInterface<ArrayList<University>>() {
+        @Override
+        public ArrayList<University> run(Connection connection) throws ServiceException {
+            return (ArrayList<University>) University.lookUpAll(connection);
+        }
+    });
+    request.setAttribute("univs", univs);
+%>
+
 <html>
     <head>
         <title>Feckless Weasel Hello World Index Page</title>
@@ -25,6 +36,11 @@
                                 <p>
                                     <a class="btn btn-warning" href="/university/create.jsp" role="button">Create</a>
                                 </p>
+                            </div>
+                            <div class="col-md-4">
+                                <c:forEach var="university" items="${univs}">
+                                    <p><a href="/university/index.jsp?uid=${university.getID()}">${university.getLongName()}</a></p>
+                                </c:forEach>
                             </div>
                         </div>
                     </div>
