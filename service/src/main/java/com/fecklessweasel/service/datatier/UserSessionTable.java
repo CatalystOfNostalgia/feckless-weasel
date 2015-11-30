@@ -51,7 +51,7 @@ public abstract class UserSessionTable {
      * @param uuid The session id.
      */
     public static void insertSession(Connection connection,
-                                     long uid,
+                                     int uid,
                                      UUID uuid) throws ServiceException {
         CodeContract.assertNotNull(connection, "connection");
         CodeContract.assertNotNull(uuid, "uuid");
@@ -100,7 +100,7 @@ public abstract class UserSessionTable {
      * @param uid The user AUTO_INCREMENT index integer.
      */
     public static void deleteAllSessions(Connection connection,
-                                         long uid) throws ServiceException {
+                                         int uid) throws ServiceException {
         CodeContract.assertNotNull(connection, "connection");
 
         try {
@@ -145,7 +145,7 @@ public abstract class UserSessionTable {
      * @return True if the session exists.
      */
     public static boolean sessionExists(Connection connection,
-                                        long uid,
+                                        int uid,
                                         UUID sessionId) throws ServiceException {
         CodeContract.assertNotNull(connection, "connection");
         CodeContract.assertNotNull(sessionId, "sessionId");

@@ -36,7 +36,7 @@
                 </tr>
                 <c:forEach var="element" items="${univs}">
                     <tr>
-                        <td>${element.getlongName()}</td>
+                        <td>${element.getLongName()}</td>
                         <td>${element.getAcronym()}</td>
                         <td>${element.getCity()}</td>
                         <td>${element.getState()}</td>

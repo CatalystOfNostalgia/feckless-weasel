@@ -19,7 +19,7 @@ import com.fecklessweasel.service.objectmodel.ServiceStatus;
  * Exhaustive validation is performed by the object model.
  * @author Christian Gunderman
  */
-public final class UserTable {
+public class UserTable {
     /** Create user query. */
     public static final String INSERT_USER_QUERY =
         "INSERT INTO User (user, pass, join_date, email)" +

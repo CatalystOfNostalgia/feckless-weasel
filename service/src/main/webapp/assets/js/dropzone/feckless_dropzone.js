@@ -3,20 +3,23 @@ var previewNode = document.querySelector("#template");
 previewNode.id = "";
 var previewTemplate = previewNode.parentNode.innerHTML;
 previewNode.parentNode.removeChild(previewNode);
+var classID = "";
+var tag = "";
 
 var drop = new Dropzone(document.body, {
     autoProcessQueue: false,
     autoQueue: false,
     url: "/servlet/file/upload",
-    thumbnailWidth: 200,
-    thumbnailHeight: 200,
+    thumbnailWidth: 150,
+    thumbnailHeight: 150,
     maxFiles: 1,
     paramName: "file",
     parallelUploads: 100,
     previewTemplate: previewTemplate,
     previewContainer: "#previews",
     uploadMultiple: true,
-    acceptedFiles: "image/*, application/pdf",
+    acceptedFiles: "image/*, application/pdf, application/doc, application/docx",
+    clickable: ".fileinput-button"
 });
 
 drop.on("init", function(){
@@ -38,14 +41,26 @@ drop.on("addedfile", function(file) {
         e.stopPropagation();
         drop.processQueue();
     });
+    ele = this.element.querySelectorAll("#tag");
+    for(var i=0; i<ele.length; i++){
+        ele[i].addEventListener("click", function(){
+            tag=this.value;
+        });
+    }
 });
 
 drop.on("sending", function(file, xhr, formData){
     formData.append("title", this.element.querySelector("#title").value);
     formData.append("description", this.element.querySelector("#description").value);
-    formData.append("class", "0");  // TODO: Un-hardcode this!!!!
+    formData.append("class", this.element.querySelector("#classID").value);
+    classID = this.element.querySelector("#classID").value;
+    formData.append("tag", tag);
 });
 
 drop.on("success", function(file, response){
-    window.location.href = "/";
+    window.location.href = "/course/index.jsp?cid=" + classID + "&uploadSuccess=True";
+});
+
+drop.on("error", function(){
+    window.location.href = "/course/index.jsp?cid=" + classID + "&uploadSuccess=False";
 });

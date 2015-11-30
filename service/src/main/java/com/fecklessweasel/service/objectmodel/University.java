@@ -50,35 +50,35 @@ public class University {
     /**
      * Max character length for longName.
      */
-    private static int NAME_MAX = 50;
+    private final static int NAME_MAX = 50;
     /**
      * Min character length for longName.
      */
-    private static int NAME_MIN = 5;
+    private final static int NAME_MIN = 5;
     /**
      * Max character length for acronym.
      */
-    private static int ACRONYM_MAX = 5;
+    private final static int ACRONYM_MAX = 5;
     /**
      * Min character length for acronym.
      */
-    private static int ACRONYM_MIN = 2;
+    private final static int ACRONYM_MIN = 2;
     /**
      * Max character length for city.
      */
-    private static int CITY_MAX = 30;
+    private final static int CITY_MAX = 30;
     /**
      * Min character length for city.
      */
-    private static int CITY_MIN = 3;
+    private final static int CITY_MIN = 3;
     /**
      * Max character length for country.
      */
-    private static int COUNTRY_MAX = 30;
+    private final static int COUNTRY_MAX = 30;
     /**
      * Min character length for country.
      */
-    private static int COUNTRY_MIN = 3;
+    private final static int COUNTRY_MIN = 3;
 
     /**
      * Private countructor for a University. Should be created from the database
@@ -304,7 +304,7 @@ public class University {
      */
     public List<Department> getAllDeptsPaginated(Connection connection, int offset, int amt)
         throws ServiceException {
-            return Department.lookUpPaginated(connection, 1, offset, amt);
+            return Department.lookUpPaginated(connection, this.getID(), offset, amt);
     }
 
     /**

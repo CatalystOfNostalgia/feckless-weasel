@@ -13,7 +13,6 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import com.fecklessweasel.service.UniversityUtil;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -160,6 +159,28 @@ public final class Department {
             throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
         }
         return depts;
+    }
+
+    /**
+     * Get all Courses between offset and offset + amt that belong to this Dept
+     * @param connection MySQL database Collection
+     * @param offset The first n rows to skip in the table select statement
+     * @param amt the amount of Course objects to return (or less if  < amt records exist)
+     * @return A List of Courses belonging to this Dept within the bounds of offset and amt
+     * @throws A Service Exception if there is a database error
+     */
+    public List<Course> getAllCoursesPaginated(Connection connection, int offset, int amt)
+        throws ServiceException {
+            return Course.lookUpPaginated(connection, this.getID(), offset, amt);
+    }
+
+    /**
+     * Get all Courses belonging to this Dept
+     * @param connection MySQL database connection
+     * @return a List of All Course Objects associated with this Dept
+     */
+    public List<Course> getAllCourses(Connection connection) throws ServiceException {
+        return this.getAllCoursesPaginated(connection, 0, 2147483647);
     }
 
     /**
