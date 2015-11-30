@@ -80,7 +80,7 @@ public enum ServiceStatus {
     APP_RATING_TAKEN(736, 400, "Rating already exists."),
     APP_COMMENT_TAKEN(737, 400, "Comment already exists."),
     APP_INVALID_RATING(738, 400, "Rating is too high or too low."),
-    APP_INVALID_COMMENT_TEXT(739, 400, "Comment is too long or too short.");
+    APP_INVALID_COMMENT_TEXT(739, 400, "Comment is too long or too short."),
     APP_INVALID_ROLE_DESC_LENGTH(740, 400, "Description is too long.");
 
 

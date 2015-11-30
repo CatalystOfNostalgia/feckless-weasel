@@ -299,6 +299,21 @@ public final class User {
     }
 
     /**
+     * Returns the trust score of this user.
+     * @param conn A connection to the database.
+     * @return The trust score of this user.
+     */
+    public double lookupTrustScore(Connection conn) throws ServiceException{
+        OMUtil.sqlCheck(conn);
+        double score = 0;
+        Iterable<StoredFile> files = StoredFile.lookupUserFiles(conn, this.uid);
+        for(StoredFile f : files){
+            score += f.lookupRating(conn);
+        }
+        return score;
+    }
+    
+    /**
      * Checks if two User objects refer to the same User account.
      * @param o The object to compare.
      * @return True if they are the same user.
