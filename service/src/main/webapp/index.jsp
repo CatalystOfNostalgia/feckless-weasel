@@ -16,6 +16,25 @@
         </div>
         <div class="container">
             <div class="container">
+                <%
+                    ArrayList<University> univs =
+                    SQLSource.interact(new SQLInteractionInterface<ArrayList<University>>() {
+                        @Override
+                        public ArrayList<University> run(Connection connection) throws ServiceException {
+                            return (ArrayList<University>) University.lookUpAll(connection);
+                        }
+                    });
+                    request.setAttribute("univs", univs);
+                %>
+                <c:forEach var="university" items="${univs}">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h2><a href="/university/index.jsp?uid=${university.getID()}">${university.getLongName()}</a></h2>
+                        </div>
+                    </div>
+                </c:forEach>
+            </div>
+            <div class="container">
                 <div class="col-md-4">
                     <h2>Can't find your university?</h2>
                     <p>That's okay! Get your university started and add your university on Feckless Weasel today.</p>

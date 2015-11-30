@@ -13,11 +13,11 @@ import com.fecklessweasel.service.objectmodel.ServiceStatus;
 
 /**
  * Course to represent the Course table in the database.
- * @author Elliot Essman
+ * @author Elliot Essman, Hayden Schmackpfeffer
  */
 public class CourseTable {
 
-    public final static String INSERT_ROW = "insert into Course (deptid, courseNumber) values (?,?)";
+    public final static String INSERT_ROW = "insert into Course (deptid, courseNumber, courseName) values (?,?,?)";
 
     public final static String LOOKUP_ROW = "SELECT * FROM Course WHERE id=?";
 
@@ -31,13 +31,17 @@ public class CourseTable {
      * @param Coursenum The number of this Course.
      * @return The id of the new Course.
      */
-    public static int insertCourse(Connection conn, int deptid, int courseNumber)
+    public static int insertCourse(Connection conn, int deptid, int courseNumber, String courseName)
         throws ServiceException {
+
         CodeContract.assertNotNull(conn, "conn");
+        CodeContract.assertNotNullOrEmptyOrWhitespace(courseName, "courseName");
+
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(INSERT_ROW, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setInt(1, deptid);
             preparedStatement.setInt(2, courseNumber);
+            preparedStatement.setString(3, courseName);
             preparedStatement.executeUpdate();
 
             // Get new id

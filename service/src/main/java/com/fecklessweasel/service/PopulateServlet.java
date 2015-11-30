@@ -51,6 +51,8 @@ public final class PopulateServlet extends HttpServlet {
     //Test Course data
     public static final int[] course_nums = {397, 233, 390, 201, 102, 300};
 
+    public static final String[] course_names = {"Mobile Computing", "Data Structures", "Algorithms", "Medieval Philosophy", "Introduction to Philosophy", "Advance Philosophy"};
+
 
     public void doGet(HttpServletRequest request, HttpServletResponse response)
                   throws ServletException, IOException {
@@ -121,7 +123,8 @@ public final class PopulateServlet extends HttpServlet {
 
                         Course course = Course.create(connection,
                                             dept,
-                                            course_nums[i]);
+                                            course_nums[i],
+                                            course_names[i]);
 
                         courses.add(course);
                     }

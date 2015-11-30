@@ -60,9 +60,11 @@ public final class CourseServlet extends HttpServlet {
                     throws ServiceException, SQLException {
                     String deptIDStr = request.getParameter("department");
                     String courseNumStr = request.getParameter("course");
-                    
+                    String courseName = request.getParameter("courseName");
+
                     OMUtil.nullCheck(courseNumStr);
                     OMUtil.nullCheck(deptIDStr);
+                    OMUtil.nullCheck(courseName);
 
                     int deptID = OMUtil.parseInt(deptIDStr);
                     int courseNum = OMUtil.parseInt(courseNumStr);
@@ -71,7 +73,7 @@ public final class CourseServlet extends HttpServlet {
                     Department department = Department.lookup(connection, deptID);
 
                     // Create course.
-                    Course course = Course.create(connection, department, courseNum);
+                    Course course = Course.create(connection, department, courseNum, courseName);
 
                     // Return course ID to caller.
                     return course.getID();

@@ -54,6 +54,7 @@
                 <p>
                     ${file.getDescription()}
                 </p>
+                <a href="/servlet/file/download?fid=${file.getID()}">Download</a>
                 <p>
                     TODO: Display the actual file here :D Still need the file download servlet first.
                 </p>
