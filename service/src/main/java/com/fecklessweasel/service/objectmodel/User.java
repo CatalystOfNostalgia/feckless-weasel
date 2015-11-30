@@ -513,6 +513,15 @@ public final class User {
         }
     }
 
+    /**
+     * Get all notes belonging to this user
+     * @param sql Database connection
+     * @return List of all notes belonging to this user 
+     */
+    public Iterable<StoredFile> getNotes(Connection sql) throws ServiceException {
+        return StoredFile.lookupUserNotes(sql, this.uid);
+    }
+
     /** 
      * Determine if this user has already favorited the file
      * @throw ServiceException on database error

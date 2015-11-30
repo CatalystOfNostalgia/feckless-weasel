@@ -35,6 +35,9 @@ public abstract class FileMetadataTable{
     public static final String DELETE_FILE_QUERY =
         "DELETE FROM FileMetadata WHERE fid=?";
 
+    public static final String LOOKUP_USER_NOTES =
+        "SELECT * FROM FileMetadata WHERE uid=? AND extension=md";
+
     /**
      * Inserts a file into the corresponding MySQL table. returns the generated fid
      * @param connection Connection to the database from SQLSource.
@@ -171,6 +174,27 @@ public abstract class FileMetadataTable{
             }
             deleteStatement.close();
         } catch (SQLException ex){
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        }
+    }
+
+    /**
+     * Return all Notes that belong to a certain user
+     * @param connection Database connection
+     * @param uid User ID
+     * @return ResultSet of all rows where uid=uid and extension=md
+     */
+    public static ResultSet lookUpUserNotes(Connection connection, int uid)
+        throws ServiceException {
+
+        CodeContract.assertNotNull(connection, "connection");
+
+        try {
+            PreparedStatement lookupNoteStatement = connection.prepareStatement(LOOKUP_USER_NOTES);
+            lookupNoteStatement.setInt(1,uid);
+
+            return lookupNoteStatement.executeQuery();
+        } catch (SQLException ex) {
             throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
         }
     }

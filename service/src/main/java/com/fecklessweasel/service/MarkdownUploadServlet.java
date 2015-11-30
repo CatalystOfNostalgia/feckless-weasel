@@ -41,23 +41,31 @@ public class MarkdownUploadServlet extends HttpServlet {
         final String title = request.getParameter("title");
         final String description = request.getParameter("description");
         final String markdownText = request.getParameter("markdown");
+        final String fid = request.getParameter("fid");
 
-        // Open a SQL connection and create the file meta data.
-        StoredFile fileMetadata = SQLSource.interact(new SQLInteractionInterface<StoredFile>() {
-            @Override
-            public StoredFile run(Connection connection)
-                    throws ServiceException, SQLException {
+        if (fid == null || fid.equals("null")) {
+            // Open a SQL connection and create the file meta data.
+            StoredFile fileMetadata = SQLSource.interact(new SQLInteractionInterface<StoredFile>() {
+                @Override
+                public StoredFile run(Connection connection)
+                        throws ServiceException, SQLException {
 
-                int courseID = OMUtil.parseInt(request.getParameter("class"));
+                    int courseID = OMUtil.parseInt(request.getParameter("cid"));
 
-                // Write and store file.
-                return StoredFile.create(connection,
-                        session.getUser(),
-                        Course.lookupById(connection, courseID),
-                        title,
-                        description,
-                        markdownText);
-            }
-        });
+                    // Write and store file.
+                    return StoredFile.create(connection,
+                            session.getUser(),
+                            Course.lookupById(connection, courseID),
+                            title,
+                            description,
+                            markdownText);
+                }
+            });
+            response.sendRedirect("/course/file.jsp?fid=" + fileMetadata.getID());
+        } else {
+            // Update markdown file's contents
+            StoredFile.updateMarkdownFile(OMUtil.parseInt(fid), markdownText);
+            response.sendRedirect("/course/file.jsp?fid=" + fid);
+        }
     }
 }
