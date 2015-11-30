@@ -58,11 +58,11 @@
             <% } %>
             <div class="container">
             <%if (authSession != null) {%>
-                <jsp:include page="/file_uploader.jsp"> 
+                <jsp:include page="/file_uploader.jsp">
                     <jsp:param name="classID" value="${course.getID()}"/>
                 </jsp:include>
             <% } else { %>
-                <p>Login or create an account to contribute!</p>  
+                <p>Login or create an account to contribute!</p>
             <% } %>
             </div>
            <div class="container">
@@ -74,6 +74,16 @@
                                   ${file.getTitle()} &#09; - &#09; ${file.getCreationDate()}
                               </a>
                           </h2>
+                      </div>
+                      <div class="col-md-3">
+                            <!-- Take up space in the row-->
+                      </div>
+                      <div class="col-md-1">
+                          <c:if test="${! file.getTag().isEmpty()}">
+                              <h3><span class="label label-primary">
+                                  ${file.getTag()}
+                              </span></h3>
+                          </c:if>
                       </div>
                   </div>
               </c:forEach>

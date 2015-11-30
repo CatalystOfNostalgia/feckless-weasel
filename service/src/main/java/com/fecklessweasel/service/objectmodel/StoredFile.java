@@ -41,7 +41,7 @@ public class StoredFile {
      * started from.
      */
     private static final String FILEPATH_PREFIX = "files/";
-    
+
     /** A file's unique identifier. */
     private int fid;
     /** The user id of the user who uploaded the file. */
@@ -54,10 +54,12 @@ public class StoredFile {
     private String title;
     /** The file description. */
     private String description;
+
     /** The file tag. */
     private String tag;
     /** The file's extension. */
     private String extension;
+
     /**
      * Private constructor to the StoredFile object. Is only called in create();
      * @param fid The Files Unique Identifier in the table
@@ -329,6 +331,14 @@ public class StoredFile {
     }
 
     /**
+     * Gets the tag of this file
+     * @return the files tag
+     */
+    public String getTag() {
+        return this.tag;
+    }
+    
+    /**
      * Gets the file extensions for this StoredFile.
      * @return The file's extension.
      */
@@ -426,7 +436,7 @@ public class StoredFile {
 
         FileMetadataTable.deleteFile(sql, fid);
     }
-    
+
     /**
      * Saves a file to the server.
      * @param inputStream The file input stream.
