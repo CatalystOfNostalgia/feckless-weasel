@@ -8,20 +8,26 @@
     </head>
     <body>
         <jsp:include page="header.jsp"/>
-        <div class="jumbotron">
+        <div class="jumbotron" style="margin-bottom: 0px;">
             <div class="container">
                 <h1>Welcome to Feckless Weasel!</h1>
                 <p>Let Feckless Weasel help you ace your next test!</p>
             </div>
         </div>
-        <div class="container">
-            <div class="container">
-                <div class="col-md-4">
-                    <h2>Can't find your university?</h2>
-                    <p>That's okay! Get your university started and add your university on Feckless Weasel today.</p>
-                    <p>
-                        <a class="btn btn-warning" href="/university/create.jsp" role="button">Create</a>
-                    </p>
+        <div class="container-fluid">
+            <div class="row">
+                <jsp:include page="sidebar.jsp"/>
+                   <div class="container">
+                        <div class="container">
+                            <div class="col-md-4">
+                                <h2>Can't find your university?</h2>
+                                <p>That's okay! Get your university started and add your university on Feckless Weasel today.</p>
+                                <p>
+                                    <a class="btn btn-warning" href="/university/create.jsp" role="button">Create</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

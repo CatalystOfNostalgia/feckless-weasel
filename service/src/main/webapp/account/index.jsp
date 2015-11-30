@@ -7,7 +7,6 @@
     </head>
     <body>
         <%@ include file="/header.jsp" %>
-
         <%--
             Determines user who's info we'll display on this page. Looks first
             at "user" query param for a username. If none is given we revert to
@@ -31,23 +30,22 @@
 
             boolean isCurrentUsersProfile
                 = authSession != null && (user.equals(authSession.getUser()));
-         %>
-         <div class="jumbotron">
+        %>
+        <div class="col-sm-3 col-md-3 sidebar">
+            <ul class="nav nav-sidebar">
+                <li>Test</li>
+            </ul>
+        </div>
+        <div class="jumbotron">
             <div class="container">
                 <h1><%= user.getUsername() %>'s Profile</h1>
             </div>
         </div>
         <div class="container">
-            <ul>
-                <li>Joined on: <%= user.getJoinDate() %></li>
-                <li>
-                    Contact via: <%= user.getEmail() %>
-                    <%= isCurrentUsersProfile ? "<a href='/account/email_update.jsp'>Update Email</a>" : "" %>
-                </li>
-
-                <%-- If this is the current users profile, display a password reset link. --%>
-                <%= isCurrentUsersProfile ? "<li><a href='/account/password_update.jsp'>Change password</a></li>" : "" %>
-            </ul>
+            <h2>Contact Information</h2>
+            <p><b>Email:</b> <%= user.getEmail() %> <%= isCurrentUsersProfile ? "<a href='/account/email_update.jsp'>Update Email</a>" : "" %><p>
+            <h2>General Information</h2>
+            <p><b>Password:</b> ************ <%= isCurrentUsersProfile ? "<a href='/account/password_update.jsp'>Change Password</a>" : "" %>
         </div>
     </body>
 </html>
