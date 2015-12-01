@@ -296,7 +296,7 @@ public class StoredFile {
      * @return true if the user can edit the file.
      */
     public boolean userCanEdit(User user) throws ServiceException {
-        if (this.getExtension().equals("md")) {
+        if (!this.getExtension().equals("md")) {
             throw new ServiceException(ServiceStatus.INVALID_FILE_TYPE);
         }
 
