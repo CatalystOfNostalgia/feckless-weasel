@@ -50,9 +50,9 @@
                     <h1>
                         ${department.getAcronym()} ${course.getCourseNum()}
                         <%if (authSession != null && toggled) {%>
-                            <a href="/servlet/course?username=${user.getUsername()}&cid=${course.getID()}"><i class="glyphicon glyphicon-heart"></i></a>
+                            <a href="/servlet/course?username=${user.getUsername()}&cid=${course.getID()}"><i style="float: right; color: #f0ad4e;" class="glyphicon glyphicon-heart"></i></a>
                         <% } else if (authSession != null) { %>
-                            <a href="/servlet/course?username=${user.getUsername()}&cid=${course.getID()}"><i class="glyphicon glyphicon-heart-empty"></i></a>
+                            <a href="/servlet/course?username=${user.getUsername()}&cid=${course.getID()}"><i style="float: right; color: #f0ad4e;" class="glyphicon glyphicon-heart-empty"></i></a>
                         <% } %>
                     </h1>
                 <h2>
@@ -101,7 +101,7 @@
                       </div>
                       <div class="col-md-1">
                           <c:if test="${! file.getTag().isEmpty()}">
-                              <h3><span class="label label-primary">
+                              <h3><span class="label label-warning">
                                   ${file.getTag()}
                               </span></h3>
                           </c:if>

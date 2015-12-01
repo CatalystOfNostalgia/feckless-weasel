@@ -36,7 +36,7 @@ public abstract class FileMetadataTable{
         "DELETE FROM FileMetadata WHERE fid=?";
 
     public static final String LOOKUP_USER_NOTES =
-        "SELECT * FROM FileMetadata WHERE uid=? AND extension=md";
+        "SELECT * FROM FileMetadata WHERE uid=? AND extension='md'";
 
     /**
      * Inserts a file into the corresponding MySQL table. returns the generated fid
