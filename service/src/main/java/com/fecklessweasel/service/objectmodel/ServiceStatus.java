@@ -34,6 +34,7 @@ public enum ServiceStatus {
     NO_SQL(505, 500, "No SQL instance provided."),
     ACCESS_DENIED(506, 403, "Access denied."),
     FILE_READ_ERROR(507, 500, "Reading file from server failed."),
+    INVALID_FILE_TYPE(508, 500, "Invalid file type for attempted operation."),
 
     // App logic errors.
     APP_INVALID_USER_LENGTH(701, 400, "Username is either too short or too long."),
