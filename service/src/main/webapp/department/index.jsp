@@ -45,40 +45,39 @@
            request.setAttribute("department", tuple.value2);
            request.setAttribute("courses", tuple.value3);
         %>
-        <div class="jumbotron">
+        <div class="jumbotron" style="margin-bottom: 0px">
             <div class="container">
                 <h1>${department.getDeptName()}</h1>
                 <h2>
                     <span>${department.getAcronym()} at </span>
-                    <a href="/university?uid=${university.getID()}" title="${university.getLongName()}">${university.getAcronym()}</a>
+                    <a style="color: #f0ad4e" href="/university?uid=${university.getID()}" title="${university.getLongName()}">${university.getAcronym()}</a>
                 </h2>
             </div>
         </div>
-        <div class="container">
+        <div class="container-fluid">
             <div class="row">
-                <c:forEach var="courseObj" items="${courses}">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h2><a href="/course/index.jsp?cid=${courseObj.getID()}">
+                <jsp:include page="/sidebar.jsp"/>
+                <div class="container">
+                    <div class="col-md-6">
+                        <c:forEach var="courseObj" items="${courses}">
+                            <h2><a style="color: #f0ad4e;" href="/course/index.jsp?cid=${courseObj.getID()}">
                                 ${department.getAcronym()} ${courseObj.getCourseNum()}: ${courseObj.getCourseName()}
                             </a></h2>
-                        </div>
+                        </c:forEach>
                     </div>
-                </c:forEach>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
+                    <div class="col-md-6">
                         <h2>Create a Course</h2>
-                        <form class="form-inline" action="/servlet/course" method="post" enctype="application/x-www-form-urlencoded" 
+                        <form class="form-signin" action="/servlet/course" method="post" enctype="application/x-www-form-urlencoded" 
                             onsubmit="return validate()">
                              <input type="hidden" class = "text-large" id="method" name="method" value="handleCourseCreate">
                              <input type="hidden" class="text-large" id="department" name="department" placeholder= "department" value='${department.getID()}'>
                              <input type="text" class="form-control input-lg" id="course" name="course" placeholder="Course Number">
                              <input type="text" class="form-control input-lg" id="courseName" name="courseName" placeholder="Course Name">
                              <div>
-                                <button type="submit" class="btn btn-default" id="submit" name="submit">Create</button>
+                                <button type="submit" class="btn btn-warning" id="submit" name="submit">Create</button>
                              </div>
                         </form>
+                    </div>
                 </div>
             </div>
         </div>

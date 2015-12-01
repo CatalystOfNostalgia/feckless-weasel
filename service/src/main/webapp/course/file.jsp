@@ -36,9 +36,9 @@
                     <h1>
                         ${file.getTitle()}
                         <%if (authSession != null && toggled) {%>
-                            <a href="/servlet/file?username=${user.getUsername()}&fid=${file.getID()}"><i class="glyphicon glyphicon-heart"></i></a>
+                            <a href="/servlet/file?username=${user.getUsername()}&fid=${file.getID()}"><i style="float: right; color: #f0ad4e;" class="glyphicon glyphicon-heart"></i></a>
                         <% } else if (authSession != null) { %>
-                            <a href="/servlet/file?username=${user.getUsername()}&fid=${file.getID()}"><i class="glyphicon glyphicon-heart-empty"></i></a>
+                            <a href="/servlet/file?username=${user.getUsername()}&fid=${file.getID()}"><i style="float: right; color: #f0ad4e;" class="glyphicon glyphicon-heart-empty"></i></a>
                         <% } %>
                     </h1>
                     <h2>

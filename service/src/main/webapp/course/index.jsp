@@ -45,69 +45,69 @@
                 Boolean toggled = tuple.value5;
             %>
             <jsp:include page="/header.jsp"/>
-            <div class="jumbotron">
+            <div class="jumbotron" style="margin-bottom: 0px;">
                 <div class="container">
                     <h1>
                         ${department.getAcronym()} ${course.getCourseNum()}
                         <%if (authSession != null && toggled) {%>
-                            <a href="/servlet/course?username=${user.getUsername()}&cid=${course.getID()}"><i class="glyphicon glyphicon-heart"></i></a>
+                            <a href="/servlet/course?username=${user.getUsername()}&cid=${course.getID()}"><i style="float: right; color: #f0ad4e;" class="glyphicon glyphicon-heart"></i></a>
                         <% } else if (authSession != null) { %>
-                            <a href="/servlet/course?username=${user.getUsername()}&cid=${course.getID()}"><i class="glyphicon glyphicon-heart-empty"></i></a>
+                            <a href="/servlet/course?username=${user.getUsername()}&cid=${course.getID()}"><i style="float: right; color: #f0ad4e;" class="glyphicon glyphicon-heart-empty"></i></a>
                         <% } %>
                     </h1>
                 <h2>
-                    <a href="/department?did=${department.getID()}">${department.getDeptName()}</a>
+                    <a style="color=#f0ad4e;" href="/department?did=${department.getID()}">${department.getDeptName()}</a>
                     at
-                    <a href="/university?uid=${university.getID()}" title="${university.getLongName()}">${university.getAcronym()}</a>
+                    <a style="color=#f0ad4e;" href="/university?uid=${university.getID()}" title="${university.getLongName()}">${university.getAcronym()}</a>
                 </h2>
                 </div>
             </div>
-            <%if (request.getParameter("uploadSuccess") == null) {} else if (request.getParameter("uploadSuccess").equals("True")) {%>
-            <div class="container">
-                <div class="alert alert-success">
-                    <i class="glyphicon glyphicon-ok"></i>
-                    <strong>Yay!</strong> Upload was successful
+            <div class="container-fluid row">
+                <jsp:include page="/sidebar.jsp"/>
+                <div class="col-md-6">
+                    <%if (request.getParameter("uploadSuccess") == null) {} else if (request.getParameter("uploadSuccess").equals("True")) {%>
+                    <div class="container">
+                        <div class="alert alert-success">
+                            <i class="glyphicon glyphicon-ok"></i>
+                            <strong>Yay!</strong> Upload was successful
+                        </div>
+                    </div>
+                    <% }else {%>
+                    <div class="container">
+                        <div class="alert alert-danger">
+                            <i class="glyphicon glyphicon-remove"></i>
+                            <strong>Oh no!</strong> Looks like there was an error uploading your file. Please try again.
+                        </div>
+                    </div>
+                    <% } %>
                 </div>
-            </div>
-            <% }else {%>
-            <div class="container">
-                <div class="alert alert-danger">
-                    <i class="glyphicon glyphicon-remove"></i>
-                    <strong>Oh no!</strong> Looks like there was an error uploading your file. Please try again.
+                <div class="col-md-6">
+                    <div class="container">
+                    <%if (authSession != null) {%>
+                        <jsp:include page="/file_uploader.jsp">
+                            <jsp:param name="classID" value="${course.getID()}"/>
+                        </jsp:include>
+                    <% } else { %>
+                        <h1>Login or create an account to contribute!</h1>
+                    <% } %>
+                    </div>
                 </div>
-            </div>
-            <% } %>
-            <div class="container">
-            <%if (authSession != null) {%>
-                <jsp:include page="/file_uploader.jsp">
-                    <jsp:param name="classID" value="${course.getID()}"/>
-                </jsp:include>
-            <% } else { %>
-                <p>Login or create an account to contribute!</p>
-            <% } %>
-            </div>
-           <div class="container">
-              <c:forEach var="file" items="${files}">
-                  <div class="row">
-                      <div class="col-md-6">
-                          <h2>
-                              <a href="/course/file.jsp?fid=${file.getID()}" title="${file.getDescription()}">
-                                  ${file.getTitle()} &#09; - &#09; ${file.getCreationDate()}
-                              </a>
-                          </h2>
-                      </div>
-                      <div class="col-md-3">
-                            <!-- Take up space in the row-->
-                      </div>
-                      <div class="col-md-1">
-                          <c:if test="${! file.getTag().isEmpty()}">
-                              <h3><span class="label label-primary">
-                                  ${file.getTag()}
-                              </span></h3>
-                          </c:if>
-                      </div>
-                  </div>
-              </c:forEach>
+                <div class="col-md-6">
+                    <div class="container">
+                        <c:forEach var="file" items="${files}">
+                            <h2>
+                                <a href="/course/file.jsp?fid=${file.getID()}" title="${file.getDescription()}">
+                                    ${file.getTitle()} &#09; - &#09; ${file.getCreationDate()}
+                                </a>
+                                <c:if test="${! file.getTag().isEmpty()}">
+                                    <span class="label label-warning">
+                                        ${file.getTag()}
+                                    </span>
+                                </c:if>
+                            </h2>
+                        </c:forEach>
+                    </div>
+                </div>
             </div>
         </body>
     </body>
