@@ -28,10 +28,10 @@
                 </button></center>
             </div>
         </div>
-        <form action="/servlet/file/upload" method="post" enctype="multipart/form-data">
         <div class="table table-striped files" id="previews">
             <div id="template" class="file-row">
                 <!-- This is used as the file preview template -->
+                <form action="/servlet/file/upload" method="post" enctype="multipart/form-data" id="form">
                 <div class="col-md-3">
                     <span class="preview">
                         <img align="right" data-dz-thumbnail/>
@@ -65,15 +65,15 @@
                     </button>
                     </div>
                     <div>
-                    <button data-dz-remove class="btn btn-danger cancel btn-lg">
+                    <button data-dz-remove class="btn btn-danger cancel btn-lg" id="form">
                         <i class="glyphicon glyphicon-ban-circle"></i>
                         <span>Cancel</span>
                     </button>
                     </div>
                 </div>
+                </form>
             </div>
         </div>
         <script src="${pageContext.request.contextPath}/assets/js/dropzone/feckless_dropzone.js"></script>
-        </form>
     </body>
 </html>

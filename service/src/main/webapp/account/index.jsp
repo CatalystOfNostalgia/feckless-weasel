@@ -31,21 +31,21 @@
             boolean isCurrentUsersProfile
                 = authSession != null && (user.equals(authSession.getUser()));
         %>
-        <div class="col-sm-3 col-md-3 sidebar">
-            <ul class="nav nav-sidebar">
-                <li>Test</li>
-            </ul>
-        </div>
-        <div class="jumbotron">
+        <div class="jumbotron" style="margin-bottom: 0px;">
             <div class="container">
                 <h1><%= user.getUsername() %>'s Profile</h1>
             </div>
         </div>
-        <div class="container">
-            <h2>Contact Information</h2>
-            <p><b>Email:</b> <%= user.getEmail() %> <%= isCurrentUsersProfile ? "<a href='/account/email_update.jsp'>Update Email</a>" : "" %><p>
-            <h2>General Information</h2>
-            <p><b>Password:</b> ************ <%= isCurrentUsersProfile ? "<a href='/account/password_update.jsp'>Change Password</a>" : "" %>
+        <div class="container-fluid">
+            <div class="row">
+                <jsp:include page="/sidebar.jsp"/>
+                <div class="container">
+                    <h2>Contact Information</h2>
+                    <p><b>Email:</b> <%= user.getEmail() %> <%= isCurrentUsersProfile ? "<a href='/account/email_update.jsp'>Update Email</a>" : "" %><p>
+                    <h2>General Information</h2>
+                    <p><b>Password:</b> ************ <%= isCurrentUsersProfile ? "<a href='/account/password_update.jsp'>Change Password</a>" : "" %>
+                </div> 
+            </div>
         </div>
     </body>
 </html>

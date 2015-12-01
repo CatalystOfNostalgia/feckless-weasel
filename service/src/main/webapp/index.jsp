@@ -28,20 +28,19 @@
         <div class="container-fluid">
             <div class="row">
                 <jsp:include page="sidebar.jsp"/>
-                   <div class="container">
-                        <div class="container">
-                            <div class="col-md-4">
-                                <h2>Can't find your university?</h2>
-                                <p>That's okay! Get your university started and add your university on Feckless Weasel today.</p>
-                                <p>
-                                    <a class="btn btn-warning" href="/university/create.jsp" role="button">Create</a>
-                                </p>
-                            </div>
-                            <div class="col-md-4">
-                                <c:forEach var="university" items="${univs}">
-                                    <p><a href="/university/index.jsp?uid=${university.getID()}">${university.getLongName()}</a></p>
-                                </c:forEach>
-                            </div>
+                <div class="container">
+                    <div class="container">
+                        <div class="col-md-4">
+                            <h2>Can't find your university?</h2>
+                            <p>That's okay! Get your university started and add your university on Feckless Weasel today.</p>
+                            <p>
+                                <a class="btn btn-warning" href="/university/create.jsp" role="button">Create</a>
+                            </p>
+                        </div>
+                        <div class="col-md-4">
+                            <c:forEach var="university" items="${univs}">
+                                <p><a href="/university/index.jsp?uid=${university.getID()}">${university.getLongName()}</a></p>
+                            </c:forEach>
                         </div>
                     </div>
                 </div>

@@ -20,7 +20,7 @@
             });
 
             request.setAttribute("courses", tuple.value1);
-            request.setAttribute("files", tuple.value2);
+            request.setAttribute("sideFiles", tuple.value2);
             request.setAttribute("notes", tuple.value3);
     }        
 %>
@@ -31,15 +31,15 @@
             <h2>My Favorite Classes</h2>
             <c:forEach var="course" items="${courses}">
                 <li>
-                    <a href="/course/index.jsp?cid=${course.getID()}">${course.getCourseName()}</a>
+                    <a style="color: #7F5926;" href="/course/index.jsp?cid=${course.getID()}">${course.getCourseName()}</a>
                 </li>
             </c:forEach>
         </ul>
         <ul class="nav nav-sidebar">
             <h2>My Favorite Files</h2>
-            <c:forEach var="file" items="${files}">
+            <c:forEach var="file" items="${sideFiles}">
                 <li>
-                    <a href="/course/file.jsp?fid=${file.getID()}">${file.getTitle()}</a>
+                    <a style="color: #7F5926;" href="/course/file.jsp?fid=${file.getID()}">${file.getTitle()}</a>
                 </li>
             </c:forEach>
 
@@ -48,7 +48,7 @@
             <h2>My Notes</h2>
             <c:forEach var="note" items="${notes}">
                 <li>
-                    <a href="/editor.jsp?fid=${note.getID()}">${note.getTitle()}</a>
+                    <a style="color: #7F5926;" href="/editor.jsp?fid=${note.getID()}">${note.getTitle()}</a>
                 </li>
             </c:forEach>
         </ul>
