@@ -5,6 +5,41 @@
     <head>
         <title>Course</title>
         <link href="${pageContext.request.contextPath}/assets/bootstrap-3.3.5-dist/css/bootstrap.min.css" rel="stylesheet">
+        <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+        <script language="javascript">
+            function filterTags(tagStub) {
+                console.log(tagStub);
+                if (tagStub == "noFilter") {
+                    var allRows = $(".hTag");
+                    for (var i=0; i<allRows.length; i++) {
+                        $(allRows[i]).show();
+                    }
+                    return;
+                }
+                var rows = $(".hTag:not(."+tagStub+")");
+                //hide all things with tag 
+                for (var i=0; i<rows.length; i++){
+                    $(rows[i]).hide();
+                }
+
+                rows = $("."+tagStub);
+                for (var i=0; i<rows.length; i++){
+                    $(rows[i]).show();
+                }
+            }
+
+            $( document ).ready(function () {
+                console.log("here");
+                var ele = document.querySelectorAll("#tagFilter");
+                console.log(ele);
+                for(var i=0; i<ele.length; i++){
+                    console.log("iterating");
+                    ele[i].addEventListener("click", function(){
+                        filterTags(this.value);
+                    });
+                }
+            });
+        </script>        
     </head>
         <body class="four-column">
             <jsp:include page="/header.jsp"/>
@@ -64,6 +99,19 @@
             </div>
             <div class="container-fluid row">
                 <jsp:include page="/sidebar.jsp"/>
+                <div class="col-md-9">
+                    <center><div class="btn-group" role="group" aria-label="Tag yo doc">
+                            <button type="button" id="tagFilter" class="btn btn-lg btn-warning" value="notes">Notes</button>
+                            <button type="button" id="tagFilter" class="btn btn-lg btn-warning" value="assignmentAnswers">Assignment Answers</button>`
+                            <button type="button" id="tagFilter" class="btn btn-lg btn-warning" value="assignment">Assignment</button>
+                            <button type="button" id="tagFilter" class="btn btn-lg btn-warning" value="quiz">Quiz</button>
+                            <button type="button" id="tagFilter" class="btn btn-lg btn-warning" value="quizAnswers">Quiz Answers</button>
+                            <button type="button" id="tagFilter" class="btn btn-lg btn-warning" value="test">Test</button>
+                            <button type="button" id="tagFilter" class="btn btn-lg btn-warning" value="testAnswers">Test Answers</button>
+                            <button type="button" id="tagFilter" class="btn btn-lg btn-warning" value="noFilter">No Filter</button>
+
+                    </div></center>
+                </div>
                 <div class="col-md-6">
                     <%if (request.getParameter("uploadSuccess") == null) {} else if (request.getParameter("uploadSuccess").equals("True")) {%>
                     <div class="container">
@@ -95,7 +143,7 @@
                 <div class="col-md-6">
                     <div class="container">
                         <c:forEach var="file" items="${files}">
-                            <h2>
+                            <h2 class="hTag ${file.getTag()}">
                                 <a href="/course/file.jsp?fid=${file.getID()}" title="${file.getDescription()}">
                                     ${file.getTitle()} &#09; - &#09; ${file.getCreationDate()}
                                 </a>
