@@ -42,7 +42,9 @@
                             </p>
 
                             <div class="container">
-                                <h3>New files from your classes!</h3>
+                                <% if (authSession != null) { %>
+                                    <h3>New files from your classes!</h3>
+                                <% } %>
                                 <c:forEach var="file" items="${recentFiles}">
                                     <div class="row">
                                         <div class="col-sm-5">
