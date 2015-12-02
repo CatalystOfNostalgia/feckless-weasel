@@ -19,9 +19,9 @@ import com.fecklessweasel.service.objectmodel.ServiceStatus;
  */
 public abstract class RatingTable{
     
-    private static String ADD_RATING = "insert into Rating (uid, fid, rating) values (?,?,?)"
+    private static String ADD_RATING = "insert into Rating (uid, fid, rating) values (?,?,?)";
             
-    private static String UPDATE_RATING = "update Rating set rating=? where uid=? and fid=?"
+    private static String UPDATE_RATING = "update Rating set rating=? where uid=? and fid=?";
     
     private static String GET_FILE_RATING = "SELECT AVG(rating) as avg FROM Rating WHERE fid=?";
     
