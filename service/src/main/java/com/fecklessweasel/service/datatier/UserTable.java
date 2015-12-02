@@ -52,7 +52,7 @@ public class UserTable {
         "SELECT fid, uid, cid, title, description, tag, extension, creation_date " +
         "FROM Filemetadata F, Course C WHERE F.cid=C.id AND C.id " +
         "IN (SELECT Z.cid FROM User U, FavoriteCourse Z WHERE U.uid=Z.uid AND U.uid=?) " +
-        "ORDER BY creation_date ASC LIMIT 10";
+        "ORDER BY creation_date DESC LIMIT 10";
 
 
     /**
