@@ -91,8 +91,10 @@
                       var deptIdList = new Array();
                       var deptClick = document.getElementById("department");
                       document.addEventListener('DOMContentLoaded', function () {
-                          deptClick.addEventListener('click', function() {
+                          deptClick.addEventListener('focus', function() {
                               var $form = $("#uidform");
+                              deptList = new Array();
+                              deptIdList = new Array;
                               $.post($form.attr("action"), $form.serialize(), function(responseJson) {
                                 $.each(responseJson, function(key, value) {
                                     deptList.push(value);
@@ -132,7 +134,9 @@
                 var courseIdList = new Array();
                 var courseClick = document.getElementById("class");
                 document.addEventListener('DOMContentLoaded', function () {
-                    courseClick.addEventListener('click', function() {
+                    courseClick.addEventListener('focus', function() {
+                        courseList = new Array();
+                        courseLidList = new Array();
                         var $form = $("#didform");
                             $.post($form.attr("action"), $form.serialize(), function(responseJson) {
                                 $.each(responseJson, function(key, value) {
