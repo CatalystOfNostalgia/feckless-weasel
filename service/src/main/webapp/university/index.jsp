@@ -24,7 +24,7 @@
         <div class="jumbotron" style="margin-bottom: 0px;">
             <div class="container">
                 <h1>${university.getLongName()}</h1>
-                <h2>${depts.size()} total Departments</h2>
+                <h2>${university.getCity()}, ${university.getState()} ${university.getCountry()}</h2>
             </div>
         </div>
         <div class="container-fluid">
