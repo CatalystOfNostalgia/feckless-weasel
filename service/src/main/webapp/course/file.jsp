@@ -41,7 +41,7 @@
                         Created by <a style="color: #f0ad4e;" href="/account?user=${user.getUsername()}">${user.getUsername()}</a> on ${file.getCreationDate()}.
                         <br>
                         <a style="color: #f0ad4e;" href="/course?cid=${course.getID()}">${course.getCourseNum()}: ${course.getCourseName()}</a>
-       
+
                         <a style="color: #f0ad4e;" href="/servlet/file/download?fid=${file.getID()}">
                             <span style="color: #f0ad4e; float: right;" class="glyphicon glyphicon-download-alt"></span>
                         </a>
@@ -75,7 +75,7 @@
             <%if (authSession != null) {%>
             <form class="form-comment" action="/servlet/file/comment" method="post" enctype="application/x-www-form-urlencoded">
                 <h2>Have something to say?</h2>
-                <textarea class="form-control" rows="5" name="text" placeholder="username">What's on your mind?</textarea>
+                <textarea class="form-control" rows="5" name="text" placeholder="What's on your mind?"></textarea>
                 <input type="hidden" name="fileid" value='${file.getID()}'>
                 <input type="hidden" name="username" value='${user.getUsername()}'>
                 <button type="submit" id="submit" class="btn btn-lg btn-warning" name="submit">Comment</button>
