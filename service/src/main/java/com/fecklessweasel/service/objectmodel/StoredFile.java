@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.fecklessweasel.service.datatier.FileMetadataTable;
+import com.fecklessweasel.service.datatier.RatingTable;
 import com.fecklessweasel.service.datatier.SQLInteractionInterface;
 import com.fecklessweasel.service.datatier.SQLSource;
 
@@ -73,7 +74,7 @@ public class StoredFile {
      * @param tag The tag associated with the file.
      * @param extension The file extension.
      */
-    private StoredFile(int fid, int uid, int cid, Date creationDate,
+    protected StoredFile(int fid, int uid, int cid, Date creationDate,
                        String title, String description, String tag, String extension) {
         this.fid = fid;
         this.uid = uid;
@@ -447,6 +448,29 @@ public class StoredFile {
         } catch (SQLException ex) {
             throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
         }
+    }
+    
+    /**
+     * Returns comments on this file.
+     *@param start The first comment to get.
+     * @param count The amount of comments to get.
+     * @return A list of Comment objects.
+     */
+    public List<Comment> lookupComments(Connection conn, int start, int count) throws ServiceException{
+        return Comment.lookupFileComments(conn, this.fid, start, count);
+    }
+    
+    /**
+     * Returns the rating of this file.
+     * @param conn A connection to the database.
+     * @return The rating of this file.
+     */
+    public int lookupRating(Connection conn) throws ServiceException{
+        return Rating.lookupFileRating(conn, this.fid);
+    }
+    
+    public int getRatingByUser(Connection conn, int uid) throws ServiceException {
+        return RatingTable.getUserFileRating(conn, uid, this.fid);
     }
 
     /**

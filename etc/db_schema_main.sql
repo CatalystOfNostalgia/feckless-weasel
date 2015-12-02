@@ -44,3 +44,9 @@ SOURCE etc/db_schema_favorite_file_table.sql;
 
 /* Create FavoriteCourses Table */
 SOURCE etc/db_schema_favorite_course_table.sql;
+
+/* Create Comments Table*/
+SOURCE etc/db_schema_comment_table.sql;
+
+/* Create Ratings Table*/
+SOURCE etc/db_schema_rating_table.sql;

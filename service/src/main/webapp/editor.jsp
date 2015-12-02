@@ -13,6 +13,23 @@
     <link href="${pageContext.request.contextPath}/assets/css/vue.css" rel="stylesheet" type="text/css">
     <script src="${pageContext.request.contextPath}/assets/js/vue/vue.js"></script>
     <script src="${pageContext.request.contextPath}/assets/js/vue/marked.min.js"></script>
+    <script language="javascript">
+        function validate(event) {
+            var noteTitleInput = document.getElementById('title');
+            var noteDescInput  = document.getElementById('description');
+
+            if (noteTitleInput.value.length <= 0 || noteTitleInput.value.length > <%= StoredFile.MAX_TITLE %>) {
+                alert("Note title must be nonzero and be shorter than <%= StoredFile.MAX_TITLE %> characters.");
+                return false;
+            }
+
+            if (noteDescInput.value.length <= 0 || noteDescInput.value.length > <%= StoredFile.MAX_DESCRIPTION %>) {
+                alert("Note description must be nonzero and shorter than <%= StoredFile.MAX_DESCRIPTION %> characters.");
+                return false;
+            }
+            return true;
+        }
+    </script>
 </head>
 <body>
     <jsp:include page="header.jsp"/>
@@ -33,10 +50,10 @@
             textareaContents = StoredFile.getMarkdownText(fid);
         }
     %>
-    <form action="/servlet/markdown/upload" method="post" class="form-vertical" style="margin-top:1%;">
+    <form action="/servlet/markdown/upload" method="post" class="form-vertical" style="margin-top:1%;" onsubmit="return validate()">
         <div class="container">
             <input type="text" class="form-control" id="title" name="title" placeholder="title" value="<%=title%>">
-            <textarea class="form-control" id="description" rows="5" name="description"><%=description%></textarea>
+            <textarea class="form-control" id="description" rows="5" placeholder="Description" name="description"><%=description%></textarea>
             <input type="hidden" name="cid" id="cid" value="${param.cid}">
             <input type="hidden" name="fid" id="fid" value="<%=request.getParameter("fid")%>">
         </div>

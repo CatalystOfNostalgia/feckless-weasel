@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
+import java.sql.SQLIntegrityConstraintViolationException;
 
 import com.fecklessweasel.service.objectmodel.CodeContract;
 import com.fecklessweasel.service.objectmodel.ServiceException;

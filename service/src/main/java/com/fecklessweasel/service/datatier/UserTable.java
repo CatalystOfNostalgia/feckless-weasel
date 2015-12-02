@@ -47,6 +47,14 @@ public class UserTable {
         "SELECT * FROM User U, UserRole R, UserHasRole H WHERE U.uid=?" +
         " AND U.uid=H.uid AND H.rid=R.rid";
 
+    /** Lookup 10 most recent files uploaded to the user's favorite classes. */
+    public static String MOST_RECENT_COURSE_FAVORITES_QUERY =
+        "SELECT fid, uid, cid, title, description, tag, extension, creation_date " +
+        "FROM Filemetadata F, Course C WHERE F.cid=C.id AND C.id " +
+        "IN (SELECT Z.cid FROM User U, FavoriteCourse Z WHERE U.uid=Z.uid AND U.uid=?) " +
+        "ORDER BY creation_date DESC LIMIT 10";
+
+
     /**
      * Private constructor to prevent instantiation.
      */
@@ -252,4 +260,26 @@ public class UserTable {
             throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
         }
     }
+
+    /**
+     * Gets the 10 most recently updated files from the given user's favorite classes.
+     * @param conn MySQL connection
+     * @param uid The ID of the user who favorited the courses
+     * @return a ResultSet of all (uid, cid) with the passed in uid
+     */
+    public static ResultSet lookupMostRecentFilesFromFavoriteCourses(Connection conn, int uid)
+        throws ServiceException {
+
+        CodeContract.assertNotNull(conn, "conn");
+
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(MOST_RECENT_COURSE_FAVORITES_QUERY);
+            preparedStatement.setInt(1, uid);
+
+            return preparedStatement.executeQuery();
+        } catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        }
+    }
+
 }

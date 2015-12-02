@@ -4,6 +4,7 @@ CREATE TABLE Department (
 	univid int,
 	deptName varchar(50),
 	acronym varchar(4),
+	UNIQUE(univid, acronym),
 	INDEX USING HASH(univid, deptname),
 	PRIMARY KEY(id),
 	FOREIGN KEY (univid) REFERENCES University(id)

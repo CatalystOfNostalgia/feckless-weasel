@@ -1,21 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"
     import="com.fecklessweasel.service.objectmodel.*, java.sql.Connection, com.fecklessweasel.service.datatier.*,  com.fecklessweasel.service.*, java.util.*" %>
-<nav class="navbar navbar-fixed-top navbar-inverse">
+<nav class="navbar navbar-fixed-top navbar-inverse" style="z-index: 50;">
     <div class="container">
         <div class="navbar-header">
             <a href="/index.jsp" class="pull-left">
-                <img style="padding-top: 15%; max-width:50px; margin-top: -7px" src="${pageContext.request.contextPath}/assets/img/logo.png">
+                <img style="padding-top: 40%; max-width:50px; margin-top: -7px" src="${pageContext.request.contextPath}/assets/img/logo.png">
             </a>
         </div>
          <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-         <link rel ="stylesheet" href="/assets/dropdown.scss">
+         <link rel="stylesheet" href="https://raw.githubusercontent.com/jquery-ui-bootstrap/jquery-ui-bootstrap/masterbs3/css/custom-theme/jquery-ui-1.10.3.custom.css">
          <script src="//code.jquery.com/jquery-1.10.2.js"></script>
          <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
         <div id="navbar" class="navbar-collapse collapse">
         <form class="form-inline" id="uidform" name="uidform" style="visibility:hidden" action="/servlet/DepartmentSearch" method="post" enctype="application/x-www-form-urlencoded">
         <input type="hidden" class="form-control" id="univId" name="univId">
-        <input type="submit" style="position: absolute; left: -9999px" value="Submit">
         </form>
         <form class="form-inline" id="didform" name="didform" style="visibility:hidden" action="/servlet/CourseSearch" method="post" enctype="application/x-www-form-urlencoded">
             <input type="hidden" class="form-control" id="deptId" name="deptId">
@@ -85,7 +84,7 @@
                 </script>
             </div>
             <div class="form-group">
-                <input type="text" class="form-control" id="department" name="department" placeholder="Department Acronym">'>
+                <input type="text" class="form-control" id="department" name="department" placeholder="Department Acronym">
                   <script>
                       var deptList = new Array();
                       var deptIdList = new Array();

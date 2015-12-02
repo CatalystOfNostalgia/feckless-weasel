@@ -17,7 +17,7 @@ import com.fecklessweasel.service.objectmodel.ServiceStatus;
  * Wrapper class for MySQL FileMetadata tabke.
  * @author Hayden Schmackpfeffer
  */
-public abstract class FileMetadataTable{
+public abstract class FileMetadataTable {
 
     public static final String INSERT_FILE_QUERY =
         "INSERT INTO FileMetadata (uid, cid, creation_date, title, description, tag, extension)" +

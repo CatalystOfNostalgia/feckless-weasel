@@ -16,6 +16,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.fecklessweasel.service.datatier.UserTable;
+import com.fecklessweasel.service.datatier.RatingTable;
 import com.fecklessweasel.service.datatier.UserRoleTable;
 import com.fecklessweasel.service.datatier.UserHasRoleTable;
 import com.fecklessweasel.service.datatier.FavoritesTable;
@@ -107,6 +108,23 @@ public final class User {
                                 UserRoleTable.ROLE_USER_DESCRIPTION));
 
         return user;
+    }
+    
+    /**
+     * Create a user with data from the database.
+     * @param result The ResultSet from the database.
+     * @return A user object.
+     */
+    protected static User fromResultSet(ResultSet result) throws ServiceException{
+        try{
+            return new User(result.getInt("uid"),
+                result.getString("user"),
+                result.getString("pass"),
+                result.getDate("join_date"),
+                result.getString("email"));
+        } catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        }
     }
 
     /**
@@ -285,6 +303,21 @@ public final class User {
     }
 
     /**
+     * Returns the trust score of this user.
+     * @param conn A connection to the database.
+     * @return The trust score of this user.
+     */
+    public double lookupTrustScore(Connection conn) throws ServiceException{
+        OMUtil.sqlCheck(conn);
+        double score = 0;
+        Iterable<StoredFile> files = StoredFile.lookupUserFiles(conn, this.uid);
+        for(StoredFile f : files){
+            score += f.lookupRating(conn);
+        }
+        return score;
+    }
+    
+    /**
      * Checks if two User objects refer to the same User account.
      * @param o The object to compare.
      * @return True if they are the same user.
@@ -332,7 +365,7 @@ public final class User {
      * protected.
      * @return The user's AUTO_INCREMENT id.
      */
-    int getID() {
+    public int getID() {
         return this.uid;
     }
 
@@ -441,6 +474,40 @@ public final class User {
     }
 
     /**
+     * Gets the 10 most recently uploaded files from recent courses.
+     * @param connection The connection to the database.
+     * @return A collection of the 10 most recent uploads to this user's favorite courses.
+     */
+    public Iterable<StoredFile> lookupMostRecentFilesFromFavoriteCourses(Connection connection) throws ServiceException {
+
+        OMUtil.sqlCheck(connection);
+
+        ResultSet result = UserTable.lookupMostRecentFilesFromFavoriteCourses(connection, this.getID());
+        ArrayList<StoredFile> files = new ArrayList<StoredFile>();
+
+        try {
+            // If no tuples returned, throw error.
+            // TODO: do this construction in StoredFile. Bahh humbug, too late for encapsulation!!!
+            // Demo is a coming! PREPARE YAR SELF!!!
+            while (result.next()) {
+                files.add(new StoredFile(result.getInt("fid"),
+                                         result.getInt("uid"),
+                                         result.getInt("cid"),
+                                         result.getDate("creation_date"),
+                                         result.getString("title"),
+                                         result.getString("description"),
+                                         result.getString("tag"),
+                                         result.getString("extension")));
+            }
+
+            result.close();
+            return files;
+        } catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        }
+    }
+
+    /**
      * Toggle if this user has favorited the input course or not
      * @throws ServiceException on database error
      * @param sql Database connection
@@ -468,6 +535,14 @@ public final class User {
      */
     public boolean checkIfFavCourse(Connection sql, int cid) throws ServiceException {
         return FavoritesTable.favoriteCourseExists(sql, this.uid, cid);
+    }
+    
+    /**
+     * Checks if the user has rated the given file.
+     * @param conn A connection to the database
+     */
+    public int checkFileRating(Connection conn, int fid) throws ServiceException {
+        return RatingTable.getUserFileRating(conn, this.uid, fid);
     }
 
     /**
