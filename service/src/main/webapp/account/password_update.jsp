@@ -42,10 +42,10 @@
             <form class="form-signin" action="/servlet/user" method="post" enctype="application/x-www-form-urlencoded" onsubmit="return validate()">
                 <h2 class="form-signin-heading">Update Password</h1>
                 <input type="hidden" name="action" value="update_password" />
-                <input type="hidden" id="username" name="username" value="<%= authSession.getUser().getUsername() %>" />
-                <input type="password" class="form-control" id="password" name="password" placeholder="current password" />
-                <input type="password" class="form-control" id="new-password" name="new-password" placeholder="new password" />
-                <input type="password" class="form-control" id="new-password-retype" name="new-password-retype" placeholder="retype new password" />
+                <input type="hidden" id="username" name="username" value="<%= authSession.getUser().getUsername() %>" style="margin-bottom: -1px;"/>
+                <input type="password" class="form-control" id="password" name="password" placeholder="current password" style="margin-bottom: -1px;"/>
+                <input type="password" class="form-control" id="new-password" name="new-password" placeholder="new password" style="margin-bottom: -1px;"/>
+                <input type="password" class="form-control" id="new-password-retype" name="new-password-retype" placeholder="retype new password" style="margin-bottom: 10px;"/>
                 <input type="submit" class="btn btn-lg btn-warning btn-block" id="submit" name="submit" value="Update Password" \>
             </form>
         </div>
