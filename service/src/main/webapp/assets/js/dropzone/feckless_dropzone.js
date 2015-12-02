@@ -16,7 +16,7 @@ var drop = new Dropzone(document.body, {
     paramName: "file",
     parallelUploads: 100,
     previewTemplate: previewTemplate,
-    previewContainer: "#previews",
+    previewsContainer: "#previews",
     uploadMultiple: true,
     acceptedFiles: "image/*, application/pdf, application/doc, application/docx",
     clickable: ".fileinput-button"
@@ -53,6 +53,7 @@ drop.on("sending", function(file, xhr, formData){
     formData.append("title", this.element.querySelector("#title").value);
     formData.append("description", this.element.querySelector("#description").value);
     formData.append("class", this.element.querySelector("#classID").value);
+    formData.append("file", file);
     classID = this.element.querySelector("#classID").value;
     formData.append("tag", tag);
 });

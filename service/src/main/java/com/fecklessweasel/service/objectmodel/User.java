@@ -3,6 +3,8 @@ package com.fecklessweasel.service.objectmodel;
 import java.sql.Connection;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -16,6 +18,7 @@ import java.sql.SQLException;
 import com.fecklessweasel.service.datatier.UserTable;
 import com.fecklessweasel.service.datatier.UserRoleTable;
 import com.fecklessweasel.service.datatier.UserHasRoleTable;
+import com.fecklessweasel.service.datatier.FavoritesTable;
 
 /**
  * User API, used for all operations pertaining to a user and his or her
@@ -443,6 +446,123 @@ public final class User {
 
         // Remove Role from user in database.
         UserHasRoleTable.deleteUserHasRole(connection, this.uid, role);
+    }
+
+    /**
+     * Return all Courses that the User has favorited
+     * @throws ServiceException if there is a database problem
+     * @param connection The database connection
+     * @return List of All Courses the User has Favorited
+     */
+    public Iterable<Course> getFavoriteCourses(Connection connection) throws ServiceException {
+
+        OMUtil.sqlCheck(connection);
+
+        ResultSet results = FavoritesTable.getFavoriteCourses(connection, this.uid);
+        ArrayList<Course> courses = new ArrayList<Course>();
+        try {
+            while (results.next()) {
+                courses.add(Course.lookupById(connection, results.getInt("cid")));
+            }
+
+            results.close();
+            return courses;
+        } catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        }
+    }
+
+    /**
+     * Toggle if this user has favorited the input course or not
+     * @throws ServiceException on database error
+     * @param sql Database connection
+     * @param cid ID of the course being favorited
+     * @return True if Course is now favorited, False if not
+     */
+    public boolean toggleFavoriteCourse(Connection sql, int cid) throws ServiceException {
+        if (FavoritesTable.favoriteCourseExists(sql, this.uid, cid)) {
+            //favorite exists, we want to delete the favorite
+            FavoritesTable.deleteFavoriteCourse(sql, this.uid, cid);
+            return false;
+        } else {
+            //favorite doesn't exist, add it
+            FavoritesTable.insertFavoriteCourse(sql, this.uid, cid);
+            return true;
+        }
+    }
+
+    /** 
+     * Determine if this user has already favorited the course
+     * @throw ServiceException on database error
+     * @param sql Database Connection
+     * @param cid ID of Course
+     * @return true if user has favorited course, false if not
+     */
+    public boolean checkIfFavCourse(Connection sql, int cid) throws ServiceException {
+        return FavoritesTable.favoriteCourseExists(sql, this.uid, cid);
+    }
+
+    /**
+     * Return all Files that the User has favorited
+     * @throws ServiceException if there is a database problem
+     * @param connection The database connection
+     * @return List of All Files the User has Favorited
+     */
+    public Iterable<StoredFile> getFavoriteFiles(Connection connection) throws ServiceException {
+
+        OMUtil.sqlCheck(connection);
+
+        ResultSet results = FavoritesTable.getFavoriteFiles(connection, this.uid);
+        ArrayList<StoredFile> files = new ArrayList<StoredFile>();
+        try {
+            while (results.next()) {
+                files.add(StoredFile.lookup(connection, results.getInt("fid")));
+            }
+
+            results.close();
+            return files;
+        } catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        }
+    }
+
+    /**
+     * Toggle if this user has favorited the input file or not
+     * @throws ServiceException on database error
+     * @param sql Database connection
+     * @param fid ID of the File being favorited
+     * @return True if file is now favorited, False if not
+     */
+    public boolean toggleFavoriteFile(Connection sql, int fid) throws ServiceException {
+        if (FavoritesTable.favoriteFileExists(sql, this.uid, fid)) {
+            //favorite exists, we want to delete the favorite
+            FavoritesTable.deleteFavoriteFile(sql, this.uid, fid);
+            return false;
+        } else {
+            //favorite doesn't exist, add it
+            FavoritesTable.insertFavoriteFile(sql, this.uid, fid);
+            return true;
+        }
+    }
+
+    /**
+     * Get all notes belonging to this user
+     * @param sql Database connection
+     * @return List of all notes belonging to this user 
+     */
+    public Iterable<StoredFile> getNotes(Connection sql) throws ServiceException {
+        return StoredFile.lookupUserNotes(sql, this.uid);
+    }
+
+    /** 
+     * Determine if this user has already favorited the file
+     * @throw ServiceException on database error
+     * @param sql Database Connection
+     * @param fid ID of File
+     * @return true if user has favorited file, false if not
+     */
+    public boolean checkIfFavFile(Connection sql, int fid) throws ServiceException {
+        return FavoritesTable.favoriteFileExists(sql, this.uid, fid);
     }
 
     /**
