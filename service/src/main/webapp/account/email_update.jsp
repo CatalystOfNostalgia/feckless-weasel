@@ -36,8 +36,8 @@
                 <h2 class="form-signin-heading">Update Email</h2>
                 <input type="hidden" name="action" value="update_email" />
                 <input type="hidden" class="text-large" id="username" name="username" placeholder="username" value="<%= authSession.getUser().getUsername() %>" />
-                <input type="text" class="form-control" id="email" name="email" placeholder="email" />
-                <input type="submit" class="btn btn-lg btn-warning btn-block id="submit" name="submit" value="Update Email" \>
+                <input type="text" class="form-control" id="email" name="email" placeholder="email" style="margin-bottom: 10px;"/>
+                <input type="submit" class="btn btn-lg btn-warning btn-block" id="submit" name="submit" value="Update Email" \>
             </form>
         </div>
     </body>
