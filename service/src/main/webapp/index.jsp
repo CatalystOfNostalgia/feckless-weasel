@@ -9,18 +9,21 @@
     <body>
         <%@ include file="/header.jsp" %>
         <%
-          Iterable<StoredFile> recentFiles =
-          SQLSource.interact(new SQLInteractionInterface<Iterable<StoredFile>>() {
+          Tuple<Iterable<StoredFile>, Iterable<University>> tuple =
+          SQLSource.interact(new SQLInteractionInterface<Tuple<Iterable<StoredFile>, Iterable<University>>>() {
               @Override
-              public Iterable<StoredFile> run(Connection connection) throws ServiceException {
+              public Tuple<Iterable<StoredFile>, Iterable<University>> run(Connection connection) throws ServiceException {
                   if (authSession == null) {
-                      return new ArrayList<StoredFile>();
+                      return new Tuple<Iterable<StoredFile>, Iterable<University>>( new  ArrayList<StoredFile>(),
+                              University.lookUpAll(connection));
                   }
-                  return authSession.getUser().lookupMostRecentFilesFromFavoriteCourses(connection);
+                  return new Tuple<Iterable<StoredFile>, Iterable<University>>(
+                          authSession.getUser().lookupMostRecentFilesFromFavoriteCourses(connection),
+                          University.lookUpAll(connection));
               }
           });
- 
-          request.setAttribute("recentFiles", recentFiles);
+          request.setAttribute("recentFiles", tuple.value1);
+          request.setAttribute("universities", tuple.value2);
         %>
         
         <div class="jumbotron" style="margin-bottom: 0px;">
@@ -63,6 +66,12 @@
                                     </div>
                                 </c:forEach>
                             </div>
+                        </div>
+                        <div class="col-md-4">
+                            <h2>Available Universities</h2>
+                            <c:forEach var="university" items="${universities}">
+                                <p style="color: #f0ad4e;"><a style="color: #f0ad4e;" href="/university/index.jsp?uid=${university.getID()}">${university.getLongName()}</a></p>
+                            </c:forEach>
                         </div>
                     </div>
                 </div>
