@@ -73,7 +73,7 @@ public class StoredFile {
      * @param tag The tag associated with the file.
      * @param extension The file extension.
      */
-    private StoredFile(int fid, int uid, int cid, Date creationDate,
+    protected StoredFile(int fid, int uid, int cid, Date creationDate,
                        String title, String description, String tag, String extension) {
         this.fid = fid;
         this.uid = uid;

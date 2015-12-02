@@ -62,7 +62,8 @@
                     <div class="col-sm-5">
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                <strong>${comment.getUser().getUsername()}</strong> <span class="text-muted">commented on ${comment.getTime()}</span>
+                                <a href="/account?user=${comment.getUser().getUsername()}"><strong>${comment.getUser().getUsername()}</strong></a>
+                                <span class="text-muted">commented on ${comment.getTime()}</span>
                             </div>
                             <div class="panel-body">
                                 ${comment.getText()}
