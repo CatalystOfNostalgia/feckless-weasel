@@ -15,12 +15,15 @@
                 final Course course = file.lookupCourse(connection);
                 final User user = file.lookupUser(connection);
                 boolean toggled = user.checkIfFavFile(connection, OMUtil.parseInt(request.getParameter("fid")));
+                int userRating = user.checkFileRating(connection, OMUtil.parseInt(request.getParameter("fid")));
                 final List<Comment> comments = file.lookupComments(connection, 0, 10);
+                final double rating = file.lookupRating(connection);
 
                 request.setAttribute("file", file);
                 request.setAttribute("course", course);
                 request.setAttribute("user", user);
                 request.setAttribute("comments", comments);
+                request.setAttribute("rating", rating);
             %>
             <jsp:include page="/header.jsp"/>
             <div class="jumbotron">
@@ -39,6 +42,7 @@
                         Belongs to
                         <a href="/course?cid=${course.getID()}">${course.getCourseNum()}</a>
                         course.
+                        <p>rating: ${rating}</p>
                     </h2>
                 </div>
             </div>
@@ -56,6 +60,18 @@
                 <a href="/editor.jsp?fid=${file.getID()}&cid=${course.getID()}">Edit</a>
                 <%}%>
             </div>
+            <!-- rating -->
+            <%if (userRating == 0) {%>
+            <a href="/servlet/file/rate?username=${user.getUsername()}&fid=${file.getID()}&rating=1">good</a>
+            <a href="/servlet/file/rate?username=${user.getUsername()}&fid=${file.getID()}&rating=-1">bad</a>
+            <% } else if (userRating == 1) { %>
+            good
+            <a href="/servlet/file/rate?username=${user.getUsername()}&fid=${file.getID()}&rating=-1">bad</a>
+            <% } else { %>
+            <a href="/servlet/file/rate?username=${user.getUsername()}&fid=${file.getID()}&rating=1">good</a>
+            bad
+            <% } %>
+            
             <div class="container">
             <!-- Displaying comments -->
             <c:forEach var="comment" items="${comments}">

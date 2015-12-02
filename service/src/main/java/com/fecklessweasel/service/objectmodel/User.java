@@ -16,6 +16,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.fecklessweasel.service.datatier.UserTable;
+import com.fecklessweasel.service.datatier.RatingTable;
 import com.fecklessweasel.service.datatier.UserRoleTable;
 import com.fecklessweasel.service.datatier.UserHasRoleTable;
 import com.fecklessweasel.service.datatier.FavoritesTable;
@@ -500,6 +501,14 @@ public final class User {
      */
     public boolean checkIfFavCourse(Connection sql, int cid) throws ServiceException {
         return FavoritesTable.favoriteCourseExists(sql, this.uid, cid);
+    }
+    
+    /**
+     * Checks if the user has rated the given file.
+     * @param conn A connection to the database
+     */
+    public int checkFileRating(Connection conn, int fid) throws ServiceException {
+        return RatingTable.getUserFileRating(conn, this.uid, fid);
     }
 
     /**
