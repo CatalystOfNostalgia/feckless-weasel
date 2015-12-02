@@ -448,6 +448,25 @@ public class StoredFile {
             throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
         }
     }
+    
+    /**
+     * Returns comments on this file.
+     *@param start The first comment to get.
+     * @param count The amount of comments to get.
+     * @return A list of Comment objects.
+     */
+    public List<Comment> lookupComments(Connection conn, int start, int count) throws ServiceException{
+        return Comment.lookupFileComments(conn, this.fid, start, count);
+    }
+    
+    /**
+     * Returns the rating of this file.
+     * @param conn A connection to the database.
+     * @return The rating of this file.
+     */
+    public double lookupRating(Connection conn) throws ServiceException{
+        return Rating.lookupFileRating(conn, this.fid);
+    }
 
     /**
      * Get all notes belonging to a certain user

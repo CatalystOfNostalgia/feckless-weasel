@@ -108,6 +108,23 @@ public final class User {
 
         return user;
     }
+    
+    /**
+     * Create a user with data from the database.
+     * @param result The ResultSet from the database.
+     * @return A user object.
+     */
+    protected static User fromResultSet(ResultSet result) throws ServiceException{
+        try{
+            return new User(result.getInt("uid"),
+                result.getString("user"),
+                result.getString("pass"),
+                result.getDate("join_date"),
+                result.getString("email"));
+        } catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        }
+    }
 
     /**
      * Looks up a user in the datatier and returns it as a User object.
@@ -284,6 +301,21 @@ public final class User {
         this.email = emailAddr.getAddress();
     }
 
+    /**
+     * Returns the trust score of this user.
+     * @param conn A connection to the database.
+     * @return The trust score of this user.
+     */
+    public double lookupTrustScore(Connection conn) throws ServiceException{
+        OMUtil.sqlCheck(conn);
+        double score = 0;
+        Iterable<StoredFile> files = StoredFile.lookupUserFiles(conn, this.uid);
+        for(StoredFile f : files){
+            score += f.lookupRating(conn);
+        }
+        return score;
+    }
+    
     /**
      * Checks if two User objects refer to the same User account.
      * @param o The object to compare.

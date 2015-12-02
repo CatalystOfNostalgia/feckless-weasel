@@ -79,9 +79,13 @@ public enum ServiceStatus {
     APP_COURSE_TAKEN(733, 400, "Course already exists."),
     APP_DEPT_TAKEN(734, 400, "Department already exists."),
     APP_UNIV_TAKEN(735, 400, "University already exists."),
-    APP_INVALID_ROLE_DESC_LENGTH(736, 400, "Description is too long."),
-    APP_INVALID_EXTENSION_LENGTH(737, 400, "File extension is either too long or too short."),
-    APP_COURSE_NAME_INVALID(738, 400, "Course name is either too long or too short.");
+    APP_RATING_TAKEN(736, 400, "Rating already exists."),
+    APP_COMMENT_TAKEN(737, 400, "Comment already exists."),
+    APP_INVALID_RATING(738, 400, "Rating is too high or too low."),
+    APP_INVALID_COMMENT_TEXT(739, 400, "Comment is too long or too short."),
+    APP_INVALID_ROLE_DESC_LENGTH(740, 400, "Description is too long."),
+    APP_INVALID_EXTENSION_LENGTH(741, 400, "File extension is either too long or too short."),
+    APP_COURSE_NAME_INVALID(742, 400, "Course name is either too long or too short.");
 
 
     /** The String name of the state (OK, MALFORMED_REQUEST, ...) */
