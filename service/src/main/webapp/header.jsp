@@ -9,10 +9,19 @@
             </a>
         </div>
          <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+         <link rel ="stylesheet" href="/assets/dropdown.scss">
          <script src="//code.jquery.com/jquery-1.10.2.js"></script>
          <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
         <div id="navbar" class="navbar-collapse collapse">
-        <form class="navbar-form navbar-nav">
+        <form class="form-inline" id="uidform" name="uidform" style="visibility:hidden" action="/servlet/DepartmentSearch" method="post" enctype="application/x-www-form-urlencoded">
+        <input type="hidden" class="form-control" id="univId" name="univId">
+        <input type="submit" style="position: absolute; left: -9999px" value="Submit">
+        </form>
+        <form class="form-inline" id="didform" name="didform" style="visibility:hidden" action="/servlet/CourseSearch" method="post" enctype="application/x-www-form-urlencoded">
+            <input type="hidden" class="form-control" id="deptId" name="deptId">
+            <input type="submit" style="position: absolute; left: -9999px" value="Submit">
+        </form>
+        <form class="navbar-form navbar-nav" id="courseform" action="servlet/search" method="post" enctype="application/x-www-form-urlencoded">
             <div class="form-group">
                 <input type="text" class="form-control" id="college" name="college" placeholder="University">
                     <% List<University> universities =
@@ -41,7 +50,7 @@
                 <script>
                     var nodeList = document.getElementsByClassName("university");
                     var IdNodeList = document.getElementsByClassName("univID");
-                    var uniList = ["Test University"];
+                    var uniList = new Array();
                     var uIdList = new Array ();
                     for (var i = 0; i < nodeList.length; i++) {
                             var uni = String(nodeList.item(i).innerText)
@@ -51,35 +60,113 @@
                             uid = uid.trim();
                             uIdList.push(uid);
                        }
-                    $("#college").autocomplete({
-                      source: function( request, response ) {
-                              var matcher = new RegExp( "^" + $.ui.autocomplete.escapeRegex( request.term ), "i" );
-                              response( $.grep( uniList, function( item ){
-                                  return matcher.test( item );
-                              }) );
-                          }
+                    $(function() {
+                        $("#college").autocomplete({
+                        source: function( request, response ) {
+                             var matcher = new RegExp( "^" + $.ui.autocomplete.escapeRegex( request.term ), "i" );
+                             response( $.grep( uniList, function( item ){
+                                 return matcher.test( item );
+                             }) );
+                            },
+                        change: function(event, ui) {
+                          var index =0;
+                          var college = document.getElementById("college").value;
+                             while(index<uniList.length){
+                                 if(college == uniList[index]){
+                                     var uid = uIdList[index];
+                                     break;
+                                 }
+                                 index++
+                             }
+                          $('#univId').val(uid);
+                            }
+                        });
                     });
                 </script>
             </div>
             <div class="form-group">
-                <input type="hidden" class="form-control" id="univId" name="univId" value="">
                 <input type="text" class="form-control" id="department" name="department" placeholder="Department Acronym">'>
                   <script>
-                  <!--hard coded for time being-->
-                    var tags = [ "EECS", "BIOL", "ECON"];
-                    $("#department").autocomplete({
-                      source: function( request, response ) {
-                              var matcher = new RegExp( "^" + $.ui.autocomplete.escapeRegex( request.term ), "i" );
-                              response( $.grep( tags, function( item ){
-                                  return matcher.test( item );
-                              }) );
-                          }
-                    });
+                      var deptList = new Array();
+                      var deptIdList = new Array();
+                      var deptClick = document.getElementById("department");
+                      document.addEventListener('DOMContentLoaded', function () {
+                          deptClick.addEventListener('click', function() {
+                              var $form = $("#uidform");
+                              $.post($form.attr("action"), $form.serialize(), function(responseJson) {
+                                $.each(responseJson, function(key, value) {
+                                    deptList.push(value);
+                                    deptIdList.push(key);
+                                });
+                              });
+                          });
+                      });
+                      $(function() {
+                          $("#department").autocomplete({
+                              source: function( request, response ) {
+                                  var matcher = new RegExp( "^" + $.ui.autocomplete.escapeRegex( request.term ), "i" );
+                                  response( $.grep( deptList, function( item ){
+                                      return matcher.test( item );
+                                  }) );
+                              },
+                              change: function(event, ui) {
+                                  var indexD =0;
+                                  var department = document.getElementById("department").value;
+                                  while(indexD<deptList.length){
+                                      if(department == deptList[indexD]){
+                                          var did = deptIdList[indexD];
+                                          break;
+                                      }
+                                      indexD++
+                                  }
+                                  $('#deptId').val(did);
+                              }
+                          });
+                      });
                 </script>
             </div>
             <div class="form-group">
                 <input type="text" class="form-control" id="class" name="class" placeholder="Course Number">
+                <script>
+                var courseList = new Array();
+                var courseIdList = new Array();
+                var courseClick = document.getElementById("class");
+                document.addEventListener('DOMContentLoaded', function () {
+                    courseClick.addEventListener('click', function() {
+                        var $form = $("#didform");
+                            $.post($form.attr("action"), $form.serialize(), function(responseJson) {
+                                $.each(responseJson, function(key, value) {
+                                    courseList.push(value);
+                                    courseIdList.push(key);
+                                });
+                            });
+                         });
+                });
+                $(function() {
+                    $("#class").autocomplete({
+                        source: function( request, response ) {
+                            var matcher = new RegExp( "^" + $.ui.autocomplete.escapeRegex( request.term ), "i" );
+                            response( $.grep( courseList, function( item ){
+                                return matcher.test( item );
+                            }) );
+                        },
+                        change: function(event, ui) {
+                            var indexC =0;
+                            var course = document.getElementById("class").value;
+                            while(indexC<courseList.length){
+                                if(course == courseList[indexC]){
+                                    var cid = courseIdList[indexC];
+                                    break;
+                                }
+                                indexC++
+                            }
+                            $('#courseId').val(cid);
+                        }
+                    });
+                });
+                </script>
             </div>
+            <input type="hidden" class="form-control" id="courseId" name="courseId">
             <button type="submit" class="btn btn-warning" id="search-submit" name="search-submit">Go</button>
         </form>
         <ul class="nav navbar-nav navbar-right">
