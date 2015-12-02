@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.fecklessweasel.service.datatier.FileMetadataTable;
+import com.fecklessweasel.service.datatier.RatingTable;
 import com.fecklessweasel.service.datatier.SQLInteractionInterface;
 import com.fecklessweasel.service.datatier.SQLSource;
 
@@ -464,8 +465,12 @@ public class StoredFile {
      * @param conn A connection to the database.
      * @return The rating of this file.
      */
-    public double lookupRating(Connection conn) throws ServiceException{
+    public int lookupRating(Connection conn) throws ServiceException{
         return Rating.lookupFileRating(conn, this.fid);
+    }
+    
+    public int getRatingByUser(Connection conn, int uid) throws ServiceException {
+        return RatingTable.getUserFileRating(conn, uid, this.fid);
     }
 
     /**

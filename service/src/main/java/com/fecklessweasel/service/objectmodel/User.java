@@ -365,7 +365,7 @@ public final class User {
      * protected.
      * @return The user's AUTO_INCREMENT id.
      */
-    int getID() {
+    public int getID() {
         return this.uid;
     }
 

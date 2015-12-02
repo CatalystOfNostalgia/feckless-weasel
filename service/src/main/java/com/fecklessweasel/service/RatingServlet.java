@@ -33,8 +33,9 @@ public final class RatingServlet extends HttpServlet {
                  public Boolean run(Connection connection)
                      throws ServiceException {
                      
+                     UserSession session = UserSessionUtil.resumeSession(connection, request);
                      final StoredFile file = StoredFile.lookup(connection, fid);
-                     final User user = User.lookup(connection, username);
+                     final User user = session.getUser();
                      Rating.Create(connection, user, file, rating);
                      return true;
                  }

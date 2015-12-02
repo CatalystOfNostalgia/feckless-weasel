@@ -23,7 +23,7 @@ public abstract class RatingTable{
             
     private static String UPDATE_RATING = "update Rating set rating=? where uid=? and fid=?";
     
-    private static String GET_FILE_RATING = "SELECT AVG(rating) as avg FROM Rating WHERE fid=?";
+    private static String GET_FILE_RATING = "SELECT SUM(rating) as sum FROM Rating WHERE fid=?";
     
     private static String GET_USER_FILE_RATING = "SELECT rating FROM Rating WHERE fid=? and uid=?";
     

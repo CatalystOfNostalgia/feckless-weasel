@@ -41,7 +41,8 @@ public final class FileViewServlet extends HttpServlet {
             public Boolean run(Connection connection)
                 throws ServiceException {
   
-                final User user = User.lookup(connection, username);
+                UserSession session = UserSessionUtil.resumeSession(connection, request);
+                final User user = session.getUser();
                 return (Boolean) user.toggleFavoriteFile(connection, fileID);
             }
         });
