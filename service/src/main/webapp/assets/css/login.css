@@ -31,7 +31,7 @@ body {
     z-index: 2;
 }
 .form-signin input[type="text"] {
-    margin-bottom: 10px;
+    margin-bottom: -1px;
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
 

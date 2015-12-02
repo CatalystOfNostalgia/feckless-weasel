@@ -83,17 +83,17 @@
             <div class="jumbotron" style="margin-bottom: 0px;">
                 <div class="container">
                     <h1>
-                        ${department.getAcronym()} ${course.getCourseNum()}
+                        ${department.getAcronym()} ${course.getCourseNum()}: ${course.getCourseName()}
                         <%if (authSession != null && toggled) {%>
-                            <a href="/servlet/course?username=${user.getUsername()}&cid=${course.getID()}"><i style="float: right; color: #f0ad4e;" class="glyphicon glyphicon-heart"></i></a>
+                            <a class="color: #f0ad4e;" href="/servlet/course?username=${user.getUsername()}&cid=${course.getID()}"><i style="float: right; color: #f0ad4e;" class="glyphicon glyphicon-heart"></i></a>
                         <% } else if (authSession != null) { %>
-                            <a href="/servlet/course?username=${user.getUsername()}&cid=${course.getID()}"><i style="float: right; color: #f0ad4e;" class="glyphicon glyphicon-heart-empty"></i></a>
+                            <a class="color: #f0ad4e;" href="/servlet/course?username=${user.getUsername()}&cid=${course.getID()}"><i style="float: right; color: #f0ad4e;" class="glyphicon glyphicon-heart-empty"></i></a>
                         <% } %>
                     </h1>
                 <h2>
-                    <a style="color=#f0ad4e;" href="/department?did=${department.getID()}">${department.getDeptName()}</a>
+                    <a style="color:#f0ad4e;" href="/department?did=${department.getID()}">${department.getDeptName()}</a>
                     at
-                    <a style="color=#f0ad4e;" href="/university?uid=${university.getID()}" title="${university.getLongName()}">${university.getAcronym()}</a>
+                    <a style="color:#f0ad4e;" href="/university?uid=${university.getID()}" title="${university.getLongName()}">${university.getAcronym()}</a>
                 </h2>
                 </div>
             </div>
@@ -102,7 +102,7 @@
                 <div class="col-md-9">
                     <center><div class="btn-group" role="group" aria-label="Tag yo doc">
                             <button type="button" id="tagFilter" class="btn btn-lg btn-warning" value="notes">Notes</button>
-                            <button type="button" id="tagFilter" class="btn btn-lg btn-warning" value="assignmentAnswers">Assignment Answers</button>`
+                            <button type="button" id="tagFilter" class="btn btn-lg btn-warning" value="assignmentAnswers">Assignment Answers</button>
                             <button type="button" id="tagFilter" class="btn btn-lg btn-warning" value="assignment">Assignment</button>
                             <button type="button" id="tagFilter" class="btn btn-lg btn-warning" value="quiz">Quiz</button>
                             <button type="button" id="tagFilter" class="btn btn-lg btn-warning" value="quizAnswers">Quiz Answers</button>
@@ -144,11 +144,11 @@
                     <div class="container">
                         <c:forEach var="file" items="${files}">
                             <h2 class="hTag ${file.getTag()}">
-                                <a href="/course/file.jsp?fid=${file.getID()}" title="${file.getDescription()}">
+                                <a style="color: #f0ad4e;" href="/course/file.jsp?fid=${file.getID()}" title="${file.getDescription()}">
                                     ${file.getTitle()} &#09; - &#09; ${file.getCreationDate()}
                                 </a>
                                 <c:if test="${! file.getTag().isEmpty()}">
-                                    <span class="label label-warning">
+                                    <span style="float: right;" class="label label-warning">
                                         ${file.getTag()}
                                     </span>
                                 </c:if>
