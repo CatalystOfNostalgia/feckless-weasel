@@ -474,6 +474,40 @@ public final class User {
     }
 
     /**
+     * Gets the 10 most recently uploaded files from recent courses.
+     * @param connection The connection to the database.
+     * @return A collection of the 10 most recent uploads to this user's favorite courses.
+     */
+    public Iterable<StoredFile> lookupMostRecentFilesFromFavoriteCourses(Connection connection) throws ServiceException {
+
+        OMUtil.sqlCheck(connection);
+
+        ResultSet result = UserTable.lookupMostRecentFilesFromFavoriteCourses(connection, this.getID());
+        ArrayList<StoredFile> files = new ArrayList<StoredFile>();
+
+        try {
+            // If no tuples returned, throw error.
+            // TODO: do this construction in StoredFile. Bahh humbug, too late for encapsulation!!!
+            // Demo is a coming! PREPARE YAR SELF!!!
+            while (result.next()) {
+                files.add(new StoredFile(result.getInt("fid"),
+                                         result.getInt("uid"),
+                                         result.getInt("cid"),
+                                         result.getDate("creation_date"),
+                                         result.getString("title"),
+                                         result.getString("description"),
+                                         result.getString("tag"),
+                                         result.getString("extension")));
+            }
+
+            result.close();
+            return files;
+        } catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        }
+    }
+
+    /**
      * Toggle if this user has favorited the input course or not
      * @throws ServiceException on database error
      * @param sql Database connection
