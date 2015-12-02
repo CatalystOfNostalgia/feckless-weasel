@@ -19,7 +19,7 @@
             }
             });
 
-            request.setAttribute("courses", tuple.value1);
+            request.setAttribute("sideCourses", tuple.value1);
             request.setAttribute("sideFiles", tuple.value2);
             request.setAttribute("notes", tuple.value3);
     }        
@@ -29,7 +29,7 @@
     <%if (authSession != null) {%>
         <ul class="nav nav-sidebar">
             <h2>My Favorite Classes</h2>
-            <c:forEach var="course" items="${courses}">
+            <c:forEach var="course" items="${sideCourses}">
                 <li>
                     <a style="color: #7F5926;" href="/course/index.jsp?cid=${course.getID()}">${course.getCourseName()}</a>
                 </li>
