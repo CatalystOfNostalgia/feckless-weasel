@@ -37,15 +37,21 @@ public abstract class RatingTable{
     public static void addRating(Connection conn, int uid, int fid, int rating) throws ServiceException {
         CodeContract.assertNotNull(conn, "conn");
         try {
-            PreparedStatement preparedStatement = conn.prepareStatement(ADD_RATING);
-            preparedStatement.setInt(1, rating);
-            preparedStatement.setInt(2, uid);
-            preparedStatement.setInt(3, fid);
-            preparedStatement.setInt(4, uid);
-            preparedStatement.setInt(5, fid);
-            preparedStatement.setInt(6, rating);
-            preparedStatement.executeUpdate();
-            preparedStatement.close();
+            try{
+                PreparedStatement preparedStatement = conn.prepareStatement(ADD_RATING);
+                preparedStatement.setInt(1, uid);
+                preparedStatement.setInt(2, fid);
+                preparedStatement.setInt(3, rating);
+                preparedStatement.executeUpdate();
+                preparedStatement.close();
+            } catch (SQLIntegrityConstraintViolationException ex){
+                PreparedStatement preparedStatement = conn.prepareStatement(UPDATE_RATING);
+                preparedStatement.setInt(1, rating);
+                preparedStatement.setInt(2, uid);
+                preparedStatement.setInt(3, fid);
+                preparedStatement.executeUpdate();
+                preparedStatement.close();
+            }
         } catch (SQLIntegrityConstraintViolationException ex){
             throw new ServiceException(ServiceStatus.APP_RATING_TAKEN, ex);
         } catch (SQLException ex) {
