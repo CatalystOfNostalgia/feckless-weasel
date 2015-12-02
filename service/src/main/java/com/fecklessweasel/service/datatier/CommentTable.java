@@ -37,7 +37,8 @@ public abstract class CommentTable{
         CodeContract.assertNotNull(uid, "uid");
         CodeContract.assertNotNull(fid, "fid");
         CodeContract.assertNotNullOrEmptyOrWhitespace(text, "text");
-        Timestamp time = Timestamp.from(java.time.Instant.now());
+        Date date = new Date();
+        Timestamp time = new Timestamp(date.getTime());
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(ADD_COMMENT);
             preparedStatement.setInt(1, uid);
