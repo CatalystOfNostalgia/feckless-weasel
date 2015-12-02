@@ -41,7 +41,7 @@
                     </div>
                     <% } else if (userRating == 1) { %>
                     <div class="row">
-                        <h2><span class="glyphicon glyphicon-arrow-up" style="color:#ff8b60;"></span></h2>
+                        <h2><a href="/servlet/file/rate?username=${user.getUsername()}&fid=${file.getID()}&rating=0"><span class="glyphicon glyphicon-arrow-up" style="color:#ff8b60;"></span></a></h2>
                     </div>
                     <div class="row">
                         <h2>${rating}</h2>
@@ -57,7 +57,7 @@
                         <h2>${rating}</h2>
                     </div>
                     <div class="row">
-                         <h2><a href="/servlet/file/rate?username=${user.getUsername()}&fid=${file.getID()}&rating=1"><span class="glyphicon glyphicon-arrow-down" style="color:#9494ff;"><span></a></h2>
+                         <h2><a href="/servlet/file/rate?username=${user.getUsername()}&fid=${file.getID()}&rating=0"><span class="glyphicon glyphicon-arrow-down" style="color:#9494ff;"><span></a></h2>
                     </div>
                     <% } %>
                 </div>
