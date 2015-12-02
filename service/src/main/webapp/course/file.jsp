@@ -49,9 +49,6 @@
                 </div>
             </div>
             <div class="container">
-                <p>
-                    TODO: Display the actual file here :D Still need the file download servlet first.
-                </p>
                 <%
                     if (file.getExtension().equals("md") && file.userCanEdit(user)) {
                 %>
