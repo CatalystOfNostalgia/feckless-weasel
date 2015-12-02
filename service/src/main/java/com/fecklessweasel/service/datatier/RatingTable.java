@@ -19,11 +19,13 @@ import com.fecklessweasel.service.objectmodel.ServiceStatus;
  */
 public abstract class RatingTable{
     
-    private static String ADD_RATING = "insert into Comment (uid, fid, rating) values (?,?,?)";
+    private static String ADD_RATING = "insert into Rating (uid, fid, rating) values (?,?,?)";
+            
+    private static String UPDATE_RATING = "update Rating set rating=? where uid=? and fid=?";
     
-    //private static String UPDATE_RATING = "update Comment set rating=? where uid=? and fid=?";
+    private static String GET_FILE_RATING = "SELECT SUM(rating) as sum FROM Rating WHERE fid=?";
     
-    private static String GET_FILE_RATING = "SELECT AVG(rating) as avg FROM Comment WHERE fid=?";
+    private static String GET_USER_FILE_RATING = "SELECT rating FROM Rating WHERE fid=? and uid=?";
     
     /**
      * Add a rating from a user to a given file.
@@ -34,16 +36,22 @@ public abstract class RatingTable{
      */
     public static void addRating(Connection conn, int uid, int fid, int rating) throws ServiceException {
         CodeContract.assertNotNull(conn, "conn");
-        CodeContract.assertNotNull(uid, "uid");
-        CodeContract.assertNotNull(fid, "fid");
-        CodeContract.assertNotNull(rating, "rating");
         try {
-            PreparedStatement preparedStatement = conn.prepareStatement(ADD_RATING);
-            preparedStatement.setInt(1, uid);
-            preparedStatement.setInt(2, fid);
-            preparedStatement.setInt(3, rating);
-            preparedStatement.executeUpdate();
-            preparedStatement.close();
+            try{
+                PreparedStatement preparedStatement = conn.prepareStatement(ADD_RATING);
+                preparedStatement.setInt(1, uid);
+                preparedStatement.setInt(2, fid);
+                preparedStatement.setInt(3, rating);
+                preparedStatement.executeUpdate();
+                preparedStatement.close();
+            } catch (SQLIntegrityConstraintViolationException ex){
+                PreparedStatement preparedStatement = conn.prepareStatement(UPDATE_RATING);
+                preparedStatement.setInt(1, rating);
+                preparedStatement.setInt(2, uid);
+                preparedStatement.setInt(3, fid);
+                preparedStatement.executeUpdate();
+                preparedStatement.close();
+            }
         } catch (SQLIntegrityConstraintViolationException ex){
             throw new ServiceException(ServiceStatus.APP_RATING_TAKEN, ex);
         } catch (SQLException ex) {
@@ -63,11 +71,34 @@ public abstract class RatingTable{
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(GET_FILE_RATING);
             preparedStatement.setInt(1, fid);
-            preparedStatement.executeUpdate();
             return preparedStatement.executeQuery();
         } catch (SQLException ex) {
             throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
         }
     }
     
+    /**
+     * Returns the rating of the user as 1 or -1, 0 if not rated yet
+     * @param conn A connection to the database.
+     * @param fid The file id of the file to check.
+     * @param uid The user id of the user to check.
+     * @return The rating in resultset
+     */
+    public static int getUserFileRating(Connection conn, int uid, int fid) throws ServiceException {
+        CodeContract.assertNotNull(conn, "conn");
+        
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(GET_USER_FILE_RATING);
+            preparedStatement.setInt(1, fid);
+            preparedStatement.setInt(2, uid);
+            ResultSet result = preparedStatement.executeQuery();
+            if (!result.isBeforeFirst()) {    
+                return 0; 
+            } 
+            result.next();
+            return result.getInt("rating");
+        } catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        }
+    }
 }

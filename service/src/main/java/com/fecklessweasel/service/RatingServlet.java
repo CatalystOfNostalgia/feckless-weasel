@@ -14,32 +14,33 @@ import com.fecklessweasel.service.datatier.SQLInteractionInterface;
 import com.fecklessweasel.service.objectmodel.*;
 
 /**
- * The servlet for doing commenting on files.
+ * The servlet for rating files.
  */
-@WebServlet("/servlet/file/comment")
-public final class FileServlet extends HttpServlet {
+@WebServlet("/servlet/file/rate")
+public final class RatingServlet extends HttpServlet {
 
     @Override
-    protected void doPost(final HttpServletRequest request,
+    protected void doGet(final HttpServletRequest request,
         final HttpServletResponse response)
         throws ServletException, IOException {
         
-            final String text = request.getParameter("text");
-            final int fileID = OMUtil.parseInt(request.getParameter("fileid"));
+            final int rating = OMUtil.parseInt(request.getParameter("rating"));
             final String username = request.getParameter("username");
+            final int fid = OMUtil.parseInt(request.getParameter("fid"));
             
              SQLSource.interact(new SQLInteractionInterface<Boolean>() {
                  @Override 
                  public Boolean run(Connection connection)
                      throws ServiceException {
                      
-                     final StoredFile file = StoredFile.lookup(connection, fileID);
-                     final User user = User.lookup(connection, username);
-                     Comment.Create(connection, user, file, text);
+                     UserSession session = UserSessionUtil.resumeSession(connection, request);
+                     final StoredFile file = StoredFile.lookup(connection, fid);
+                     final User user = session.getUser();
+                     Rating.Create(connection, user, file, rating);
                      return true;
                  }
              });
      
-            response.sendRedirect("/course/file.jsp?fid=" + fileID);
+            response.sendRedirect("/course/file.jsp?fid=" + fid);
     }
 }

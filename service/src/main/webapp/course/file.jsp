@@ -15,23 +15,59 @@
                 OMUtil.parseInt(request.getParameter("fid")));
                 final Course course = file.lookupCourse(connection);
                 final User user = file.lookupUser(connection);
-                boolean toggled = user.checkIfFavFile(connection, OMUtil.parseInt(request.getParameter("fid")));
+                boolean toggled = authSession.getUser().checkIfFavFile(connection, OMUtil.parseInt(request.getParameter("fid")));
+                int userRating = file.getRatingByUser(connection, authSession.getUser().getID());
                 final List<Comment> comments = file.lookupComments(connection, 0, 10);
+                final int rating = file.lookupRating(connection);
 
                 request.setAttribute("file", file);
                 request.setAttribute("course", course);
                 request.setAttribute("user", user);
                 request.setAttribute("comments", comments);
+                request.setAttribute("rating", rating);
             %>
             <jsp:include page="/header.jsp"/>
-            <div class="jumbotron">
+            <div class="jumbotron" >
+                <div class="col-md-3" style="text-align:center; padding-top:1%">
+                    <%if (userRating == 0) {%>
+                    <div class="row">
+                        <h2><a href="/servlet/file/rate?fid=${file.getID()}&rating=1"><span style="color:#A0A0A0;" class="glyphicon glyphicon-arrow-up"></span></a></h2>
+                    </div>
+                    <div class="row">
+                        <h2>${rating}</h2>
+                    </div>
+                    <div class="row">
+                        <h2><a href="/servlet/file/rate?fid=${file.getID()}&rating=-1"><span style="color:#A0A0A0;" class="glyphicon glyphicon-arrow-down"></span></a></h2>
+                    </div>
+                    <% } else if (userRating == 1) { %>
+                    <div class="row">
+                        <h2><a href="/servlet/file/rate?fid=${file.getID()}&rating=0"><span class="glyphicon glyphicon-arrow-up" style="color:#ff8b60;"></span></a></h2>
+                    </div>
+                    <div class="row">
+                        <h2>${rating}</h2>
+                    </div>
+                    <div class="row">
+                        <h2><a href="/servlet/file/rate?fid=${file.getID()}&rating=-1"><span class="glyphicon glyphicon-arrow-down" style="color:#A0A0A0;"></span></a>
+                    </div>
+                    <% } else { %>
+                    <div class="row">
+                        <h2><a href="/servlet/file/rate?fid=${file.getID()}&rating=1"><span class="glyphicon glyphicon-arrow-up" style="color:#A0A0A0;"><span></a></h2>
+                    </div>
+                    <div class="row">
+                        <h2>${rating}</h2>
+                    </div>
+                    <div class="row">
+                         <h2><a href="/servlet/file/rate?fid=${file.getID()}&rating=0"><span class="glyphicon glyphicon-arrow-down" style="color:#9494ff;"><span></a></h2>
+                    </div>
+                    <% } %>
+                </div>
                 <div class="container">
                     <h1>
                         ${file.getTitle()}
                         <%if (authSession != null && toggled) {%>
-                            <a href="/servlet/file?username=${user.getUsername()}&fid=${file.getID()}"><i style="float: right; color: #f0ad4e;" class="glyphicon glyphicon-heart"></i></a>
+                            <a href="/servlet/file?fid=${file.getID()}"><i style="float: right; color: #f0ad4e;" class="glyphicon glyphicon-heart"></i></a>
                         <% } else if (authSession != null) { %>
-                            <a href="/servlet/file?username=${user.getUsername()}&fid=${file.getID()}"><i style="float: right; color: #f0ad4e;" class="glyphicon glyphicon-heart-empty"></i></a>
+                            <a href="/servlet/file?fid=${file.getID()}"><i style="float: right; color: #f0ad4e;" class="glyphicon glyphicon-heart-empty"></i></a>
                         <% } %>
                     </h1>
                     <h2>
@@ -55,6 +91,7 @@
                 <a href="/editor.jsp?fid=${file.getID()}&cid=${course.getID()}">Edit</a>
                 <%}%>
             </div>
+            <!-- rating -->
             <div class="container">
             <!-- Displaying comments -->
             <c:forEach var="comment" items="${comments}">

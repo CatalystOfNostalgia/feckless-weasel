@@ -38,7 +38,7 @@ public class Rating {
         OMUtil.sqlCheck(conn);
         OMUtil.nullCheck(user);
         OMUtil.nullCheck(file);
-        if(rating != -1 && rating != 1){
+        if(rating != -1 && rating != 1 && rating != 0){
             throw new ServiceException(ServiceStatus.APP_INVALID_RATING);
         }
         RatingTable.addRating(conn, user.getID(), file.getID(), rating);
@@ -51,13 +51,13 @@ public class Rating {
      * @param fid The id of the file to use.
      * @return The rating of the file.
      */
-    protected static double lookupFileRating(Connection conn, int fid) throws ServiceException{
+    protected static int lookupFileRating(Connection conn, int fid) throws ServiceException{
         OMUtil.sqlCheck(conn);
         
         ResultSet results = RatingTable.getFileRating(conn, fid);
         try{
             results.next();
-            double rating = results.getDouble("avg");
+            int rating = results.getInt("sum");
             results.close();
             return rating;
         } catch (SQLException ex) {
