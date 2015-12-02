@@ -22,7 +22,7 @@ public abstract class CommentTable{
     
     private static String ADD_COMMENT = "INSERT INTO Comment (uid, fid, datetime, text) VALUES (?,?,?,?)";
     
-    private static String GET_FILE_COMMENTS = "SELECT * FROM Comment c, User u WHERE c.uid=u.uid AND c.fid=? ORDER BY c.datetime DESC LIMIT ? OFFSET ?";
+    private static String GET_FILE_COMMENTS = "SELECT * FROM Comment c, User u WHERE c.uid=u.uid AND c.fid=? ORDER BY c.datetime";
     
     /**
      * Add a comment to a file.
@@ -68,8 +68,8 @@ public abstract class CommentTable{
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(GET_FILE_COMMENTS);
             preparedStatement.setInt(1, fid);
-            preparedStatement.setInt(2, amount);
-            preparedStatement.setInt(3, first);
+            //preparedStatement.setInt(2, amount);
+            //preparedStatement.setInt(3, first);
             return preparedStatement.executeQuery();
         } catch (SQLException ex) {
             throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);

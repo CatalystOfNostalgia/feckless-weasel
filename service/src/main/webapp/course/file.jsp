@@ -56,8 +56,14 @@
                 <a href="/editor.jsp?fid=${file.getID()}&cid=${course.getID()}">Edit</a>
                 <%}%>
             </div>
-            <!-- Writing comments -->
             <div class="container">
+            <!-- Displaying comments -->
+            <c:forEach var="comment" items="${comments}">
+                <p>${comment.getUser().getUsername()}</p>
+                <p>${comment.getText()}</p>
+                <p>${comment.getTime()}</p>
+            </c:forEach>
+            <!-- Writing comments -->
             <form class="form-comment" action="/servlet/file/comment" method="post" enctype="application/x-www-form-urlencoded">
                 <h2>Add comment</h2>
                 <input for="text" name="text" placeholder="username">
@@ -65,10 +71,6 @@
                 <input type="hidden" name="username" value='${user.getUsername()}'>
                 <button type="submit" id="submit" name="submit">Comment</button>
             </form>
-            <div>
-            <c:forEach var="comment" items="${comments}">
-                <p>${comment.getText()}</p>
-            </c:forEach>
             </div>
         </div>
         </body>

@@ -18,7 +18,7 @@ public class Comment {
     /**
      * The user who made the comment.
      */
-    private int uid;
+    private User user;
     
     /**
      * File The comment is on.
@@ -40,8 +40,8 @@ public class Comment {
      */
     private static int MAX_TEXT_CHARS = 5000;
     
-    private Comment(int uid, int fid, Timestamp time, String text){
-        this.uid = uid;
+    private Comment(User user, int fid, Timestamp time, String text){
+        this.user = user;
         this.fid = fid;
         this.time = time;
         this.text = text;
@@ -65,7 +65,7 @@ public class Comment {
         }
         
         Timestamp time = CommentTable.addComment(conn, user.getID(), file.getID(), text);
-        return new Comment(user.getID(), file.getID(), time, text);
+        return new Comment(user, file.getID(), time, text);
     }
     
     /**
@@ -82,11 +82,11 @@ public class Comment {
         
         try{
             while (results.next()) {
-                User user = User.lookupById(conn, results.getInt("uid"));
-                Comment c = new Comment(results.getInt("uid"),
-                                                     results.getInt("fid"),
-                                                     results.getTimestamp("datetime"),
-                                                     results.getString("text"));
+                User user = User.fromResultSet(results);
+                Comment c = new Comment(user,
+                                        results.getInt("fid"),
+                                        results.getTimestamp("datetime"),
+                                        results.getString("text"));
                 Comments.add(c);
             }
             results.close();
@@ -100,9 +100,8 @@ public class Comment {
      * Returns the user who created the comment.
      * @return The user who created the comment.
      */
-    public User lookupUser(Connection sql) throws ServiceException {
-        OMUtil.sqlCheck(sql);
-        return User.lookupById(sql, this.uid);
+    public User getUser() throws ServiceException {
+        return this.user;
     }
     
     /**
