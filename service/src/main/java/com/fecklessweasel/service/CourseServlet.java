@@ -98,7 +98,8 @@ public final class CourseServlet extends HttpServlet {
             public Boolean run(Connection connection)
                 throws ServiceException {
   
-                final User user = User.lookup(connection, username);
+                UserSession session = UserSessionUtil.resumeSession(connection, request);
+                final User user = session.getUser();
                 return (Boolean) user.toggleFavoriteCourse(connection, courseID);
             }
         });

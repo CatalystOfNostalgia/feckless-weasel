@@ -85,9 +85,9 @@
                     <h1>
                         ${department.getAcronym()} ${course.getCourseNum()}: ${course.getCourseName()}
                         <%if (authSession != null && toggled) {%>
-                            <a class="color: #f0ad4e;" href="/servlet/course?username=${user.getUsername()}&cid=${course.getID()}"><i style="float: right; color: #f0ad4e;" class="glyphicon glyphicon-heart"></i></a>
+                            <a class="color: #f0ad4e;" href="/servlet/course?cid=${course.getID()}"><i style="float: right; color: #f0ad4e;" class="glyphicon glyphicon-heart"></i></a>
                         <% } else if (authSession != null) { %>
-                            <a class="color: #f0ad4e;" href="/servlet/course?username=${user.getUsername()}&cid=${course.getID()}"><i style="float: right; color: #f0ad4e;" class="glyphicon glyphicon-heart-empty"></i></a>
+                            <a class="color: #f0ad4e;" href="/servlet/course?cid=${course.getID()}"><i style="float: right; color: #f0ad4e;" class="glyphicon glyphicon-heart-empty"></i></a>
                         <% } %>
                     </h1>
                 <h2>
