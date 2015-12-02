@@ -5,6 +5,7 @@
     <head>
         <title>Feckless Weasel File Viewer</title>
         <link href="${pageContext.request.contextPath}/assets/bootstrap-3.3.5-dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="${pageContext.request.contextPath}/assets/css/comment.css" rel="stylesheet">
     </head>
         <body class="four-column">
             <%@ include file="/header.jsp" %>
@@ -26,7 +27,40 @@
                 request.setAttribute("rating", rating);
             %>
             <jsp:include page="/header.jsp"/>
-            <div class="jumbotron">
+            <div class="jumbotron" >
+                <div class="col-md-3" style="text-align:center; padding-top:1%">
+                    <%if (userRating == 0) {%>
+                    <div class="row">
+                        <h2><a href="/servlet/file/rate?username=${user.getUsername()}&fid=${file.getID()}&rating=1"><span style="color:#A0A0A0;" class="glyphicon glyphicon-arrow-up"></span></a></h2>
+                    </div>
+                    <div class="row">
+                        <h2>${rating}</h2>
+                    </div>
+                    <div class="row">
+                        <h2><a href="/servlet/file/rate?username=${user.getUsername()}&fid=${file.getID()}&rating=-1"><span style="color:#A0A0A0;" class="glyphicon glyphicon-arrow-down"></span></a></h2>
+                    </div>
+                    <% } else if (userRating == 1) { %>
+                    <div class="row">
+                        <h2><span class="glyphicon glyphicon-arrow-up" style="color:#ff8b60;"></span></h2>
+                    </div>
+                    <div class="row">
+                        <h2>${rating}</h2>
+                    </div>
+                    <div class="row">
+                        <h2><a href="/servlet/file/rate?username=${user.getUsername()}&fid=${file.getID()}&rating=-1"><span class="glyphicon glyphicon-arrow-down" style="color:#A0A0A0;"></span></a>
+                    </div>
+                    <% } else { %>
+                    <div class="row">
+                        <h2><a href="/servlet/file/rate?username=${user.getUsername()}&fid=${file.getID()}&rating=1"><span class="glyphicon glyphicon-arrow-up" style="color:#A0A0A0;"><span></a></h2>
+                    </div>
+                    <div class="row">
+                        <h2>${rating}</h2>
+                    </div>
+                    <div class="row">
+                         <h2><a href="/servlet/file/rate?username=${user.getUsername()}&fid=${file.getID()}&rating=1"><span class="glyphicon glyphicon-arrow-down" style="color:#9494ff;"><span></a></h2>
+                    </div>
+                    <% } %>
+                </div>
                 <div class="container">
                     <h1>
                         ${file.getTitle()}
@@ -37,23 +71,20 @@
                         <% } %>
                     </h1>
                     <h2>
-                        Created ${file.getCreationDate()}
-                        By <a href="/account?user=${user.getUsername()}">${user.getUsername()}</a>.
-                        Belongs to
-                        <a href="/course?cid=${course.getID()}">${course.getCourseNum()}</a>
-                        course.
-                        <p>rating: ${rating}</p>
+                        ${file.getDescription()}
                     </h2>
+                    <p>
+                        Created by <a style="color: #f0ad4e;" href="/account?user=${user.getUsername()}">${user.getUsername()}</a> on ${file.getCreationDate()}.
+                        <br>
+                        <a style="color: #f0ad4e;" href="/course?cid=${course.getID()}">${course.getCourseNum()}: ${course.getCourseName()}</a>
+       
+                        <a style="color: #f0ad4e;" href="/servlet/file/download?fid=${file.getID()}">
+                            <span style="color: #f0ad4e; float: right;" class="glyphicon glyphicon-download-alt"></span>
+                        </a>
+                    </p>
                 </div>
             </div>
             <div class="container">
-                <p>
-                    ${file.getDescription()}
-                </p>
-                <a href="/servlet/file/download?fid=${file.getID()}">Download</a>
-                <p>
-                    TODO: Display the actual file here :D Still need the file download servlet first.
-                </p>
                 <%
                     if (file.getExtension().equals("md") && file.userCanEdit(user)) {
                 %>
@@ -61,32 +92,35 @@
                 <%}%>
             </div>
             <!-- rating -->
-            <%if (userRating == 0) {%>
-            <a href="/servlet/file/rate?username=${user.getUsername()}&fid=${file.getID()}&rating=1">good</a>
-            <a href="/servlet/file/rate?username=${user.getUsername()}&fid=${file.getID()}&rating=-1">bad</a>
-            <% } else if (userRating == 1) { %>
-            good
-            <a href="/servlet/file/rate?username=${user.getUsername()}&fid=${file.getID()}&rating=-1">bad</a>
-            <% } else { %>
-            <a href="/servlet/file/rate?username=${user.getUsername()}&fid=${file.getID()}&rating=1">good</a>
-            bad
-            <% } %>
-            
+           
             <div class="container">
             <!-- Displaying comments -->
             <c:forEach var="comment" items="${comments}">
-                <p>${comment.getUser().getUsername()}</p>
-                <p>${comment.getText()}</p>
-                <p>${comment.getTime()}</p>
+                <div class="row">
+                    <div class="col-sm-5">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <strong>${comment.getUser().getUsername()}</strong> <span class="text-muted">commented on ${comment.getTime()}</span>
+                            </div>
+                            <div class="panel-body">
+                                ${comment.getText()}
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </c:forEach>
             <!-- Writing comments -->
+            <%if (authSession != null) {%>
             <form class="form-comment" action="/servlet/file/comment" method="post" enctype="application/x-www-form-urlencoded">
-                <h2>Add comment</h2>
-                <input for="text" name="text" placeholder="username">
+                <h2>Have something to say?</h2>
+                <textarea class="form-control" rows="5" name="text" placeholder="username">What's on your mind?</textarea>
                 <input type="hidden" name="fileid" value='${file.getID()}'>
                 <input type="hidden" name="username" value='${user.getUsername()}'>
-                <button type="submit" id="submit" name="submit">Comment</button>
+                <button type="submit" id="submit" class="btn btn-lg btn-warning" name="submit">Comment</button>
             </form>
+            <%}else {%>
+            <h2>Login to comment!</h2>
+            <%}%>
             </div>
         </div>
         </body>

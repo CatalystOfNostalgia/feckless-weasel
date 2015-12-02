@@ -37,11 +37,6 @@
                                 <a class="btn btn-warning" href="/university/create.jsp" role="button">Create</a>
                             </p>
                         </div>
-                        <div class="col-md-4">
-                            <c:forEach var="university" items="${univs}">
-                                <p><a href="/university/index.jsp?uid=${university.getID()}">${university.getLongName()}</a></p>
-                            </c:forEach>
-                        </div>
                     </div>
                 </div>
             </div>
