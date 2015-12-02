@@ -85,7 +85,7 @@ public class Comment {
                 User user = User.lookupById(conn, results.getInt("uid"));
                 Comment c = new Comment(results.getInt("uid"),
                                                      results.getInt("fid"),
-                                                     results.getTimestamp("time"),
+                                                     results.getTimestamp("datetime"),
                                                      results.getString("text"));
                 Comments.add(c);
             }

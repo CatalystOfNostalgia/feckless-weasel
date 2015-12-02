@@ -37,27 +37,10 @@ public abstract class SQLSource {
 
         CodeContract.assertNotNull(actions, "actions");
 
-        Connection connection = null;
+        Connection connection = open();
         T result = null;
         try {
-            if (initialContext == null) {
-                initialContext = new InitialContext();
-            }
-
-            // Obtain our environment naming context.
-            Context environmentContext = (Context)initialContext.lookup("java:comp/env");
-
-            // Look up our data source.
-            DataSource dataSource =
-                (DataSource)environmentContext.lookup("jdbc/FecklessWeaselDB");
-
-            // Get the connection and run actions.
-            connection = dataSource.getConnection();
-
-            connection.prepareStatement(USE_DB_STATEMENT).execute();
             result = actions.run(connection);
-        } catch (NamingException ex) {
-            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
         } catch (SQLException ex) {
             throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
         } finally {
@@ -72,5 +55,38 @@ public abstract class SQLSource {
         }
 
         return result;
+    }
+    
+    /**
+     * Opens a connection to the database. This is the unsafe version of the method.
+     * You MUST close the connection when done or it will leak D:
+     * @return A new connection from the connection pool.
+     */
+    public static Connection open() throws ServiceException {
+
+        Connection connection = null;
+        
+        try {
+            if (initialContext == null) {
+                initialContext = new InitialContext();
+            }
+
+            // Obtain our environment naming context.
+            Context environmentContext = (Context)initialContext.lookup("java:comp/env");
+
+            // Look up our data source.
+            DataSource dataSource =
+                (DataSource)environmentContext.lookup("jdbc/FecklessWeaselDB");
+
+            // Get the connection and run actions.
+            connection = dataSource.getConnection();
+            connection.prepareStatement(USE_DB_STATEMENT).execute();
+            
+            return connection;
+        } catch (NamingException ex) {
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        } catch (SQLException ex) {
+            throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
+        }
     }
 }

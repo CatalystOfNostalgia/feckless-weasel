@@ -16,11 +16,11 @@ import com.fecklessweasel.service.objectmodel.*;
 /**
  * The course servlet for doing stuff with files.
  */
-@WebServlet("/servlet/file")
+@WebServlet("/servlet/file/comment")
 public final class FileServlet extends HttpServlet {
 
     @Override
-    protected void doGet(final HttpServletRequest request,
+    protected void doPost(final HttpServletRequest request,
         final HttpServletResponse response)
         throws ServletException, IOException {
         
