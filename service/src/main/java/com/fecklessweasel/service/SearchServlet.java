@@ -32,15 +32,7 @@ public final class SearchServlet extends HttpServlet {
                           final HttpServletResponse response)
             throws ServletException, IOException {
 
-        int courseID = SQLSource.interact(new SQLInteractionInterface<Integer>() {
-            @Override
-            public Integer run(Connection connection)
-                    throws ServiceException, SQLException {
-                int courseId = Integer.parseInt(request.getParameter("courseId"));
-                // Return course ID to caller.
-                return courseId;
-            }
-        });
+        int courseID = OMUtil.parseInt(request.getParameter("courseId"));
 
         // Redirect to homepage.
         response.sendRedirect("/course/index.jsp?cid=" + courseID);
