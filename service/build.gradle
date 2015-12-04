@@ -51,6 +51,11 @@ test {
         events "passed", "skipped", "failed"
         exceptionFormat "full" // default is "short"
     }
+
+    jacoco {
+        excludes = ['com.fecklessweasel.service.*']
+    }
+
 }
 
 jacocoTestReport {
@@ -58,5 +63,4 @@ jacocoTestReport {
         xml.enabled = true
         html.enabled = true
     }
-
 }
