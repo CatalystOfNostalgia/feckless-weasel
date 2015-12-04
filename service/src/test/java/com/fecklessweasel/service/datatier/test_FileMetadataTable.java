@@ -367,4 +367,36 @@ public class test_FileMetadataTable {
         verify(mockPreparedStatement, times(1)).executeUpdate();
         verify(mockPreparedStatement, times(1)).close();
     }
+
+
+    @Test(expected = IllegalArgumentException.class)
+    public void test_lookupUserNotes_NullConnection() throws Exception {
+        FileMetadataTable.lookUpUserNotes(null, 1);
+    }
+
+    @Test
+    public void test_lookupUserNotes_SQLException() throws Exception {
+        when(mockConnection.prepareStatement(FileMetadataTable.LOOKUP_USER_NOTES))
+                .thenThrow(new SQLException());
+
+        try {
+            FileMetadataTable.lookUpUserNotes(mockConnection, 1);
+        } catch (ServiceException ex) {
+            assertEquals(ServiceStatus.DATABASE_ERROR, ex.status);
+        }
+    }
+
+    @Test
+    public void test_lookupUserNotes_success() throws Exception {
+        PreparedStatement mockPreparedStatement = mock(PreparedStatement.class);
+        ResultSet mockResultSet = mock(ResultSet.class);
+
+        when(mockConnection.prepareStatement(FileMetadataTable.LOOKUP_USER_NOTES))
+                .thenReturn(mockPreparedStatement);
+        when(mockPreparedStatement.executeQuery())
+                .thenReturn(mockResultSet);
+
+        ResultSet result = FileMetadataTable.lookUpUserNotes(mockConnection, 1);
+        assertEquals(mockResultSet, result);
+    }
 }
