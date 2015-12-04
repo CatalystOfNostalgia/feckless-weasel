@@ -22,8 +22,9 @@ import com.fecklessweasel.service.datatier.SQLSource;
  * @author Hayden Schmackpfeffer
  * @author Christian Gunderman
  * @author James Flinn
+ * @author Eric Luan
  */
-public class StoredFile {
+public class StoredFile implements Comparable<StoredFile> {
     /** Minimum StoredFile title length. */
     public static final int MIN_TITLE = 1;
     /** Maximum StoredFile title length. */
@@ -62,7 +63,9 @@ public class StoredFile {
     private String tag;
     /** The file's extension. */
     private String extension;
-
+    /** A file's relevance score */
+    private long relevanceScore; 
+    
     /**
      * Private constructor to the StoredFile object. Is only called in create();
      * @param fid The Files Unique Identifier in the table
@@ -84,6 +87,21 @@ public class StoredFile {
         this.description = description;
         this.tag = tag;
         this.extension = extension;
+    }
+
+    /**
+     * Files are compared by their relevance score
+     * @param otherFile The other file to compare to
+     * @return 1 if this file is greater, 0 otherwise.
+     */
+    public int compareTo(StoredFile otherFile) {
+        if (this.getRelevanceScore() > otherFile.getRelevanceScore()){
+            return 1;
+        } else if(this.getRelevanceScore() < otherFile.getRelevanceScore()){
+            return -1;
+        } else {
+            return 0; 
+        }
     }
 
     /**
@@ -340,6 +358,22 @@ public class StoredFile {
     public Date getCreationDate() {
         return this.creationDate;
     }
+    
+    /**
+     * Get's the relevance score of the file
+     * @return The file's relevance score
+     */
+    public long getRelevanceScore(){
+        return this.relevanceScore;
+    }
+
+    /**
+     * Set's the relevance scor of the file
+     * @param score The score to set it to
+     */
+    public void setRelevanceScore(long score){
+        this.relevanceScore = score;
+    }
 
     /**
      * Gets the title for this StoredFile.
@@ -411,6 +445,18 @@ public class StoredFile {
                 listOfFiles.add(fileData);
             }
             results.close();
+            Date today = new Date();
+            long todayInMillis = today.getTime();
+            for(StoredFile file: listOfFiles){
+                Date fileDate = file.getCreationDate();
+                long fileDateInMillis = fileDate.getTime();
+                long timeDifference = (todayInMillis - fileDateInMillis)/(1000*60*60*24); 
+                long score = file.lookupRating(sql) - timeDifference;
+                file.setRelevanceScore(score); 
+            }
+            
+            Collections.sort(listOfFiles);
+            Collections.reverse(listOfFiles);
             return listOfFiles;
         } catch (SQLException ex){
             throw new ServiceException(ServiceStatus.DATABASE_ERROR, ex);
