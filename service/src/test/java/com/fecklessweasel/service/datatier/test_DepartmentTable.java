@@ -7,6 +7,7 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+import com.fecklessweasel.service.objectmodel.Department;
 import com.fecklessweasel.service.objectmodel.ServiceException;
 import com.fecklessweasel.service.objectmodel.ServiceStatus;
 
@@ -22,10 +23,14 @@ import org.junit.runners.JUnit4;
 public class test_DepartmentTable {
 
     private Connection mockConnection;
+    private PreparedStatement mockPreparedStatement;
+    private ResultSet mockResultSet;
 
     @Before
     public void setup() {
         this.mockConnection = mock(Connection.class);
+        this.mockPreparedStatement = mock(PreparedStatement.class);
+        this.mockResultSet = mock(ResultSet.class);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -89,4 +94,59 @@ public class test_DepartmentTable {
         }
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void test_lookupDepartment_nullConnection() throws Exception {
+        DepartmentTable.lookupDepartment(null, 1);
+    }
+
+    @Test
+    public void test_lookupDepartment_SQLException() throws Exception {
+        when(mockConnection.prepareStatement(DepartmentTable.LOOKUP_ROW))
+            .thenThrow(new SQLIntegrityConstraintViolationException());
+
+        try {
+            DepartmentTable.lookupDepartment(mockConnection, 1);
+        } catch (ServiceException ex) {
+            assertEquals(ex.status, ServiceStatus.DATABASE_ERROR);
+        }
+    }
+
+    @Test
+    public void test_lookupDepartment_success() throws Exception {
+        when(mockConnection.prepareStatement(DepartmentTable.LOOKUP_ROW))
+                .thenReturn(mockPreparedStatement);
+        when(mockPreparedStatement.executeQuery())
+                .thenReturn(mockResultSet);
+
+        ResultSet result = DepartmentTable.lookupDepartment(mockConnection, 1);
+        assertEquals(mockResultSet, result);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void test_lookupPaginated_nullConnection() throws Exception {
+        DepartmentTable.lookUpPaginated(null, 1, 2, 3);
+    }
+
+    @Test
+    public void test_lookupPaginated_SQLException() throws Exception {
+        when(mockConnection.prepareStatement(DepartmentTable.SELECT_PAGINATED))
+                .thenThrow(new SQLIntegrityConstraintViolationException());
+
+        try {
+            DepartmentTable.lookUpPaginated(mockConnection, 1, 2, 3);
+        } catch (ServiceException ex) {
+            assertEquals(ex.status, ServiceStatus.DATABASE_ERROR);
+        }
+    }
+
+    @Test
+    public void test_lookupPaginated_success() throws Exception {
+        when(mockConnection.prepareStatement(DepartmentTable.SELECT_PAGINATED))
+                .thenReturn(mockPreparedStatement);
+        when(mockPreparedStatement.executeQuery())
+                .thenReturn(mockResultSet);
+
+        ResultSet result = DepartmentTable.lookUpPaginated(mockConnection, 1, 2, 3);
+        assertEquals(mockResultSet, result);
+    }
 }
