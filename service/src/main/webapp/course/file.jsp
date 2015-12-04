@@ -15,8 +15,12 @@
                 OMUtil.parseInt(request.getParameter("fid")));
                 final Course course = file.lookupCourse(connection);
                 final User user = file.lookupUser(connection);
-                boolean toggled = authSession.getUser().checkIfFavFile(connection, OMUtil.parseInt(request.getParameter("fid")));
-                int userRating = file.getRatingByUser(connection, authSession.getUser().getID());
+                boolean toggled = false;
+                int userRating = 0;
+                if (authSession != null) {
+                    toggled = authSession.getUser().checkIfFavFile(connection, OMUtil.parseInt(request.getParameter("fid")));
+                    userRating = file.getRatingByUser(connection, authSession.getUser().getID());
+                }    
                 final List<Comment> comments = file.lookupComments(connection, 0, 10);
                 final int rating = file.lookupRating(connection);
 
@@ -28,39 +32,41 @@
             %>
             <jsp:include page="/header.jsp"/>
             <div class="jumbotron" >
-                <div class="col-md-3" style="text-align:center; padding-top:1%">
-                    <%if (userRating == 0) {%>
-                    <div class="row">
-                        <h2><a href="/servlet/file/rate?fid=${file.getID()}&rating=1"><span style="color:#A0A0A0;" class="glyphicon glyphicon-arrow-up"></span></a></h2>
+                <%if (authSession != null) {%>
+                    <div class="col-md-3" style="text-align:center; padding-top:1%">
+                        <%if (userRating == 0) {%>
+                        <div class="row">
+                            <h2><a href="/servlet/file/rate?fid=${file.getID()}&rating=1"><span style="color:#A0A0A0;" class="glyphicon glyphicon-arrow-up"></span></a></h2>
+                        </div>
+                        <div class="row">
+                            <h2>${rating}</h2>
+                        </div>
+                        <div class="row">
+                            <h2><a href="/servlet/file/rate?fid=${file.getID()}&rating=-1"><span style="color:#A0A0A0;" class="glyphicon glyphicon-arrow-down"></span></a></h2>
+                        </div>
+                        <% } else if (userRating == 1) { %>
+                        <div class="row">
+                            <h2><a href="/servlet/file/rate?fid=${file.getID()}&rating=0"><span class="glyphicon glyphicon-arrow-up" style="color:#ff8b60;"></span></a></h2>
+                        </div>
+                        <div class="row">
+                            <h2>${rating}</h2>
+                        </div>
+                        <div class="row">
+                            <h2><a href="/servlet/file/rate?fid=${file.getID()}&rating=-1"><span class="glyphicon glyphicon-arrow-down" style="color:#A0A0A0;"></span></a>
+                        </div>
+                        <% } else { %>
+                        <div class="row">
+                            <h2><a href="/servlet/file/rate?fid=${file.getID()}&rating=1"><span class="glyphicon glyphicon-arrow-up" style="color:#A0A0A0;"><span></a></h2>
+                        </div>
+                        <div class="row">
+                            <h2>${rating}</h2>
+                        </div>
+                        <div class="row">
+                             <h2><a href="/servlet/file/rate?fid=${file.getID()}&rating=0"><span class="glyphicon glyphicon-arrow-down" style="color:#9494ff;"><span></a></h2>
+                        </div>
+                        <% } %>
                     </div>
-                    <div class="row">
-                        <h2>${rating}</h2>
-                    </div>
-                    <div class="row">
-                        <h2><a href="/servlet/file/rate?fid=${file.getID()}&rating=-1"><span style="color:#A0A0A0;" class="glyphicon glyphicon-arrow-down"></span></a></h2>
-                    </div>
-                    <% } else if (userRating == 1) { %>
-                    <div class="row">
-                        <h2><a href="/servlet/file/rate?fid=${file.getID()}&rating=0"><span class="glyphicon glyphicon-arrow-up" style="color:#ff8b60;"></span></a></h2>
-                    </div>
-                    <div class="row">
-                        <h2>${rating}</h2>
-                    </div>
-                    <div class="row">
-                        <h2><a href="/servlet/file/rate?fid=${file.getID()}&rating=-1"><span class="glyphicon glyphicon-arrow-down" style="color:#A0A0A0;"></span></a>
-                    </div>
-                    <% } else { %>
-                    <div class="row">
-                        <h2><a href="/servlet/file/rate?fid=${file.getID()}&rating=1"><span class="glyphicon glyphicon-arrow-up" style="color:#A0A0A0;"><span></a></h2>
-                    </div>
-                    <div class="row">
-                        <h2>${rating}</h2>
-                    </div>
-                    <div class="row">
-                         <h2><a href="/servlet/file/rate?fid=${file.getID()}&rating=0"><span class="glyphicon glyphicon-arrow-down" style="color:#9494ff;"><span></a></h2>
-                    </div>
-                    <% } %>
-                </div>
+                <%}%>
                 <div class="container">
                     <h1>
                         ${file.getTitle()}
@@ -115,7 +121,7 @@
                 <h2>Have something to say?</h2>
                 <textarea class="form-control" rows="5" name="text" placeholder="What's on your mind?"></textarea>
                 <input type="hidden" name="fileid" value='${file.getID()}'>
-                <input type="hidden" name="username" value='${user.getUsername()}'>
+                <input type="hidden" name="username" value='<%= authSession.getUser().getUsername() %>'>
                 <button type="submit" id="submit" class="btn btn-lg btn-warning" name="submit">Comment</button>
             </form>
             <%}else {%>
