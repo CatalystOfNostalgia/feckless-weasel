@@ -433,7 +433,6 @@ public class StoredFile implements Comparable<StoredFile> {
 
         try {
             while (results.next()) {
-                User user = User.lookupById(sql, results.getInt("uid"));
                 StoredFile fileData = new StoredFile(results.getInt("fid"),
                                                      results.getInt("uid"),
                                                      results.getInt("cid"),
