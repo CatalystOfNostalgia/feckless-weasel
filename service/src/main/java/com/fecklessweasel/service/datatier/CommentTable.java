@@ -20,9 +20,9 @@ import com.fecklessweasel.service.objectmodel.ServiceStatus;
  */
 public abstract class CommentTable{
     
-    private static String ADD_COMMENT = "INSERT INTO Comment (uid, fid, datetime, text) VALUES (?,?,?,?)";
+    public static String ADD_COMMENT = "INSERT INTO Comment (uid, fid, datetime, text) VALUES (?,?,?,?)";
     
-    private static String GET_FILE_COMMENTS = "SELECT * FROM Comment c, User u WHERE c.uid=u.uid AND c.fid=? ORDER BY c.datetime";
+    public static String GET_FILE_COMMENTS = "SELECT * FROM Comment c, User u WHERE c.uid=u.uid AND c.fid=? ORDER BY c.datetime";
     
     /**
      * Add a comment to a file.
