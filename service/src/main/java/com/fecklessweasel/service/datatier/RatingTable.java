@@ -19,13 +19,13 @@ import com.fecklessweasel.service.objectmodel.ServiceStatus;
  */
 public abstract class RatingTable{
     
-    private static String ADD_RATING = "insert into Rating (uid, fid, rating) values (?,?,?)";
+    public static String ADD_RATING = "insert into Rating (uid, fid, rating) values (?,?,?)";
             
-    private static String UPDATE_RATING = "update Rating set rating=? where uid=? and fid=?";
+    public static String UPDATE_RATING = "update Rating set rating=? where uid=? and fid=?";
     
-    private static String GET_FILE_RATING = "SELECT SUM(rating) as sum FROM Rating WHERE fid=?";
+    public static String GET_FILE_RATING = "SELECT SUM(rating) as sum FROM Rating WHERE fid=?";
     
-    private static String GET_USER_FILE_RATING = "SELECT rating FROM Rating WHERE fid=? and uid=?";
+    public static String GET_USER_FILE_RATING = "SELECT rating FROM Rating WHERE fid=? and uid=?";
     
     /**
      * Add a rating from a user to a given file.
