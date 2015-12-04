@@ -22,10 +22,14 @@ import org.junit.runners.JUnit4;
 public class test_CourseTable {
 
     private Connection mockConnection;
+    private PreparedStatement mockPreparedStatement;
+    private ResultSet mockResultSet;
 
     @Before
     public void setup() {
         this.mockConnection = mock(Connection.class);
+        this.mockPreparedStatement = mock(PreparedStatement.class);
+        this.mockResultSet = mock(ResultSet.class);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -84,4 +88,59 @@ public class test_CourseTable {
         }
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void test_lookupCourse_nullConnection() throws Exception {
+        CourseTable.lookupCourse(null, 1);
+    }
+
+    @Test
+    public void test_lookupCourse_SQLException() throws Exception {
+        when(mockConnection.prepareStatement(CourseTable.LOOKUP_ROW))
+                .thenThrow(new SQLException());
+
+        try {
+            CourseTable.lookupCourse(mockConnection, 1);
+        } catch (ServiceException ex) {
+            assertEquals(ex.status, ServiceStatus.DATABASE_ERROR);
+        }
+    }
+
+    @Test
+    public void test_lookupCourse_success() throws Exception {
+        when(mockConnection.prepareStatement(CourseTable.LOOKUP_ROW))
+                .thenReturn(mockPreparedStatement);
+        when(mockPreparedStatement.executeQuery())
+                .thenReturn(mockResultSet);
+
+        ResultSet result = CourseTable.lookupCourse(mockConnection, 1);
+        assertEquals(mockResultSet, result);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void test_lookupPaginated_nullConnection() throws Exception {
+        CourseTable.lookUpPaginated(null, 1, 2, 3);
+    }
+
+    @Test
+    public void test_lookupPaginated_SQLException() throws Exception {
+        when(mockConnection.prepareStatement(CourseTable.SELECT_PAGINATED))
+                .thenThrow(new SQLException());
+
+        try {
+            CourseTable.lookUpPaginated(mockConnection, 1, 2, 3);
+        } catch (ServiceException ex) {
+            assertEquals(ex.status, ServiceStatus.DATABASE_ERROR);
+        }
+    }
+
+    @Test
+    public void test_lookupPaginated_success() throws Exception {
+        when(mockConnection.prepareStatement(CourseTable.SELECT_PAGINATED))
+                .thenReturn(mockPreparedStatement);
+        when(mockPreparedStatement.executeQuery())
+                .thenReturn(mockResultSet);
+
+        ResultSet result = CourseTable.lookUpPaginated(mockConnection, 1, 2, 3);
+        assertEquals(mockResultSet, result);
+    }
 }
