@@ -509,43 +509,6 @@ public class test_StoredFile {
     }
 
     @Test
-    public void test_lookupCourseFiles_success() throws Exception {
-        int fid = 1;
-        int uid = 1;
-        int cid = 1;
-        java.sql.Date date = new java.sql.Date(1);
-        String title = "title";
-        String description = "description";
-        String tag = "tag";
-        String extension = "md";
-
-        PowerMockito.when(FileMetadataTable.lookUpCourseFiles(mockConnection, 1))
-                .thenReturn(mockResultSet);
-        when(mockResultSet.next())
-                .thenReturn(true)
-                .thenReturn(false);
-        when(mockResultSet.getInt("fid")).thenReturn(fid);
-        when(mockResultSet.getInt("uid")).thenReturn(uid);
-        when(mockResultSet.getInt("cid")).thenReturn(cid);
-        when(mockResultSet.getDate("creation_date")).thenReturn(date);
-        when(mockResultSet.getString("title")).thenReturn(title);
-        when(mockResultSet.getString("description")).thenReturn(description);
-        when(mockResultSet.getString("tag")).thenReturn(tag);
-        when(mockResultSet.getString("extension")).thenReturn(extension);
-
-        Iterable<StoredFile> fileList = StoredFile.lookupCourseFiles(mockConnection, testCourse);
-        StoredFile file = null;
-        for (StoredFile f : fileList) {
-            file = f;
-        }
-        assertEquals(fid, file.getID());
-        assertEquals(title, file.getTitle());
-        assertEquals(description, file.getDescription());
-        assertEquals(tag, file.getTag());
-        assertEquals(extension, file.getExtension());
-    }
-
-    @Test
     public void test_lookupUserFiles_nullConnection() throws Exception {
         try {
             StoredFile.lookupUserFiles(null, 1);
