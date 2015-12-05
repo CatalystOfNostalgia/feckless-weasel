@@ -19,28 +19,161 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 import javax.mail.internet.InternetAddress;
 import java.util.Date;
+import java.io.InputStream;
 
-import com.fecklessweasel.service.datatier.UserTable;
-import com.fecklessweasel.service.datatier.UserHasRoleTable;
-import com.fecklessweasel.service.datatier.UserRoleTable;
-import com.fecklessweasel.service.objectmodel.OMUtil;
-import com.fecklessweasel.service.objectmodel.ServiceException;
-import com.fecklessweasel.service.objectmodel.ServiceStatus;
+import com.fecklessweasel.service.datatier.*;
+import com.fecklessweasel.service.objectmodel.*;
 
 /**
  * Unit tests for object model User.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({UserTable.class, UserHasRoleTable.class, UserRoleTable.class})
+@PrepareForTest({CourseTable.class,
+                 DepartmentTable.class,
+                 FileMetadataTable.class,
+                 UniversityTable.class,
+                 UserHasRoleTable.class,
+                 UserRoleTable.class,
+                 UserTable.class,
+                 FavoritesTable.class,
+                 StoredFile.class,
+                 Course.class,
+                 University.class,
+                 Department.class})
 public class test_User {
     private Connection mockConnection;
+    private InputStream mockInputStream;
+    private Course testCourse;
+    private StoredFile testFile;
+    private Department testDepartment;
+    private University testUniversity;
+    private User testUser;
+
+    private University createTestUni() throws Exception {
+        String longName = "Case Western";
+        String acronym = "CWRU";
+        String city = "Cleveland";
+        String state = "OH";
+        String country = "USA";
+
+        PowerMockito.when(UniversityTable.insertUniversity(
+                mockConnection, longName, acronym, city, state, country))
+                .thenReturn(1);
+
+        return University.create(
+                mockConnection,
+                "Case Western",
+                "CWRU",
+                "Cleveland",
+                "OH",
+                "USA"
+        );
+    }
+
+    private Department createTestDept() throws Exception {
+        int uniID = 1;
+        String deptName = "Computer Science";
+        String acronym = "EECS";
+
+        PowerMockito.when(DepartmentTable.insertDepartment(
+                mockConnection, uniID, deptName, acronym))
+                .thenReturn(1);
+
+        return Department.create(
+                mockConnection,
+                createTestUni(),
+                deptName,
+                acronym
+        );
+    }
+
+    private Course createTestCourse() throws Exception {
+        int courseNum = 111;
+        String courseName = "Test Course";
+
+        PowerMockito.when(CourseTable.insertCourse(
+                mockConnection, 1, courseNum, courseName))
+                .thenReturn(1);
+
+        return Course.create(
+                mockConnection,
+                createTestDept(),
+                courseNum,
+                courseName);
+    }
+
+    private User createTestUser() throws Exception {
+        String username = "testuser";
+        String password = "password";
+        String email = "email@gmail.com";
+
+        PowerMockito.when(UserTable.insertUser(
+                mockConnection,
+                username,
+                password,
+                new Date(),
+                new InternetAddress(email)))
+                .thenReturn(1);
+
+        PowerMockito.doNothing().when(UserRoleTable.class, "insertUserRole",
+                any(Connection.class),
+                any(String.class),
+                any(String.class));
+
+        return User.create(
+                mockConnection, "testuser", "password", "email@email.com"
+        );
+    }
+
+    private StoredFile createTestFile() throws Exception {
+    // public static StoredFile create(Connection sql, User user,Course course,String title,
+        // String description,String tag,String extension,InputStream fileData) throws ServiceException {
+        String title = "FileTitle";
+        String description = "This is a description";
+        String extension = "pdf";
+
+        PowerMockito.when(FileMetadataTable.insertFileData(
+                eq(mockConnection),
+                anyInt(),       //uid
+                anyInt(),       //courseId
+                anyString(),    //title
+                anyString(),    //description
+                any(Date.class),
+                anyString(),    //tag
+                anyString()    //extension
+                )).thenReturn(1);
+
+        PowerMockito.when(StoredFile.class, "saveFile",
+                any(InputStream.class),
+                anyString()).thenReturn(true);
+
+        return StoredFile.create(mockConnection, this.testUser, this.testCourse,
+                                 title, description, "tag", extension, mockInputStream);
+    }
 
     @Before
-    public void setup() {
+    public void setup() throws Exception {
         this.mockConnection = mock(Connection.class);
+        this.mockInputStream = mock(InputStream.class);
         PowerMockito.mockStatic(UserTable.class);
         PowerMockito.mockStatic(UserHasRoleTable.class);
         PowerMockito.mockStatic(UserRoleTable.class);
+        PowerMockito.mockStatic(FavoritesTable.class);
+        PowerMockito.mockStatic(FileMetadataTable.class);
+        PowerMockito.mockStatic(UniversityTable.class);
+        PowerMockito.mockStatic(DepartmentTable.class);
+        PowerMockito.mockStatic(CourseTable.class);
+        PowerMockito.mockStatic(StoredFile.class);
+        // PowerMockito.mockStatic(University.class);
+        // // PowerMockito.mockStatic(Department.class);
+        // PowerMockito.mockStatic(Course.class);
+
+        this.testUser = createTestUser();
+        this.testUniversity = createTestUni();
+        this.testDepartment = createTestDept();
+        this.testCourse = createTestCourse();
+
+        // this.testFile = createTestFile();
     }
 
     @Test
@@ -1019,5 +1152,21 @@ public class test_User {
                                       this.mockConnection,
                                       "ROLE_FOO");
         User.Role.delete(this.mockConnection, "ROLE_FOO");
+    }
+
+    @Test
+    public void test_getFavoriteCourses_NullConnection() {
+        try {
+            new User(3,
+                     "gundermanc",
+                     OMUtil.sha256("old_pass"),
+                     new Date(),
+                     "email@gc.com").getFavoriteCourses(null);
+        } catch (ServiceException ex) {
+            assertEquals(ex.status, ServiceStatus.NO_SQL);
+            return;
+        }
+
+        fail("no exception thrown");
     }
 }
